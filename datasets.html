@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datasets | Terrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FBFAF6;
+    --paper-2: #F3F1E8;
+    --ink: #1B2A26;
+    --ink-soft: #4A5A54;
+    --moss: #2F6B4F;
+    --moss-deep: #1F4D38;
+    --sky: #5B8BB0;
+    --clay: #D98E5A;
+    --line: #E3DFD2;
+    --glow: #C7E0A8;
+    --radius: 16px;
+    --maxw: 1180px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink);
+    line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  ::selection { background: var(--glow); color: var(--ink); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  a { color: inherit; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,250,246,0.82); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 21px;
+    color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
+  }
+  .logo-mark { width: 30px; height: 30px; flex-shrink: 0; }
+  .nav-links { display: flex; align-items: center; gap: 34px; }
+  .nav-links a {
+    color: var(--ink-soft); text-decoration: none; font-size: 15px;
+    font-weight: 450; transition: color .2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--moss); }
+  .nav-cta {
+    background: var(--moss); color: #fff !important; padding: 9px 18px;
+    border-radius: 10px; font-weight: 500 !important; font-size: 14.5px !important;
+    transition: background .2s, transform .2s;
+  }
+  .nav-cta:hover { background: var(--moss-deep); transform: translateY(-1px); }
+
+  /* HEADER */
+  .lib-head { padding: 64px 0 36px; }
+  .crumb {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink-soft);
+    margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px;
+    text-decoration: none;
+  }
+  .crumb:hover { color: var(--moss); }
+  .lib-head h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(34px, 5vw, 54px); line-height: 1.05;
+    letter-spacing: -.025em; margin-bottom: 16px; max-width: 18ch;
+  }
+  .lib-head p { font-size: 18px; color: var(--ink-soft); max-width: 60ch; }
+
+  /* CONTROLS */
+  .controls {
+    display: flex; flex-direction: column; gap: 16px;
+    padding-bottom: 28px; margin-bottom: 8px;
+  }
+  .controls-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .filter-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .filter-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em;
+    min-width: 42px;
+  }
+  .search-box {
+    display: flex; align-items: center; gap: 10px; background: #fff;
+    border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px;
+    flex: 1; min-width: 260px; transition: border-color .2s, box-shadow .2s;
+  }
+  .search-box:focus-within { border-color: var(--moss); box-shadow: 0 0 0 3px rgba(47,107,79,.1); }
+  .search-box input {
+    border: none; outline: none; background: none; flex: 1;
+    font-family: 'Inter'; font-size: 15px; color: var(--ink);
+  }
+  .search-box input::placeholder { color: #9AA8A1; }
+  .search-clear {
+    display: none; background: none; border: none; cursor: pointer;
+    color: var(--ink-soft); font-size: 18px; line-height: 1; padding: 0 2px;
+  }
+  .search-clear.visible { display: block; }
+  .search-clear:hover { color: var(--moss); }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-family: 'Inter'; font-size: 14px; font-weight: 500; cursor: pointer;
+    padding: 10px 16px; border-radius: 100px; border: 1px solid var(--line);
+    background: #fff; color: var(--ink-soft); transition: all .18s;
+  }
+  .chip:hover { border-color: var(--moss); color: var(--moss); }
+  .chip.active { background: var(--moss); border-color: var(--moss); color: #fff; }
+
+  .result-count {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--ink-soft); margin-bottom: 22px;
+  }
+
+  /* GRID */
+  .lib-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
+    padding-bottom: 80px;
+  }
+  .ds-card {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px; display: flex; flex-direction: column; gap: 14px;
+    transition: transform .22s, box-shadow .22s, border-color .22s;
+  }
+  .ds-card:hover { transform: translateY(-3px); box-shadow: 0 18px 38px -24px rgba(27,42,38,.3); border-color: var(--glow); }
+  .ds-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+  .ds-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
+  .ds-source { font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
+  .ds-level {
+    flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 500; padding: 5px 10px; border-radius: 6px; text-transform: uppercase;
+    letter-spacing: .03em; white-space: nowrap;
+  }
+  .lvl-beginner { background: #E8F0E0; color: #3C7A4A; }
+  .lvl-intermediate { background: #FBEEDF; color: #C07A3E; }
+  .lvl-advanced { background: #E5EEF5; color: #3F7197; }
+  .ds-desc { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; flex-grow: 1; }
+  .ds-answers { font-size: 13.5px; color: var(--ink); }
+  .ds-answers strong { font-weight: 600; }
+  .ds-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+  .ds-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--ink-soft);
+    background: var(--paper-2); padding: 4px 9px; border-radius: 6px;
+  }
+  .ds-foot { display: flex; gap: 10px; padding-top: 4px; }
+  .ds-btn {
+    text-decoration: none; font-size: 14px; font-weight: 500; padding: 10px 16px;
+    border-radius: 10px; border: 1px solid var(--line); color: var(--ink);
+    transition: border-color .2s, transform .2s, background .2s;
+  }
+  .ds-btn:hover { border-color: var(--moss); transform: translateY(-1px); }
+  .ds-btn-primary { background: var(--moss); color: #fff; border-color: var(--moss); }
+  .ds-btn-primary:hover { background: var(--moss-deep); border-color: var(--moss-deep); }
+  .ds-btn-soon { opacity: .55; cursor: default; pointer-events: none; }
+
+  .empty {
+    grid-column: 1 / -1; text-align: center; padding: 60px 20px;
+    color: var(--ink-soft); font-size: 16px;
+  }
+  .empty strong { color: var(--ink); font-weight: 600; }
+  .empty button {
+    margin-top: 14px; font-family: 'Inter'; font-size: 14px; font-weight: 500;
+    padding: 10px 16px; border-radius: 10px; border: 1px solid var(--line);
+    background: #fff; color: var(--ink); cursor: pointer;
+  }
+  .empty button:hover { border-color: var(--moss); color: var(--moss); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--line); padding: 50px 0 38px; }
+  .foot-inner { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+  .foot-brand { max-width: 280px; }
+  .foot-brand p { font-size: 14px; color: var(--ink-soft); margin-top: 12px; line-height: 1.55; }
+  .foot-cols { display: flex; gap: 64px; flex-wrap: wrap; }
+  .foot-col h5 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); margin-bottom: 14px; font-weight: 600; }
+  .foot-col a { display: block; font-size: 14.5px; color: var(--ink); text-decoration: none; margin-bottom: 9px; transition: color .2s; }
+  .foot-col a:hover { color: var(--moss); }
+  .foot-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .foot-bottom a { color: var(--moss); text-decoration: none; }
+  .foot-bottom a:hover { text-decoration: underline; }
+
+  @media (max-width: 820px) {
+    .nav-links { display: none; }
+    .lib-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
+        <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
+        <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="23" cy="8" r="2.4" fill="#fff"/>
+      </svg>
+      Terrain
+    </a>
+    <div class="nav-links">
+      <a href="index.html#start">How it works</a>
+      <a href="datasets.html" class="active">Datasets</a>
+      <a href="projects.html">Projects</a>
+      <a href="programs.html">Programs</a>
+      <a href="index.html#faculty">Faculty</a>
+      <a href="team.html">Team</a>
+      <a href="index.html#join" class="nav-cta">Join the list</a>
+    </div>
+  </div>
+</nav>
+
+<header class="lib-head">
+  <div class="wrap">
+    <a href="index.html" class="crumb">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to home
+    </a>
+    <h1>The dataset library</h1>
+    <p>Public, free datasets for environmental work. Each listing includes a short explainer, example questions you can answer, and a link to download the data.</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="controls">
+    <div class="controls-row">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="6" stroke="#4A5A54" stroke-width="1.6"/><path d="M12.5 12.5L16 16" stroke="#4A5A54" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input type="text" id="search" placeholder="Search by name, topic, or format (e.g. &quot;emissions&quot;, &quot;ice&quot;, or &quot;CSV&quot;" autocomplete="off">
+        <button type="button" class="search-clear" id="searchClear" aria-label="Clear search">×</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Topic</span>
+      <div class="filters" id="topicFilters">
+        <button class="chip active" data-topic="all">All</button>
+        <button class="chip" data-topic="climate">Climate</button>
+        <button class="chip" data-topic="emissions">Emissions</button>
+        <button class="chip" data-topic="justice">Justice</button>
+        <button class="chip" data-topic="satellite">Satellite</button>
+        <button class="chip" data-topic="water">Water</button>
+        <button class="chip" data-topic="local">Local</button>
+        <button class="chip" data-topic="catalog">Catalogs</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Level</span>
+      <div class="filters" id="levelFilters">
+        <button class="chip active" data-level="all">Any</button>
+        <button class="chip" data-level="beginner">Beginner</button>
+        <button class="chip" data-level="intermediate">Intermediate</button>
+        <button class="chip" data-level="advanced">Advanced</button>
+      </div>
+    </div>
+  </div>
+  <div class="result-count" id="count"></div>
+  <div class="lib-grid" id="grid"></div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a href="index.html" class="logo">
+          <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
+            <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
+            <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="23" cy="8" r="2.4" fill="#fff"/>
+          </svg>
+          Terrain
+        </a>
+        <p>A student-built entry point for environmental data science at UCLA.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Explore</h5>
+          <a href="index.html#start">How it works</a>
+          <a href="datasets.html">Dataset library</a>
+          <a href="projects.html">Project library</a>
+          <a href="index.html#faculty">Faculty directory</a>
+          <a href="programs.html">Programs</a>
+          <a href="team.html">Meet the team</a>
+        </div>
+        <div class="foot-col">
+          <h5>Demos</h5>
+          <a href="index.html#tracker">Carbon tracker</a>
+          <a href="projects.html">Starter projects</a>
+        </div>
+        <div class="foot-col">
+          <h5>Connect</h5>
+          <a href="team.html">Join the team</a>
+          <a href="index.html#join">Join the list</a>
+          <a href="mailto:krishmatai23@ucla.edu">Contact</a>
+          <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Terrain · <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX</a> student initiative</span>
+      <span>Know a dataset? <a href="index.html#join">Suggest one →</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ===== DATASET LIBRARY =====
+     cats topics: climate, emissions, justice, satellite, water, local, catalog, air
+     cats levels: beginner, intermediate, advanced
+     keywords: extra search terms not shown on the card */
+  const datasets = [
+    {
+      name: 'CalEnviroScreen',
+      source: 'CA Office of Environmental Health Hazard Assessment',
+      level: 'beginner',
+      desc: 'California\u2019s official map of which communities face the heaviest combined pollution and social vulnerability, scored down to the census tract. The backbone of nearly all environmental-justice analysis in the state.',
+      answers: 'Which neighborhoods carry the highest environmental burden, and why?',
+      tags: ['CSV', 'Shapefile', 'Census tract'],
+      cats: ['beginner', 'justice', 'local'],
+      keywords: 'california ces oehha pollution vulnerability census environmental justice',
+      explainer: '#',
+      data: 'https://oehha.ca.gov/calenviroscreen'
+    },
+    {
+      name: 'EPA AirNow',
+      source: 'U.S. Environmental Protection Agency',
+      level: 'beginner',
+      desc: 'Live and historical air-quality readings (AQI, PM2.5, ozone) from monitoring stations across the U.S. Clean, well-documented, and a perfect first time-series or mapping project.',
+      answers: 'How does air quality change over time and across a city?',
+      tags: ['API', 'JSON', 'Real-time'],
+      cats: ['beginner', 'air', 'local'],
+      keywords: 'aqi pm2.5 ozone smog pollution monitoring',
+      explainer: '#',
+      data: 'https://www.airnow.gov/'
+    },
+    {
+      name: 'NOAA Climate Data',
+      source: 'National Centers for Environmental Information',
+      level: 'intermediate',
+      desc: 'Temperature, precipitation, and extreme-weather records reaching back over a century. Big and occasionally messy, but the definitive source for U.S. climate trends.',
+      answers: 'Is my region getting hotter, drier, or more extreme over decades?',
+      tags: ['CSV', 'API', 'Historical'],
+      cats: ['intermediate', 'climate'],
+      keywords: 'noaa ncei weather temperature precipitation drought extremes',
+      explainer: '#',
+      data: 'https://www.ncei.noaa.gov/cdo-web/'
+    },
+    {
+      name: 'NASA Earthdata',
+      source: 'NASA Earth Science Data Systems',
+      level: 'advanced',
+      desc: 'Satellite earth observation: sea ice, vegetation, land-surface temperature, and more. Files are in formats like HDF and NetCDF. More advanced, but useful for large-scale work.',
+      answers: 'What can orbit-level data reveal about a changing planet?',
+      tags: ['NetCDF', 'HDF', 'Satellite'],
+      cats: ['advanced', 'climate', 'satellite'],
+      keywords: 'nasa remote sensing modis landsat earth observation geospatial',
+      explainer: '#',
+      data: 'https://www.earthdata.nasa.gov/'
+    },
+    {
+      name: 'ICESat-2',
+      source: 'NASA NSIDC Distributed Active Archive Center',
+      level: 'advanced',
+      desc: 'Laser altimetry from NASA\u2019s ICESat-2 mission. Provides elevation measurements of ice sheets, sea ice, glaciers, and forest canopy height. Widely used in cryosphere and land-change research.',
+      answers: 'How are ice sheets, sea ice, and polar landscapes changing at centimeter scale?',
+      tags: ['HDF5', 'Laser altimetry', 'Cryosphere'],
+      cats: ['advanced', 'climate', 'satellite'],
+      keywords: 'icesat nsidc ice sheet sea ice glacier lidar altimetry arctic antarctica snow elevation',
+      explainer: '#',
+      data: 'https://nsidc.org/data/icesat-2/data'
+    },
+    {
+      name: 'Climate TRACE',
+      source: 'Climate TRACE Coalition',
+      level: 'intermediate',
+      desc: 'Facility-level greenhouse gas inventory covering power, transport, agriculture, and more. Free CSV downloads and a beta API.',
+      answers: 'Who is emitting what, where, and how have facility-level emissions changed over time?',
+      tags: ['CSV', 'API', 'Facility-level'],
+      cats: ['intermediate', 'climate', 'emissions', 'catalog'],
+      keywords: 'climate trace ghg co2 methane inventory power plants shipping agriculture sector',
+      explainer: '#',
+      data: 'https://climatetrace.org/data'
+    },
+    {
+      name: 'Our World in Data',
+      source: 'Global Change Data Lab / University of Oxford',
+      level: 'beginner',
+      desc: 'Open charts and downloadable datasets on CO\u2082, energy, disasters, land use, and more. Data are cleaned, cited, and suitable for a first analysis or class project.',
+      answers: 'How do emissions, energy, or environmental outcomes compare across countries over time?',
+      tags: ['CSV', 'Charts', 'Open license'],
+      cats: ['beginner', 'climate', 'emissions', 'catalog'],
+      keywords: 'owid our world in data co2 carbon energy renewables disasters biodiversity global',
+      explainer: 'https://ourworldindata.org/data',
+      data: 'https://ourworldindata.org/'
+    },
+    {
+      name: 'Data Rescue Project Portal',
+      source: 'Data Rescue Project',
+      level: 'intermediate',
+      desc: 'A catalog of nearly 3,000 preserved government datasets with metadata, archive links, and notes on data that may have moved or gone offline.',
+      answers: 'Where can I find a federal dataset that may have moved, gone offline, or been archived?',
+      tags: ['Catalog', 'Metadata', 'Archived'],
+      cats: ['intermediate', 'catalog', 'climate', 'water'],
+      keywords: 'drp data rescue datalumos government federal archive preserved epa noaa usgs',
+      explainer: '#',
+      data: 'https://portal.datarescueproject.org/'
+    },
+    {
+      name: 'USGS All Data',
+      source: 'U.S. Geological Survey',
+      level: 'intermediate',
+      desc: 'The full USGS data catalog. 16,000+ releases spanning water, geology, ecosystems, hazards, and climate. Filter by topic and format when you need more than streamflow alone.',
+      answers: 'What USGS datasets exist for my topic, and how do I browse them by theme?',
+      tags: ['Catalog', 'Data releases', 'Real-time'],
+      cats: ['intermediate', 'water', 'climate', 'catalog'],
+      keywords: 'usgs geology ecosystems hazards biology coasts minerals water nwis',
+      explainer: '#',
+      data: 'https://www.usgs.gov/products/data/all-data'
+    },
+    {
+      name: 'UCLA Emissions Reports',
+      source: 'UCLA Sustainability',
+      level: 'beginner',
+      desc: 'Campus energy use and carbon emissions from UCLA\u2019s public sustainability reports. Local data and the source used in Terrain\u2019s carbon tracker.',
+      answers: 'Is UCLA actually on track to meet its carbon-neutrality pledge?',
+      tags: ['PDF', 'Manual entry', 'Local'],
+      cats: ['beginner', 'local', 'climate', 'emissions'],
+      keywords: 'ucla campus carbon neutrality sustainability energy',
+      explainer: '#',
+      data: 'https://www.sustain.ucla.edu/'
+    },
+    {
+      name: 'USGS Water Data',
+      source: 'U.S. Geological Survey',
+      level: 'intermediate',
+      desc: 'Streamflow, groundwater levels, and water-quality measurements from sites nationwide. Strong for drought, watershed, or water-justice projects with a spatial angle.',
+      answers: 'How are water supply and quality shifting across a watershed?',
+      tags: ['API', 'CSV', 'Time-series'],
+      cats: ['intermediate', 'water', 'local'],
+      keywords: 'usgs nwis streamflow groundwater drought watershed quality',
+      explainer: '#',
+      data: 'https://waterdata.usgs.gov/nwis'
+    }
+  ];
+
+  const grid = document.getElementById('grid');
+  const countEl = document.getElementById('count');
+  const searchEl = document.getElementById('search');
+  const searchClear = document.getElementById('searchClear');
+  let activeTopic = 'all';
+  let activeLevel = 'all';
+
+  const levelClass = { beginner: 'lvl-beginner', intermediate: 'lvl-intermediate', advanced: 'lvl-advanced' };
+
+  function datasetHaystack(d) {
+    return [
+      d.name, d.source, d.desc, d.answers, d.keywords || '',
+      d.tags.join(' '), d.cats.join(' '), d.level
+    ].join(' ').toLowerCase();
+  }
+
+  function matchesSearch(d, q) {
+    if (!q) return true;
+    const haystack = datasetHaystack(d);
+    const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+    return terms.every(term => {
+      if (haystack.includes(term)) return true;
+      if (term.length < 3) return false;
+      return haystack.split(/[^a-z0-9]+/).some(word => word.startsWith(term));
+    });
+  }
+
+  function matchesTopic(d) {
+    if (activeTopic === 'all') return true;
+    return d.cats.includes(activeTopic);
+  }
+
+  function matchesLevel(d) {
+    if (activeLevel === 'all') return true;
+    return d.level === activeLevel;
+  }
+
+  function resetFilters() {
+    activeTopic = 'all';
+    activeLevel = 'all';
+    searchEl.value = '';
+    document.querySelectorAll('#topicFilters .chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.topic === 'all');
+    });
+    document.querySelectorAll('#levelFilters .chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.level === 'all');
+    });
+    render();
+  }
+
+  function render() {
+    const q = searchEl.value.trim();
+    searchClear.classList.toggle('visible', q.length > 0);
+
+    const list = datasets.filter(d => matchesTopic(d) && matchesLevel(d) && matchesSearch(d, q));
+    const filtered = list.length !== datasets.length || q || activeTopic !== 'all' || activeLevel !== 'all';
+
+    countEl.textContent = filtered
+      ? `Showing ${list.length} of ${datasets.length} datasets`
+      : `${datasets.length} datasets`;
+
+    if (list.length === 0) {
+      grid.innerHTML = `<div class="empty">
+        <strong>No datasets match.</strong><br>
+        Try fewer search terms, a broader topic, or reset filters.
+        <br><button type="button" id="resetFilters">Reset search &amp; filters</button>
+      </div>`;
+      document.getElementById('resetFilters')?.addEventListener('click', resetFilters);
+      return;
+    }
+
+    grid.innerHTML = list.map(d => `
+      <div class="ds-card">
+        <div class="ds-top">
+          <div>
+            <div class="ds-name">${d.name}</div>
+            <div class="ds-source">${d.source}</div>
+          </div>
+          <span class="ds-level ${levelClass[d.level]}">${d.level}</span>
+        </div>
+        <p class="ds-desc">${d.desc}</p>
+        <div class="ds-answers"><strong>Answers:</strong> ${d.answers}</div>
+        <div class="ds-tags">${d.tags.map(t => `<span class="ds-tag">${t}</span>`).join('')}</div>
+        <div class="ds-foot">
+          ${d.explainer === '#' 
+            ? '<span class="ds-btn ds-btn-primary ds-btn-soon">Explainer (coming soon)</span>'
+            : `<a class="ds-btn ds-btn-primary" href="${d.explainer}" target="_blank" rel="noopener">Read the explainer</a>`}
+          <a class="ds-btn" href="${d.data}" target="_blank" rel="noopener">Get the data →</a>
+        </div>
+      </div>`).join('');
+  }
+
+  document.getElementById('topicFilters').addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    document.querySelectorAll('#topicFilters .chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    activeTopic = btn.dataset.topic;
+    render();
+  });
+
+  document.getElementById('levelFilters').addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    document.querySelectorAll('#levelFilters .chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    activeLevel = btn.dataset.level;
+    render();
+  });
+
+  searchEl.addEventListener('input', render);
+  searchClear.addEventListener('click', () => { searchEl.value = ''; searchEl.focus(); render(); });
+  render();
+</script>
+
+</body>
+</html>

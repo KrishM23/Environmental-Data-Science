@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team | Terrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FBFAF6;
+    --paper-2: #F3F1E8;
+    --ink: #1B2A26;
+    --ink-soft: #4A5A54;
+    --moss: #2F6B4F;
+    --moss-deep: #1F4D38;
+    --sky: #5B8BB0;
+    --clay: #D98E5A;
+    --line: #E3DFD2;
+    --glow: #C7E0A8;
+    --radius: 16px;
+    --maxw: 1180px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink);
+    line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  ::selection { background: var(--glow); color: var(--ink); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  a { color: inherit; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,250,246,0.82); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 21px;
+    color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
+  }
+  .logo-mark { width: 30px; height: 30px; flex-shrink: 0; }
+  .nav-links { display: flex; align-items: center; gap: 34px; }
+  .nav-links a {
+    color: var(--ink-soft); text-decoration: none; font-size: 15px;
+    font-weight: 450; transition: color .2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--moss); }
+  .nav-cta {
+    background: var(--moss); color: #fff !important; padding: 9px 18px;
+    border-radius: 10px; font-weight: 500 !important; font-size: 14.5px !important;
+    transition: background .2s, transform .2s;
+  }
+  .nav-cta:hover { background: var(--moss-deep); transform: translateY(-1px); }
+
+  /* HEADER */
+  .team-head { padding: 64px 0 40px; }
+  .crumb {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink-soft);
+    margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  }
+  .crumb:hover { color: var(--moss); }
+  .team-head h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(34px, 5vw, 54px); line-height: 1.05;
+    letter-spacing: -.025em; margin-bottom: 16px; max-width: 18ch;
+  }
+  .team-head p { font-size: 18px; color: var(--ink-soft); max-width: 60ch; }
+
+  /* TEAM GRID */
+  .team-section { padding-bottom: 30px; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
+    color: var(--moss); text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 22px; display: flex; align-items: center; gap: 14px;
+  }
+  .section-label .bar { height: 1px; background: var(--line); flex: 1; }
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .member {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 28px; display: flex; flex-direction: column; gap: 14px;
+    transition: transform .22s, box-shadow .22s, border-color .22s;
+  }
+  .member:hover { transform: translateY(-3px); box-shadow: 0 18px 38px -24px rgba(27,42,38,.3); border-color: var(--glow); }
+  .member-avatar {
+    width: 72px; height: 72px; border-radius: 18px; display: flex;
+    align-items: center; justify-content: center; font-family: 'Fraunces', serif;
+    font-weight: 600; font-size: 28px; color: #fff; letter-spacing: -.01em;
+  }
+  .member-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
+  .member-role { font-size: 13.5px; color: var(--clay); font-weight: 500; margin-top: 2px; }
+  .member-bio { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; flex-grow: 1; }
+  .member-links { display: flex; gap: 10px; align-items: center; padding-top: 4px; }
+  .member-link {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px;
+    font-weight: 500; color: var(--moss); text-decoration: none;
+    padding: 7px 13px; border: 1px solid var(--line); border-radius: 9px;
+    transition: border-color .2s, background .2s;
+  }
+  .member-link:hover { border-color: var(--moss); background: #EAF2E3; }
+
+  /* JOIN CARD (dashed placeholder for growth) */
+  .member.join {
+    border-style: dashed; background: transparent; align-items: flex-start;
+    justify-content: center; text-align: left;
+  }
+  .member.join .member-avatar { background: var(--paper-2); color: var(--moss); border: 1px dashed var(--line); }
+  .member.join .member-bio { color: var(--ink-soft); }
+
+  /* CTA */
+  .cta-band {
+    background: var(--moss-deep); border-radius: 24px; padding: 52px 44px; text-align: center;
+    margin: 46px 0 80px; position: relative; overflow: hidden;
+  }
+  .cta-band::before { content: ''; position: absolute; width: 260px; height: 260px; border-radius: 50%; background: rgba(199,224,168,.13); top: -120px; right: -50px; }
+  .cta-band::after { content: ''; position: absolute; width: 180px; height: 180px; border-radius: 50%; background: rgba(91,139,176,.14); bottom: -80px; left: -30px; }
+  .cta-band h2 { font-family: 'Fraunces', serif; font-weight: 600; color: #fff; font-size: clamp(26px, 3.5vw, 36px); margin-bottom: 14px; position: relative; max-width: 20ch; margin-left: auto; margin-right: auto; }
+  .cta-band p { color: rgba(255,255,255,.82); font-size: 16.5px; max-width: 52ch; margin: 0 auto 26px; position: relative; }
+  .cta-band a {
+    background: #fff; color: var(--moss-deep); text-decoration: none; font-weight: 500;
+    padding: 14px 28px; border-radius: 12px; display: inline-flex; align-items: center; gap: 9px;
+    position: relative; transition: background .2s, transform .2s;
+  }
+  .cta-band a:hover { background: var(--glow); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--line); padding: 50px 0 38px; }
+  .foot-inner { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+  .foot-brand { max-width: 280px; }
+  .foot-brand p { font-size: 14px; color: var(--ink-soft); margin-top: 12px; line-height: 1.55; }
+  .foot-cols { display: flex; gap: 64px; flex-wrap: wrap; }
+  .foot-col h5 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); margin-bottom: 14px; font-weight: 600; }
+  .foot-col a { display: block; font-size: 14.5px; color: var(--ink); text-decoration: none; margin-bottom: 9px; transition: color .2s; }
+  .foot-col a:hover { color: var(--moss); }
+  .foot-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .foot-bottom a { color: var(--moss); text-decoration: none; }
+  .foot-bottom a:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) {
+    .nav-links { display: none; }
+    .team-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
+        <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
+        <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="23" cy="8" r="2.4" fill="#fff"/>
+      </svg>
+      Terrain
+    </a>
+    <div class="nav-links">
+      <a href="index.html#start">How it works</a>
+      <a href="datasets.html">Datasets</a>
+      <a href="projects.html">Projects</a>
+      <a href="programs.html">Programs</a>
+      <a href="index.html#faculty">Faculty</a>
+      <a href="team.html" class="active">Team</a>
+      <a href="index.html#join" class="nav-cta">Join the list</a>
+    </div>
+  </div>
+</nav>
+
+<header class="team-head">
+  <div class="wrap">
+    <a href="index.html" class="crumb">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to home
+    </a>
+    <h1>The people behind Terrain</h1>
+    <p>Terrain is a student project under UCLA DataX. We built it because getting started in environmental data science at UCLA was harder than it needed to be.</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="team-section">
+    <div class="section-label">Founding team <span class="bar"></span></div>
+    <div class="team-grid" id="teamGrid"></div>
+  </section>
+
+  <div class="cta-band">
+    <h2>Want to help build Terrain?</h2>
+    <p>We are looking for students to help write projects, curate datasets, or connect Terrain to campus groups. No prior experience required.</p>
+    <a href="mailto:krishmatai23@ucla.edu">
+      Get in touch
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a href="index.html" class="logo">
+          <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
+            <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
+            <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="23" cy="8" r="2.4" fill="#fff"/>
+          </svg>
+          Terrain
+        </a>
+        <p>A student-built entry point for environmental data science at UCLA.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Explore</h5>
+          <a href="index.html#start">How it works</a>
+          <a href="datasets.html">Dataset library</a>
+          <a href="projects.html">Project library</a>
+          <a href="index.html#faculty">Faculty directory</a>
+          <a href="programs.html">Programs</a>
+          <a href="team.html">Meet the team</a>
+        </div>
+        <div class="foot-col">
+          <h5>Demos</h5>
+          <a href="index.html#tracker">Carbon tracker</a>
+          <a href="projects.html">Starter projects</a>
+        </div>
+        <div class="foot-col">
+          <h5>Connect</h5>
+          <a href="team.html">Join the team</a>
+          <a href="index.html#join">Join the list</a>
+          <a href="mailto:krishmatai23@ucla.edu">Contact</a>
+          <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Terrain · <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX</a> student initiative</span>
+      <span><a href="mailto:krishmatai23@ucla.edu">krishmatai23@ucla.edu</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ===== TEAM =====
+     Add a member by appending an object. Fields:
+       name      - full name
+       role      - their role on Terrain / their program
+       initials  - 1-2 letters for the avatar
+       color     - avatar background (hex)
+       bio       - short description
+       email     - their email (omit or leave '' to hide the email button)
+       links     - optional extra links: [{ label: 'LinkedIn', url: 'https://...' }] */
+  const team = [
+    {
+      name: 'Krish Matai',
+      role: 'Founder · B.S. Statistics & Data Science, UCLA',
+      initials: 'KM',
+      color: '#2F6B4F',
+      bio: 'Started Terrain after struggling to find a way into environmental data science as a first-year. Researches Arctic sea ice with NASA ICESat-2 data and builds the datasets, projects, and tracker behind the site.',
+      email: 'krishmatai23@ucla.edu',
+      links: []
+    }
+  ];
+
+  const grid = document.getElementById('teamGrid');
+
+  function memberHTML(m) {
+    const emailBtn = m.email ? `
+      <a class="member-link" href="mailto:${m.email}">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="2.5" width="11" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M2 3.5l5 3.5 5-3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Email
+      </a>` : '';
+    const extra = (m.links || []).map(l => `
+      <a class="member-link" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+    return `
+      <div class="member">
+        <div class="member-avatar" style="background:${m.color}">${m.initials}</div>
+        <div>
+          <div class="member-name">${m.name}</div>
+          <div class="member-role">${m.role}</div>
+        </div>
+        <p class="member-bio">${m.bio}</p>
+        <div class="member-links">${emailBtn}${extra}</div>
+      </div>`;
+  }
+
+  // Render members + a dashed "your spot here" card to signal growth
+  grid.innerHTML = team.map(memberHTML).join('') + `
+    <div class="member join">
+      <div class="member-avatar">+</div>
+      <div>
+        <div class="member-name">Your spot here</div>
+        <div class="member-role">Joining soon</div>
+      </div>
+      <p class="member-bio">More of the team is coming shortly. Want to be one of them?</p>
+      <div class="member-links">
+        <a class="member-link" href="mailto:krishmatai23@ucla.edu">Join the team</a>
+      </div>
+    </div>`;
+</script>
+
+</body>
+</html>
