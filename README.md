@@ -6,10 +6,10 @@ Everything here is free and runs on free tools. No paid software, no powerful la
 
 ## What's on the site
 
-- **Datasets** — a curated library of real environmental datasets (CalEnviroScreen, EPA AirNow, NOAA, NASA Earthdata, USGS, and UCLA's own emissions data), each with a plain-English explainer and what kind of question it can answer.
-- **Starter projects** — guided projects in R or Python, sorted by level from total beginner to advanced. Each one is built on a real dataset and ends with something you actually made: a map, a chart, a model.
-- **Faculty** — a directory of UCLA researchers across departments who work in environmental data, so you know who to reach out to and why.
-- **Carbon tracker** — a live chart tracking UCLA's actual emissions against its 2025 carbon-neutrality pledge, built from the university's public reports.
+- **Datasets** a curated library of real environmental datasets (CalEnviroScreen, EPA AirNow, NOAA, NASA Earthdata, USGS, and UCLA's own emissions data), each with a plain-English explainer and what kind of question it can answer.
+- **Starter projects** guided projects in R or Python, sorted by level from total beginner to advanced. Each one is built on a real dataset and ends with something you actually made: a map, a chart, a model.
+- **Faculty** a directory of UCLA researchers across departments who work in environmental data, so you know who to reach out to and why.
+- **Carbon tracker** a live chart tracking UCLA's actual emissions against its 2025 carbon-neutrality pledge, built from the university's public reports.
 
 ## Who it's for
 
