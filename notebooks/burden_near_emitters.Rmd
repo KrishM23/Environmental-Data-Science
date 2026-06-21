@@ -1,0 +1,273 @@
+---
+title: "Do burdened communities sit near major emitters?"
+subtitle: "Terrain advanced project · R · CalEnviroScreen + Climate TRACE"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Do burdened communities sit near major emitters?
+
+**Terrain advanced project · R · CalEnviroScreen + Climate TRACE**
+
+Join CalEnviroScreen tract scores with Climate TRACE facility locations to test whether high-burden neighborhoods cluster near large point sources.
+
+**You will build:** a map of tracts and emitters, a buffer-distance analysis, and a short interpretation.
+
+---
+
+## Learning objectives
+
+- Combine environmental justice scores with an emissions inventory
+- Compute distances between census tract centroids and facilities
+- Compare groups with maps and simple models
+- Explain why proximity ≠ causation
+
+**Time:** ~3 hr · [CalEnviroScreen](../explainer.html?id=calenviroscreen) · [Climate TRACE](../explainer.html?id=climate-trace)
+
+---
+
+## For mentors
+
+- **Open in:** RStudio or Posit Cloud.
+- **Prerequisites:** CalEnviroScreen beginner project; basic ggplot comfort.
+- **Data:** Live CES from ArcGIS + real Climate TRACE CO₂ extract (2022).
+- **Watch for:** Students treating correlation as proof that facilities *cause* burden scores.
+
+---
+
+## 1. Setup
+
+```{r packages}
+required <- c("jsonlite", "httr", "dplyr", "ggplot2", "readr", "broom", "scales", "geosphere")
+missing <- required[!vapply(required, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
+if (length(missing)) install.packages(missing, repos = "https://cloud.r-project.org")
+library(jsonlite)
+library(httr)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(broom)
+library(scales)
+library(geosphere)
+```
+
+**Mentor check-in:** *Why do we need tract **centroids** instead of just county averages?*
+
+---
+
+## 2. Load Climate TRACE facilities (California)
+
+**Goal:** Import georeferenced facility-level CO₂ for 2022.
+
+**You should see:** ~330 facilities with `lat`, `lon`, and `emissions_co2e_tonnes`.
+
+```{r facilities}
+GITHUB_RAW <- "https://raw.githubusercontent.com/KrishM23/Environmental-Data-Science/main/notebooks/data"
+
+load_facilities <- function() {
+  paths <- c("data/climate_trace_ca_facilities.csv", "notebooks/data/climate_trace_ca_facilities.csv")
+  for (p in paths) if (file.exists(p)) return(read_csv(p, show_col_types = FALSE))
+  read_csv(paste0(GITHUB_RAW, "/climate_trace_ca_facilities.csv"), show_col_types = FALSE)
+}
+
+facilities <- load_facilities() |>
+  mutate(
+    lat = as.numeric(lat),
+    lon = as.numeric(lon),
+    emissions_co2e_tonnes = as.numeric(emissions_co2e_tonnes)
+  ) |>
+  filter(!is.na(lat), !is.na(lon), emissions_co2e_tonnes > 0)
+
+TOP_N_EMITTERS <- 40L
+BUFFER_KM <- 10
+
+top_emitters <- facilities |>
+  slice_max(emissions_co2e_tonnes, n = TOP_N_EMITTERS, with_ties = FALSE)
+
+message("Loaded ", nrow(facilities), " CA facilities · analyzing top ", nrow(top_emitters), " emitters")
+head(top_emitters |> select(source_name, sector, emissions_co2e_tonnes, lat, lon))
+```
+
+---
+
+## 3. Load CalEnviroScreen (Los Angeles County)
+
+**Goal:** Pull CES 4.0 scores and tract centroids for LA County (`6037` tracts).
+
+**Concept:** We use ArcGIS twice — once for scores, once for polygon centroids.
+
+```{r ces}
+CES_URL <- paste0(
+  "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/",
+  "CalEnviroScreen_4_0_Results_/FeatureServer/0/query"
+)
+
+fetch_ces_attributes <- function() {
+  rows <- list()
+  offset <- 0L
+  repeat {
+    q <- list(
+      where = "TractTXT LIKE '6037%'",
+      outFields = "TractTXT,CIscoreP,PollutionScore,PopCharScore,pmP",
+      returnGeometry = "false",
+      resultOffset = offset,
+      resultRecordCount = 2000,
+      f = "json"
+    )
+    resp <- GET(CES_URL, query = q)
+    stop_for_status(resp)
+    parsed <- fromJSON(content(resp, as = "text", encoding = "UTF-8"))
+    batch <- parsed$features$attributes
+    if (is.null(batch) || nrow(batch) == 0) break
+    rows[[length(rows) + 1]] <- batch
+    if (!isTRUE(parsed$exceededTransferLimit)) break
+    offset <- offset + nrow(batch)
+  }
+  bind_rows(rows)
+}
+
+centroid_from_rings <- function(rings) {
+  mat <- do.call(rbind, rings)
+  c(lon = mean(mat[, 1]), lat = mean(mat[, 2]))
+}
+
+fetch_ces_centroids <- function() {
+  rows <- list()
+  offset <- 0L
+  repeat {
+    q <- list(
+      where = "TractTXT LIKE '6037%'",
+      outFields = "TractTXT",
+      returnGeometry = "true",
+      outSR = 4326,
+      resultOffset = offset,
+      resultRecordCount = 500,
+      f = "json"
+    )
+    resp <- GET(CES_URL, query = q)
+    stop_for_status(resp)
+    parsed <- fromJSON(content(resp, as = "text", encoding = "UTF-8"))
+    feats <- parsed$features
+    if (is.null(feats) || nrow(feats) == 0) break
+    for (i in seq_len(nrow(feats))) {
+      rings <- feats$geometry[[i]]$rings[[1]]
+      cc <- centroid_from_rings(rings)
+      rows[[length(rows) + 1]] <- tibble(
+        TractTXT = feats$attributes$TractTXT[i],
+        lon = cc[["lon"]],
+        lat = cc[["lat"]]
+      )
+    }
+    if (!isTRUE(parsed$exceededTransferLimit)) break
+    offset <- offset + nrow(feats)
+  }
+  bind_rows(rows)
+}
+
+ces_scores <- fetch_ces_attributes()
+ces_centroids <- fetch_ces_centroids()
+
+tracts <- ces_centroids |>
+  inner_join(ces_scores, by = "TractTXT") |>
+  mutate(
+    CIscoreP = as.numeric(CIscoreP),
+    PollutionScore = as.numeric(PollutionScore),
+    PopCharScore = as.numeric(PopCharScore)
+  )
+
+message("LA County tracts with scores + centroids: ", nrow(tracts))
+head(tracts |> select(TractTXT, CIscoreP, lon, lat))
+```
+
+**Mentor check-in:** *Why use LA County tracts when emitters are statewide?*
+
+---
+
+## 4. Buffer analysis
+
+**Goal:** For each tract, find distance to the **nearest top emitter** and flag tracts within `BUFFER_KM`.
+
+```{r buffers}
+emitter_coords <- top_emitters |> select(lon, lat) |> as.matrix()
+tract_coords <- tracts |> select(lon, lat) |> as.matrix()
+
+dist_m <- distm(tract_coords, emitter_coords, fun = distHaversine)
+tracts <- tracts |>
+  mutate(
+    dist_nearest_km = apply(dist_m, 1, min) / 1000,
+    near_major_emitter = dist_nearest_km <= BUFFER_KM
+  )
+
+summary_tbl <- tracts |>
+  group_by(near_major_emitter) |>
+  summarise(
+    tracts = n(),
+    mean_CIscoreP = mean(CIscoreP, na.rm = TRUE),
+    median_CIscoreP = median(CIscoreP, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+print(summary_tbl)
+```
+
+**You should see:** Higher average `CIscoreP` for tracts within the buffer (often — not always perfectly separated).
+
+**Mentor check-in:** *If the difference is small, does that mean facilities don't matter?*
+
+---
+
+## 5. Model
+
+```{r model}
+fit <- lm(CIscoreP ~ near_major_emitter + PollutionScore + PopCharScore, data = tracts)
+tidy(fit)
+```
+
+---
+
+## 6. Map
+
+**Goal:** Plot tract burden (color) and top emitters (size).
+
+```{r map, fig.width=9, fig.height=6}
+ggplot() +
+  geom_point(
+    data = tracts,
+    aes(x = lon, y = lat, color = CIscoreP),
+    size = 1.6, alpha = 0.75
+  ) +
+  geom_point(
+    data = top_emitters,
+    aes(x = lon, y = lat, size = emissions_co2e_tonnes),
+    color = "#7B2D26", alpha = 0.85, shape = 17
+  ) +
+  scale_color_gradient(low = "#C7E0A8", high = "#7B2D26", labels = label_number(suffix = "%")) +
+  scale_size_continuous(labels = label_comma(), range = c(2, 8)) +
+  coord_fixed(ratio = 1.2, xlim = range(tracts$lon) + c(-0.5, 0.5), ylim = range(tracts$lat) + c(-0.3, 0.3)) +
+  labs(
+    title = "CalEnviroScreen burden vs. major emitters (California top facilities, LA tracts)",
+    subtitle = paste0("Orange triangles = top ", TOP_N_EMITTERS, " emitters · buffer = ", BUFFER_KM, " km"),
+    x = "Longitude", y = "Latitude",
+    color = "CES percentile",
+    size = "CO₂ (t)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+---
+
+## 7. Final takeaway
+
+**Mentor prompts:**
+
+1. Are tracts within `r BUFFER_KM` km of major emitters higher-burden on average?
+2. Why is **distance to a facility** an imperfect measure of exposure?
+3. What would you add next (wind direction, PM2.5 monitors, income controls)?
+
+**Mentor rubric:** Names both datasets · Avoids causal overclaim · Names one limitation
+
+**Next:** [Climate TRACE map (Python)](california_emitters_map.ipynb) · [CalEnviroScreen beginner](calenviroscreen_burden.Rmd)

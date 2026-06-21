@@ -24,6 +24,8 @@ Runnable code for projects on [Terrain](https://github.com/KrishM23/Environmenta
 |---------|------|----------|-------------|
 | Map California's largest emitters | [`california_emitters_map.ipynb`](california_emitters_map.ipynb) | Python · Colab | Climate TRACE CO₂ (334 CA facilities, 2022) |
 | Compare heat-wave trends across Western cities | [`western_heat_waves.ipynb`](western_heat_waves.ipynb) | Python · Colab | NOAA NCEI (live daily TMAX) |
+| Measure ice-sheet change with ICESat-2 | [`icesat2_elevation_change.ipynb`](icesat2_elevation_change.ipynb) | Python · Colab | NASA ATL06 via Earthdata |
+| Do burdened communities sit near major emitters? | [`burden_near_emitters.Rmd`](burden_near_emitters.Rmd) | R · RStudio | CalEnviroScreen + Climate TRACE |
 
 ## How to run (mentors)
 
@@ -76,6 +78,8 @@ jupyter notebook la_air_quality_map.ipynb
 | Burden + air quality | CES live + AirNow live (API key) | — |
 | California emitters map | Climate TRACE v5.7.0 extract (2022); optional live zip refresh | `data/climate_trace_ca_facilities.csv` |
 | Western heat waves | Yes (NOAA NCEI, decade pulls) | — |
+| ICESat-2 elevation change | Yes (Earthdata + ATL06 HDF5 download) | — |
+| Burden near emitters | CES ArcGIS + Climate TRACE extract | `data/climate_trace_ca_facilities.csv` |
 
 ## Adding notebooks
 

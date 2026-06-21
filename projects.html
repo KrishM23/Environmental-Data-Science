@@ -417,7 +417,7 @@
       build: 'An elevation-change profile along an ice sheet with uncertainty bands and a short methods note.',
       dataset: 'ICESat-2', datasetLink: 'explainer.html?id=icesat-2',
       skills: ['HDF5 / xarray', 'Along-track analysis', 'Change detection'],
-      video: '#', notebook: '#'
+      video: '#', notebook: 'notebooks/icesat2_elevation_change.ipynb'
     },
     {
       title: 'Compare heat-wave trends across Western cities',
@@ -435,11 +435,9 @@
       build: 'A map linking census-tract burden scores to nearby facilities, plus a buffer analysis and written interpretation.',
       dataset: 'CalEnviroScreen', datasetLink: 'explainer.html?id=calenviroscreen',
       skills: ['Spatial buffers', 'Two-dataset joins', 'EJ interpretation'],
-      video: '#', notebook: '#'
+      video: '#', notebook: 'notebooks/burden_near_emitters.Rmd'
     }
   ];
-
-  const groupsEl = document.getElementById('groups');
   const countEl = document.getElementById('count');
   const searchEl = document.getElementById('search');
   let activeFilter = 'all';
