@@ -12,16 +12,35 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 **Terrain intermediate project · R · UCLA Emissions Reports**
 
-Recreate Terrain's homepage carbon tracker: verified UCLA greenhouse gas totals (Scopes 1+2+3), a linear trend from the 2019 baseline, and UC's **90% reduction by 2045** commitment line.
+Recreate Terrain's homepage carbon tracker: verified UCLA greenhouse gas totals (Scopes 1+2+3), a trend from the 2019 baseline, and UC's **90% reduction by 2045** commitment.
 
-**You will build:** a reproducible emissions chart plus a projected year to reach the 2045 target.
+**You will build:** a reproducible emissions chart plus interpretation of progress vs. pace.
 
-**Before you start**
+---
 
-- Open in **RStudio** or Posit Cloud. Same data and logic as [Terrain's live tracker](../index.html#tracker).
-- Read the [UCLA emissions explainer](../explainer.html?id=ucla-emissions).
+## Learning objectives
+
+- Read a verified campus GHG inventory time series
+- Compute a policy target line (90% cut from 2019 by 2045)
+- Fit and interpret a simple linear trend
+- Explain why extrapolation ≠ forecast
+
+**Time:** ~1.5 hr · Compare with [live tracker](../index.html#tracker) · [Explainer](../explainer.html?id=ucla-emissions)
+
+---
+
+## For mentors
+
+- **Prerequisites:** One beginner project; basic comfort with plots.
+- **Key vocabulary:** *Scope 1* = on-campus fuels · *Scope 2* = purchased electricity · *Scope 3* = commute, travel, etc.
+- **Watch for:** Students mixing up the old 2025 net-zero pledge with the current **2045 / 90%** policy.
+- **Tip:** Open [Terrain's tracker](../index.html#tracker) side-by-side and compare lines.
+
+---
 
 ## 1. Setup
+
+**Mentor check-in:** *What does "metric tons CO₂e" mean — why the "e"?*
 
 ```{r packages}
 required <- c("dplyr", "ggplot2", "readr", "scales", "broom")
@@ -34,9 +53,15 @@ library(scales)
 library(broom)
 ```
 
+---
+
 ## 2. Load verified UCLA emissions
 
-Totals are calendar-year Scopes 1+2+3 from UC Annual Sustainability Reports (same series as `index.html`).
+**Goal:** Import the same annual totals Terrain uses on the homepage.
+
+**Concept:** Each row is one calendar year of **Scopes 1+2+3** from UC Annual Sustainability Reports.
+
+**You should see:** A table from 2009–2023 with `year` and `emissions`.
 
 ```{r load}
 GITHUB_RAW <- "https://raw.githubusercontent.com/KrishM23/Environmental-Data-Science/main/notebooks/data"
@@ -44,13 +69,18 @@ GITHUB_RAW <- "https://raw.githubusercontent.com/KrishM23/Environmental-Data-Sci
 load_emissions <- function() {
   paths <- c("data/ucla_emissions.csv", "notebooks/data/ucla_emissions.csv")
   for (p in paths) if (file.exists(p)) return(read_csv(p, show_col_types = FALSE))
-  url <- paste0(GITHUB_RAW, "/ucla_emissions.csv")
-  read_csv(url, show_col_types = FALSE)
+  read_csv(paste0(GITHUB_RAW, "/ucla_emissions.csv"), show_col_types = FALSE)
 }
 
 emissions <- load_emissions()
 emissions
 ```
+
+**Goal:** Define UC policy constants.
+
+**You should see:** Baseline **335,331 t** and 2045 target **~33,533 t** (90% reduction).
+
+**Mentor check-in:** *Why use 2019 as baseline instead of the lowest year on the chart?*
 
 ```{r meta}
 BASELINE_YEAR <- 2019L
@@ -70,7 +100,17 @@ cat("2019 baseline:", comma(BASELINE_EMISSIONS), "t CO2e\n")
 cat("2045 target (90% cut):", comma(target_emissions), "t CO2e\n")
 ```
 
-## 3. Fit a trend from the 2019 baseline
+---
+
+## 3. Fit a trend from 2019
+
+**Goal:** Quantify recent direction with `lm()` — same idea as the blue trend on Terrain.
+
+**Concept:** We fit only **2019 onward** because COVID distorts 2020 and policy baseline is 2019.
+
+**You should see:** Regression table with slope (tons per year) — negative slope = declining emissions.
+
+**Mentor check-in:** *If slope were positive, what would that imply about reaching 2045?*
 
 ```{r trend}
 recent <- emissions |> filter(year >= BASELINE_YEAR)
@@ -80,11 +120,6 @@ fit_tidy
 
 slope <- coef(fit)[["year"]]
 intercept <- coef(fit)[["(Intercept)"]]
-years_ahead <- 2030:2050
-projected <- tibble(
-  year = years_ahead,
-  projected = slope * years_ahead + intercept
-)
 
 reach_year <- if (slope >= 0) {
   NA_integer_
@@ -101,7 +136,15 @@ if (!is.na(reach_year)) {
 }
 ```
 
+---
+
 ## 4. Build the chart
+
+**Goal:** Layer three stories on one plot: **reported** (dots), **trend** (blue), **commitment pace** (dashed orange).
+
+**You should see:** Chart matching the structure of [Terrain's live tracker](../index.html#tracker).
+
+**Mentor check-in:** *Is the latest year above or below the dashed commitment line?*
 
 ```{r chart, fig.width=9, fig.height=5}
 chart_years <- seq(min(emissions$year), TARGET_YEAR)
@@ -116,8 +159,8 @@ trend_df <- tibble(
 )
 
 latest <- emissions |> slice_tail(n = 1)
-pace_2023 <- commitment_pace(latest$year)
-gap <- latest$emissions - pace_2023
+pace_latest <- commitment_pace(latest$year)
+gap <- latest$emissions - pace_latest
 
 ggplot() +
   geom_line(data = commitment_df, aes(x = year, y = commitment),
@@ -141,10 +184,16 @@ ggplot() +
   theme(plot.title = element_text(face = "bold"))
 ```
 
-## 5. Write your takeaway
+---
 
-1. How far is UCLA's latest total from the **2019 baseline** and from the **2045 target**?
-2. Is UCLA above or below the **linear commitment pace** in the latest year?
-3. Why should you treat the dashed trend line as illustrative, not a prediction?
+## 5. Final takeaway
 
-**Next:** Browse [Terrain's live tracker](../index.html#tracker) or explore [campus programs](../programs.html).
+**Mentor prompts:**
+
+1. How far is the latest total from the **2019 baseline** and **2045 target**?
+2. Above or below the **commitment pace** this year?
+3. Why is the trend line illustrative, not a prediction?
+
+**Extension:** Write a 150-word memo a campus administrator could read.
+
+**Next:** [Live tracker](../index.html#tracker) · [Programs](../programs.html)

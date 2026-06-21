@@ -402,21 +402,39 @@
       video: '#', notebook: 'notebooks/pollution_burden_air_quality.Rmd'
     },
     {
-      title: 'Read sea ice from satellite data',
+      title: 'Map California\u2019s largest emitters',
       level: 'advanced', time: '~3 hr', lang: 'Python',
-      desc: 'Open real NASA Earthdata satellite files and extract a usable sea-ice signal from raw NetCDF. A genuine step into the formats and scale that professional earth-science work runs on.',
-      build: 'A processed sea-ice map rendered from raw satellite files.',
-      dataset: 'NASA Earthdata', datasetLink: 'explainer.html?id=nasa-earthdata',
-      skills: ['NetCDF / HDF', 'Array handling (xarray)', 'Geospatial plotting'],
+      desc: 'Download Climate TRACE facility-level greenhouse gas inventory for California, rank the biggest sources by sector, and map where emissions concentrate. Real inventory work at the scale policy analysts use.',
+      build: 'A geospatial map of top emitters plus a sector breakdown chart for your chosen county or region.',
+      dataset: 'Climate TRACE', datasetLink: 'explainer.html?id=climate-trace',
+      skills: ['Large CSV wrangling', 'Geospatial joins', 'Sector aggregation'],
+      video: '#', notebook: 'notebooks/california_emitters_map.ipynb'
+    },
+    {
+      title: 'Measure ice-sheet change with ICESat-2',
+      level: 'advanced', time: '~3 hr', lang: 'Python',
+      desc: 'Open NASA ICESat-2 laser altimetry (ATL06) and compute elevation change along a repeating orbit track. The same workflow researchers use for ice-sheet mass balance and sea-level research.',
+      build: 'An elevation-change profile along an ice sheet with uncertainty bands and a short methods note.',
+      dataset: 'ICESat-2', datasetLink: 'explainer.html?id=icesat-2',
+      skills: ['HDF5 / xarray', 'Along-track analysis', 'Change detection'],
       video: '#', notebook: '#'
     },
     {
-      title: 'Fill the gaps with spatial interpolation',
-      level: 'advanced', time: '~4 hr', lang: 'Python',
-      desc: 'Start with scattered sensor readings and estimate missing values across space using kriging. A standard method for turning incomplete environmental data into a continuous map.',
-      build: 'A continuous interpolated surface from scattered input points, with uncertainty.',
-      dataset: 'NASA Earthdata', datasetLink: 'explainer.html?id=nasa-earthdata',
-      skills: ['Kriging', 'Spatial statistics', 'Uncertainty mapping'],
+      title: 'Compare heat-wave trends across Western cities',
+      level: 'advanced', time: '~2.5 hr', lang: 'Python',
+      desc: 'Pull daily temperature from NOAA for several cities, define heat-wave thresholds, and compare how often extreme heat arrived in the 1980s vs. the 2010s. A step up from single-city trend lines into event-based climate analysis.',
+      build: 'A multi-city dashboard of heat-wave frequency and duration with decade-over-decade comparison.',
+      dataset: 'NOAA Climate Data', datasetLink: 'explainer.html?id=noaa-climate',
+      skills: ['Multi-station pulls', 'Event detection', 'Decade comparison'],
+      video: '#', notebook: 'notebooks/western_heat_waves.ipynb'
+    },
+    {
+      title: 'Do burdened communities sit near major emitters?',
+      level: 'advanced', time: '~3 hr', lang: 'R',
+      desc: 'Join CalEnviroScreen tract scores with Climate TRACE facility locations to test whether the highest-burden neighborhoods cluster near large point sources. Environmental justice meets emissions inventory science.',
+      build: 'A map linking census-tract burden scores to nearby facilities, plus a buffer analysis and written interpretation.',
+      dataset: 'CalEnviroScreen', datasetLink: 'explainer.html?id=calenviroscreen',
+      skills: ['Spatial buffers', 'Two-dataset joins', 'EJ interpretation'],
       video: '#', notebook: '#'
     }
   ];
@@ -448,7 +466,7 @@
       const siteUrl = new URL(path, PUBLIC_ORIGIN.endsWith('/') ? PUBLIC_ORIGIN : PUBLIC_ORIGIN + '/').href;
       return `https://colab.research.google.com/#create=true&url=${encodeURIComponent(siteUrl)}`;
     }
-    /* Standard Colab GitHub opener — loads the .ipynb directly (repo must be public). */
+    /* Colab opens notebooks from public GitHub — file must exist on the branch below. */
     return `https://colab.research.google.com/github/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
   }
 
@@ -456,13 +474,14 @@
     if (!path || path === '#') {
       return actionBtn('#', 'Open notebook', false);
     }
+    const ghUrl = `https://github.com/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
+    if (path.endsWith('.Rmd')) {
+      return `<a class="pbtn pbtn-primary" href="${ghUrl}" target="_blank" rel="noopener">View on GitHub</a>
+        <a class="pbtn" href="${ghUrl}?raw=true" target="_blank" rel="noopener" download>Download .Rmd</a>`;
+    }
     const colabUrl = notebookColabUrl(path);
-    const colabLabel = path.endsWith('.Rmd') ? 'View on GitHub' : 'Open in Colab';
-    const colabTitle = path.endsWith('.Rmd')
-      ? 'R notebooks open in RStudio — download the .Rmd file'
-      : 'Requires a public GitHub repo (Settings → change visibility) or set publicOrigin in assets/site-config.js';
-    return `<a class="pbtn pbtn-primary" href="${path}">Open notebook</a>
-      <a class="pbtn" href="${colabUrl}" target="_blank" rel="noopener" title="${colabTitle}">${colabLabel}</a>`;
+    return `<a class="pbtn pbtn-primary" href="${colabUrl}" target="_blank" rel="noopener" title="Opens in Google Colab from GitHub (${GITHUB_REPO})">Open in Colab</a>
+      <a class="pbtn" href="${ghUrl}" target="_blank" rel="noopener">View on GitHub</a>`;
   }
 
   function cardHTML(p) {

@@ -14,18 +14,36 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 Join CalEnviroScreen burden scores at monitoring locations with EPA AirNow readings to ask: **do higher-burden communities show worse measured air quality?**
 
-**You will build:** a scatter plot and simple linear model linking CES scores to PM2.5 / AQI.
+**You will build:** a scatter plot and simple linear model linking CES scores to AQI.
 
-**Before you start**
+---
 
-- Open in **RStudio** or Posit Cloud.
-- CalEnviroScreen is fetched live from California's ArcGIS service.
-- AirNow defaults to bundled monitor readings; set `USE_LIVE_AIRNOW <- TRUE` and add a free [API key](https://docs.airnowapi.org/account/request/) for live data.
+## Learning objectives
+
+- Merge two real environmental datasets with different geography
+- Use a spatial lookup (point → census tract)
+- Run and interpret a simple regression and correlation
+- Explain why correlation ≠ causation in air-quality work
+
+**Time:** ~2 hr · [CalEnviroScreen](../explainer.html?id=calenviroscreen) · [AirNow](../explainer.html?id=epa-airnow)
+
+---
+
+## For mentors
+
+- **Prerequisites:** Beginner CalEnviroScreen project helps; comfort with scatter plots.
+- **Two datasets:** CES = long-term burden ranking · AirNow = recent monitor snapshot.
+- **Watch for:** Students expecting perfect correlation — real air quality varies hour-to-hour; CES is long-term.
+- **Live AirNow:** Requires a free API key — set `AIRNOW_API_KEY` in your environment or paste below.
+
+---
 
 ## 1. Setup
 
+**Mentor check-in:** *Why can't we download one CSV that already has both CES and AQI?*
+
 ```{r packages}
-required <- c("jsonlite", "httr", "dplyr", "ggplot2", "readr", "broom")
+required <- c("jsonlite", "httr", "dplyr", "ggplot2", "readr", "broom", "scales")
 missing <- required[!vapply(required, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
 if (length(missing)) install.packages(missing, repos = "https://cloud.r-project.org")
 library(jsonlite)
@@ -37,21 +55,20 @@ library(broom)
 library(scales)
 ```
 
+---
+
 ## 2. Load AirNow monitor readings
 
+**Goal:** Build a table of LA-area monitors with latitude, longitude, and AQI.
+
+**Concept:** Each row is a **monitoring site**, not a person. We keep one reading per site (highest AQI if duplicates).
+
+**You should see:** ~15 rows with `SiteName`, `AQI`, `Latitude`, `Longitude`.
+
+**Mentor check-in:** *What is AQI — a pollutant concentration or an index?*
+
 ```{r airnow}
-USE_LIVE_AIRNOW <- FALSE
-AIRNOW_API_KEY <- ""
-
-GITHUB_RAW <- "https://raw.githubusercontent.com/KrishM23/Environmental-Data-Science/main/notebooks/data"
-
-load_airnow_sample <- function() {
-  paths <- c("data/airnow_la_sample.json", "notebooks/data/airnow_la_sample.json")
-  for (p in paths) {
-    if (file.exists(p)) return(fromJSON(p, flatten = TRUE))
-  }
-  fromJSON(paste0(GITHUB_RAW, "/airnow_la_sample.json"), flatten = TRUE)
-}
+AIRNOW_API_KEY <- Sys.getenv("AIRNOW_API_KEY", "")
 
 fetch_airnow_live <- function(api_key, lat = 34.05, lon = -118.25, distance = 75) {
   resp <- GET(
@@ -68,13 +85,15 @@ fetch_airnow_live <- function(api_key, lat = 34.05, lon = -118.25, distance = 75
   fromJSON(content(resp, as = "text", encoding = "UTF-8"), flatten = TRUE)
 }
 
-if (USE_LIVE_AIRNOW && nzchar(AIRNOW_API_KEY)) {
-  monitors <- fetch_airnow_live(AIRNOW_API_KEY)
-  message("Fetched ", nrow(monitors), " live AirNow observations")
-} else {
-  monitors <- load_airnow_sample()
-  message("Using bundled AirNow sample (", nrow(monitors), " observations)")
+if (!nzchar(AIRNOW_API_KEY)) {
+  stop(
+    "AirNow requires a free API key. Get one at https://docs.airnowapi.org/account/request/ ",
+    "then set AIRNOW_API_KEY in your R environment or paste it above."
+  )
 }
+
+monitors <- fetch_airnow_live(AIRNOW_API_KEY)
+message("Fetched ", nrow(monitors), " live AirNow observations")
 
 monitors <- monitors |>
   mutate(
@@ -90,9 +109,19 @@ monitors <- monitors |>
 head(monitors |> select(SiteName, ReportingArea, ParameterName, AQI, Latitude, Longitude))
 ```
 
-## 3. Look up CalEnviroScreen scores at each monitor
+---
 
-For each monitor location we query CalEnviroScreen 4.0 and read the **CIscoreP** percentile for that census tract.
+## 3. Look up CalEnviroScreen at each monitor
+
+**Goal:** For each monitor's coordinates, find which census tract it sits in and that tract's **CIscoreP**.
+
+**Concept:** This is a **spatial join** simplified — we ask ArcGIS "which tract contains this point?"
+
+**You should see:** `Matched N monitors to census tracts` and a merged table with both AQI and CIscoreP.
+
+**Mentor check-in:** *Why match monitors to tracts instead of comparing whole counties?*
+
+**If something breaks:** Slow internet can delay lookups (~1 sec per monitor). Sample AirNow still works offline.
 
 ```{r ces_lookup}
 CES_URL <- paste0(
@@ -126,7 +155,8 @@ for (i in seq_len(nrow(monitors))) {
     ces
   )
 }
-joined <- bind_rows(ces_at_monitors)
+
+joined <- bind_rows(ces_at_monitors) |>
   mutate(
     CIscoreP = as.numeric(CIscoreP),
     PollutionScore = as.numeric(PollutionScore),
@@ -137,7 +167,17 @@ message("Matched ", nrow(joined), " monitors to census tracts")
 joined |> select(SiteName, ReportingArea, AQI, CIscoreP, PollutionScore, pmP)
 ```
 
-## 4. Explore the relationship
+---
+
+## 4. Model the relationship
+
+**Goal:** Test whether higher CES burden aligns with higher measured AQI.
+
+**Concept:** `lm(AQI ~ CIscoreP)` fits a straight line. `cor.test()` gives correlation strength. Neither proves causation.
+
+**You should see:** Regression coefficients and a p-value for correlation.
+
+**Mentor check-in:** *If correlation is weak, does that mean CES is "wrong"?* (No — they measure different things and timescales.)
 
 ```{r model}
 fit <- lm(AQI ~ CIscoreP, data = joined)
@@ -146,6 +186,16 @@ tidy(fit)
 cor_test <- cor.test(joined$CIscoreP, joined$AQI)
 cor_test
 ```
+
+---
+
+## 5. Plot
+
+**Goal:** Visualize the relationship for discussion.
+
+**You should see:** Scatter with points colored by pollutant type and a shaded regression band.
+
+**Mentor check-in:** *Point to one outlier — what might explain it?* (Weather, ozone day, monitor near freeway, etc.)
 
 ```{r scatter, fig.width=8, fig.height=5}
 ggplot(joined, aes(x = CIscoreP, y = AQI)) +
@@ -164,10 +214,16 @@ ggplot(joined, aes(x = CIscoreP, y = AQI)) +
   theme(plot.title = element_text(face = "bold"))
 ```
 
-## 5. Write your takeaway
+---
 
-1. Is the correlation positive, negative, or weak? Does that match your expectations?
-2. Why is **correlation not causation** here? (Think monitor placement, weather, timing.)
-3. What would you need to strengthen this analysis (daily averages, PM2.5 concentrations, more sites)?
+## 6. Final takeaway
 
-**Next:** Compare with the [beginner CalEnviroScreen notebook](calenviroscreen_burden.Rmd) or the [AirNow map project](la_air_quality_map.ipynb).
+**Student writes; mentor reviews:**
+
+1. Is correlation positive, negative, or weak? Expected?
+2. Why is **correlation not causation** here?
+3. What would strengthen the analysis? (daily averages, PM2.5 µg/m³, more sites, longer time window)
+
+**Mentor rubric:** Mentions both datasets · Names a limitation · Avoids causal overclaim ("CES causes bad air")
+
+**Next:** [CalEnviroScreen beginner notebook](calenviroscreen_burden.Rmd) · [AirNow map](la_air_quality_map.ipynb)

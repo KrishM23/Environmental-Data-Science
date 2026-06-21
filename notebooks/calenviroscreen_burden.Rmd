@@ -1,6 +1,6 @@
 ---
 title: "Who carries the pollution burden?"
-subtitle: "Terrain starter project · R · CalEnviroScreen"
+subtitle: "Terrain beginner project · R · CalEnviroScreen"
 output: html_document
 ---
 
@@ -10,19 +10,43 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 # Who carries the pollution burden?
 
-**Terrain starter project · R · CalEnviroScreen**
+**Terrain beginner project · R · CalEnviroScreen**
 
 Use CalEnviroScreen 4.0 to explore which Los Angeles County communities face the highest combined pollution and vulnerability.
 
 **You will build:** a ranked chart of the most-burdened census tracts and a short written takeaway.
 
-**Before you start**
+---
 
-- Open this file in **RStudio** (or Posit Cloud) and click **Knit**, or run chunk-by-chunk with `Ctrl/Cmd + Shift + Enter`.
-- Install packages once if needed (see chunk below).
-- Read the [CalEnviroScreen explainer](../explainer.html?id=calenviroscreen) on Terrain.
+## Learning objectives
+
+By the end, you should be able to:
+
+- Explain what CalEnviroScreen measures at the census-tract level
+- Load official California environmental justice data from a public API
+- Rank and visualize communities by burden score
+- Describe why CES is a *screening* tool, not individual risk
+
+**Time:** ~1 hr · **Dataset:** [CalEnviroScreen explainer](../explainer.html?id=calenviroscreen)
+
+---
+
+## For mentors
+
+- **Open in:** RStudio or Posit Cloud (Knit or run chunk-by-chunk with `Ctrl/Cmd + Enter`).
+- **Prerequisites:** None. First R project on Terrain is fine.
+- **Watch for:** Students treating percentile scores like raw pollution units — reinforce that **CIscoreP** is a 0–100 ranking.
+- **Flow:** Read each section → student runs chunk → use *Mentor check-in* before continuing.
+
+---
 
 ## 1. Setup
+
+**Goal:** Load the R packages we need.
+
+**Concept:** `httr` talks to the web API; `dplyr` wrangles tables; `ggplot2` draws charts.
+
+**Mentor check-in:** *Have you used R before, or is this your first script?*
 
 ```{r packages}
 required <- c("jsonlite", "httr", "dplyr", "ggplot2", "scales")
@@ -31,14 +55,29 @@ if (length(missing)) {
   install.packages(missing, repos = "https://cloud.r-project.org")
 }
 library(jsonlite)
+library(httr)
 library(dplyr)
 library(ggplot2)
 library(scales)
 ```
 
-## 2. Load CalEnviroScreen data (Los Angeles County)
+**You should see:** Package load messages only (or a one-time install prompt).
 
-We pull CES 4.0 from California's public ArcGIS service. Tract IDs starting with `6037` are in Los Angeles County.
+---
+
+## 2. Load CalEnviroScreen (Los Angeles County)
+
+**Goal:** Pull CES 4.0 tract scores into a data frame.
+
+**Concept:** California publishes CalEnviroScreen on ArcGIS. Tract IDs starting with `6037` are in **Los Angeles County**. We paginate because there are 2,000+ tracts.
+
+**Run the chunk below.**
+
+**You should see:** A message like `Fetched 2343 LA County tracts` and a preview table with `TractTXT`, `CIscoreP`, etc.
+
+**Mentor check-in:** *What is a census tract — a person, a neighborhood, or something else?*
+
+**If something breaks:** Set `USE_SAMPLE <- TRUE` to use bundled offline data, or check internet access.
 
 ```{r fetch}
 fetch_ces_la <- function() {
@@ -69,7 +108,7 @@ fetch_ces_la <- function() {
   dplyr::bind_rows(rows)
 }
 
-USE_SAMPLE <- FALSE  # set TRUE to use bundled JSON offline
+USE_SAMPLE <- FALSE  # Mentor: set TRUE if offline
 
 if (USE_SAMPLE) {
   sample_path <- if (file.exists("data/ces4_la_county.json")) {
@@ -87,9 +126,17 @@ if (USE_SAMPLE) {
 head(ces)
 ```
 
+---
+
 ## 3. Rank the highest-burden tracts
 
-`CIscoreP` is the CalEnviroScreen percentile (0–100; higher = greater cumulative burden).
+**Goal:** Sort tracts by **CIscoreP** (CalEnviroScreen percentile, 0–100).
+
+**Concept:** Higher percentile = greater combined pollution + population vulnerability relative to all California tracts.
+
+**You should see:** Summary stats and a table of the **top 15** tracts with scores often above the 75th percentile.
+
+**Mentor check-in:** *If a tract has CIscoreP = 90, what does that mean in plain English?*
 
 ```{r rank}
 ranked <- ces |>
@@ -106,7 +153,17 @@ summary(ranked$CIscoreP)
 top15 |> select(rank, TractTXT, CIscoreP, PollutionScore, PopCharScore)
 ```
 
+---
+
 ## 4. Plot
+
+**Goal:** Turn the ranking into a chart you can show someone.
+
+**Concept:** Horizontal bars make long tract labels readable. Color intensity reinforces magnitude.
+
+**You should see:** A bar chart titled *Highest CalEnviroScreen burden in Los Angeles County*.
+
+**Mentor check-in:** *For the #1 tract, is `PollutionScore` or `PopCharScore` larger? What story does that tell?*
 
 ```{r plot, fig.width=8, fig.height=5}
 ggplot(top15, aes(x = CIscoreP, y = reorder(tract_label, CIscoreP), fill = CIscoreP)) +
@@ -124,12 +181,16 @@ ggplot(top15, aes(x = CIscoreP, y = reorder(tract_label, CIscoreP), fill = CIsco
   theme(plot.title = element_text(face = "bold"))
 ```
 
-## 5. Write your takeaway
+---
 
-Answer in 3–4 sentences:
+## 5. Final takeaway
+
+Have the student write **3–4 sentences**. Use these prompts:
 
 1. What percentile range do the top tracts fall in?
-2. For the #1 tract, is pollution burden or population vulnerability higher (`PollutionScore` vs `PopCharScore`)?
+2. For the #1 tract, is pollution burden or population vulnerability higher?
 3. Why is CalEnviroScreen a *screening* tool, not an individual risk score?
 
-**Next:** Pair this with live air readings in the [AirNow Python notebook](la_air_quality_map.ipynb), or browse more on [Terrain](../datasets.html).
+**Mentor rubric:** Names specific scores · Uses “percentile” correctly · Mentions screening vs. individual risk
+
+**Next:** [AirNow map (Python)](la_air_quality_map.ipynb) · [Terrain datasets](../datasets.html)

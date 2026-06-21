@@ -18,7 +18,20 @@ Runnable code for projects on [Terrain](https://github.com/KrishM23/Environmenta
 | Track a watershed through a drought | [`watershed_drought.ipynb`](watershed_drought.ipynb) | Python · Colab | USGS NWIS streamflow |
 | Connect pollution burden to air quality | [`pollution_burden_air_quality.Rmd`](pollution_burden_air_quality.Rmd) | R · RStudio | CalEnviroScreen + EPA AirNow |
 
-## How to run
+## Advanced
+
+| Project | File | Language | Data source |
+|---------|------|----------|-------------|
+| Map California's largest emitters | [`california_emitters_map.ipynb`](california_emitters_map.ipynb) | Python · Colab | Climate TRACE CO₂ (334 CA facilities, 2022) |
+| Compare heat-wave trends across Western cities | [`western_heat_waves.ipynb`](western_heat_waves.ipynb) | Python · Colab | NOAA NCEI (live daily TMAX) |
+
+## How to run (mentors)
+
+**Suggested session:** Intro (5 min) → work through sections with check-ins (45–90 min) → takeaway writing (10 min).
+
+- **Python / Colab:** Click **Open in Colab** on project cards. Read the *For mentors* box at the top with the student before running code.
+- **R / RStudio:** Open the `.Rmd`, run chunk-by-chunk, use **Mentor check-in** questions literally — they are written for you.
+- Each section follows: **Goal → Concept → Run cell → You should see → Mentor check-in**
 
 ### Python (Colab)
 
@@ -45,12 +58,14 @@ jupyter notebook la_air_quality_map.ipynb
 
 | Notebook | Live by default? | Fallback |
 |----------|------------------|----------|
-| Air quality map | Sample (AirNow needs free API key) | `data/airnow_la_sample.json` |
-| Temperature trend | Yes (NOAA API) | `data/noaa_lax_tmax_daily.csv` |
-| CalEnviroScreen burden | Yes (ArcGIS) | `data/ces4_la_county.json` |
+| Air quality map | Live AirNow (free API key required) | — |
+| Temperature trend | Yes (NOAA API) | `data/noaa_lax_tmax_daily.csv` (offline only) |
+| CalEnviroScreen burden | Yes (ArcGIS) | `data/ces4_la_county.json` (offline only) |
 | UCLA carbon tracker | Bundled UC verified series | `data/ucla_emissions.csv` |
 | Watershed drought | Yes (USGS NWIS) | — |
-| Burden + air quality | CES live + AirNow sample | `data/airnow_la_sample.json` |
+| Burden + air quality | CES live + AirNow live (API key) | — |
+| California emitters map | Climate TRACE v5.7.0 extract (2022); optional live zip refresh | `data/climate_trace_ca_facilities.csv` |
+| Western heat waves | Yes (NOAA NCEI, decade pulls) | — |
 
 ## Adding notebooks
 

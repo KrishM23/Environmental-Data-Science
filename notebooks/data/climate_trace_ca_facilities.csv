@@ -1,0 +1,335 @@
+source_id,source_name,sector,subsector,lat,lon,gas,emissions_co2e_tonnes,year
+1753274,Tesoro Carson Refinery,fossil-fuel-operations,oil-and-gas-refining,33.818578,-118.236677,co2,4437145.164237225,2022
+1753282,Chevron El Segundo Refinery,fossil-fuel-operations,oil-and-gas-refining,33.911422,-118.410994,co2,3288132.3669939777,2022
+53058945,Midway-Sunset CA,fossil-fuel-operations,oil-and-gas-production,35.14,-119.48,co2,2713202.592146288,2022
+1753290,Chevron Richmmond Refinery,fossil-fuel-operations,oil-and-gas-refining,37.94978,-122.398665,co2,2565905.5504699424,2022
+25449206,AES Alamitos LLC,power,electricity-generation,33.768,-118.1005,co2,2326100.0,2022
+1753308,PBF Torrance Refinery,fossil-fuel-operations,oil-and-gas-refining,33.853208,-118.332317,co2,1955766.4632863812,2022
+1753309,PBF Martinex Refinery,fossil-fuel-operations,oil-and-gas-refining,38.019952,-122.111017,co2,1911761.7179749373,2022
+25449367,Chuck Lenzie Generating Station,power,electricity-generation,36.3837,-114.9218,co2,1796120.0,2022
+1753313,Valero Benecia Refinery,fossil-fuel-operations,oil-and-gas-refining,38.072007,-122.138319,co2,1772413.3578220326,2022
+1753315,Phillips 66 Wilmington Refinery,fossil-fuel-operations,oil-and-gas-refining,33.810856,-118.243473,co2,1699072.1156362933,2022
+25449138,Dynegy Moss Landing Power Plant Hybrid,power,electricity-generation,36.8048,-121.7822,co2,1674840.0,2022
+25449088,Clark (NVE),power,electricity-generation,36.0875,-115.0507,co2,1600900.0,2022
+1753320,Phillips 66 Rodeo Refinery,fossil-fuel-operations,oil-and-gas-refining,38.043474,-122.255632,co2,1446234.415101143,2022
+53059113,South Belridge CA,fossil-fuel-operations,oil-and-gas-production,35.45643888,-119.7239011,co2,1364619.2996247378,2022
+53058697,Cymric CA,fossil-fuel-operations,oil-and-gas-production,35.3758979,-119.6979518,co2,1359089.8213399176,2022
+53058892,Kern River CA,fossil-fuel-operations,oil-and-gas-production,35.45344552,-118.9862857,co2,1345290.4302080718,2022
+25449305,Delta Energy Center,power,electricity-generation,38.0173,-121.8452,co2,1324770.0,2022
+25449196,Tracy,power,electricity-generation,39.5625,-119.525,co2,1293680.0,2022
+25456578,Los Medanos Energy Center,power,electricity-generation,38.0301,-121.873,co2,1285390.0,2022
+25449209,Mountainview Generating Station,power,electricity-generation,34.0818,-117.2418,co2,1246200.0,2022
+25449208,AES Redondo Beach LLC,power,electricity-generation,33.8504,-118.395,co2,1241780.0,2022
+25456648,Elk Hills Power LLC,power,electricity-generation,35.2803,-119.4707,co2,1219480.0,2022
+25449195,North Valmy,power,electricity-generation,40.8813,-117.1516,co2,1203790.0,2022
+25449294,High Desert Power Plant,power,electricity-generation,34.5953,-117.3647,co2,1180160.0,2022
+25449050,Haynes,power,electricity-generation,33.7646,-118.0952,co2,1109350.0,2022
+25449089,Harry Allen,power,electricity-generation,36.4306,-114.9024,co2,1046770.0,2022
+1753334,Valero Wilmington Refinery,fossil-fuel-operations,oil-and-gas-refining,33.779055,-118.233663,co2,1041001.1100242496,2022
+25449459,AES Huntington Beach LLC,power,electricity-generation,33.6448,-117.9793,co2,990160.0,2022
+25456540,Griffith Energy LLC,power,electricity-generation,35.054,-114.1333,co2,980790.0,2022
+53059078,San Ardo CA,fossil-fuel-operations,oil-and-gas-production,35.95457502,-120.8590061,co2,959634.8582550803,2022
+53058672,Coalinga CA,fossil-fuel-operations,oil-and-gas-production,36.21744066,-120.3585835,co2,930436.2580551192,2022
+25456560,Sunrise Power LLC,power,electricity-generation,35.2097,-119.585,co2,929938.0,2022
+25456537,Sutter Energy Center,power,electricity-generation,39.0531,-121.6959,co2,926620.0,2022
+25456714,Higgins Generating Station,power,electricity-generation,35.6139,-115.3561,co2,890430.0,2022
+42547099,Victorville Cement Plant,manufacturing,cement,34.554152964832,-117.302279749836,co2,879834.71767,2022
+25457036,Carlsbad Energy Center and Encina,power,electricity-generation,33.1383,-117.3351,co2,871700.0,2022
+25456631,Otay Mesa Generating Project,power,electricity-generation,32.5734,-116.9141,co2,854488.3,2022
+25456856,Colusa Generating Station,power,electricity-generation,39.3661,-122.27,co2,844118.6,2022
+25449051,Scattergood,power,electricity-generation,33.9182,-118.4276,co2,823101.0,2022
+25456843,Gateway Generating Station,power,electricity-generation,38.0175,-121.7587,co2,799413.0,2022
+25449366,TS Power Plant,power,electricity-generation,40.7461,-116.5297,co2,791000.0,2022
+25449338,"Pastoria Energy Facility, LLC",power,electricity-generation,34.9556,-118.844,co2,788400.0,2022
+25456762,Palomar Energy,power,electricity-generation,33.1197,-117.1178,co2,779880.0,2022
+25456645,Metcalf Energy Center,power,electricity-generation,37.2207,-121.7457,co2,769010.0,2022
+25449464,Valley (CA),power,electricity-generation,34.245,-118.3913,co2,706460.0,2022
+25456759,Cosumnes Power Plant,power,electricity-generation,38.3385,-121.124,co2,645890.0,2022
+25456618,Blythe Energy Inc,power,electricity-generation,33.6157,-114.6865,co2,629000.0,2022
+25456740,Silverhawk,power,electricity-generation,36.4078,-114.9606,co2,628030.0,2022
+53058922,McKittrick CA,fossil-fuel-operations,oil-and-gas-production,35.32,-119.65,co2,600182.8881202816,2022
+25456685,Apex Generating Station,power,electricity-generation,36.416,-114.9609,co2,567470.0,2022
+25456557,South Point Energy Center,power,electricity-generation,34.8678,-114.5317,co2,558300.0,2022
+25456550,La Paloma Generating Plant,power,electricity-generation,35.2956,-119.5919,co2,556562.1,2022
+25449447,Yucca,power,electricity-generation,32.7214,-114.7106,co2,525710.0,2022
+25456775,Magnolia Power Project,power,electricity-generation,34.1786,-118.3153,co2,504360.0,2022
+25456520,Desert Star Energy Center,power,electricity-generation,35.7889,-114.9942,co2,500094.0,2022
+25456779,Walnut Energy Center,power,electricity-generation,37.4878,-120.8956,co2,486740.0,2022
+53058903,Lost Hills CA,fossil-fuel-operations,oil-and-gas-production,35.6151373,-119.732642,co2,467213.1968307763,2022
+53059022,Poso Creek CA,fossil-fuel-operations,oil-and-gas-production,35.54445667,-119.0757532,co2,450183.63135478715,2022
+53058891,Kern Front CA,fossil-fuel-operations,oil-and-gas-production,35.48543549,-119.0504074,co2,423583.26226658025,2022
+25456175,Sycamore Cogeneration,power,electricity-generation,35.4548,-119.0029,co2,396840.0,2022
+25456075,Kern River Cogeneration,power,electricity-generation,35.4515,-118.9849,co2,396840.0,2022
+25449462,El Centro Hybrid,power,electricity-generation,32.8022,-115.54,co2,395785.0,2022
+25456190,Watson Cogeneration,power,electricity-generation,33.8166,-118.2448,co2,382660.0,2022
+25449461,Grayson,power,electricity-generation,34.1556,-118.2782,co2,375730.0,2022
+53059252,Wilmington CA,fossil-fuel-operations,oil-and-gas-production,33.76527007,-118.2091688,co2,370347.99006470916,2022
+25456836,Russell City Energy Center,power,electricity-generation,37.6347,-122.1338,co2,345335.93,2022
+25456887,Panoche Energy Center,power,electricity-generation,36.6514,-120.5833,co2,344030.0,2022
+25450019,Campbell Power Plant,power,electricity-generation,38.511,-121.4735,co2,340564.0,2022
+25456125,Las Vegas Generating Station,power,electricity-generation,36.2319,-115.1222,co2,339100.0,2022
+25456963,Lodi Energy Center,power,electricity-generation,38.0881,-121.3872,co2,339100.0,2022
+1898045,Mojave Cement Plant,manufacturing,cement,35.0291382018169,-118.315039914856,co2,336953.77993,2022
+25449460,Long Beach Generation LLC,power,electricity-generation,33.7641,-118.2248,co2,333320.0,2022
+1898049,Lebec Cement Plant,manufacturing,cement,34.8204887545752,-118.749015093611,co2,330410.68726,2022
+32439326,Mitsubishi Lucerne Valley Cement Plant,manufacturing,cement,34.3546169072012,-116.853830360477,co2,321327.71719,2022
+25449465,Glenarm,power,electricity-generation,34.126,-118.1494,co2,318450.0,2022
+25456381,Midway Sunset Cogen,power,electricity-generation,35.2269,-119.6294,co2,309510.0,2022
+53058760,Elk Hills CA,fossil-fuel-operations,oil-and-gas-production,35.28008185,-119.4529833,co2,300520.4197337842,2022
+25456308,Southeast Resource Recovery,power,electricity-generation,33.7592,-118.2399,co2,298590.0,2022
+25449730,Fort Churchill,power,electricity-generation,39.1281,-119.1322,co2,294960.0,2022
+1898011,Redding Cement Plant,manufacturing,cement,40.7370523831865,-122.322322553725,co2,257821.18565,2022
+25450018,Procter & Gamble Power Plant,power,electricity-generation,38.5309,-121.4001,co2,247220.0,2022
+25456206,Wadham Energy LP,power,electricity-generation,39.1062,-122.1096,co2,244060.0,2022
+25456929,"Sentinel Energy Center, LLC",power,electricity-generation,33.9364,-116.5727,co2,238692.1,2022
+25456770,Donald Von Raesfeld Power Plant,power,electricity-generation,37.3767,-121.9508,co2,235869.0,2022
+25456523,Crockett Cogen Project,power,electricity-generation,38.057,-122.2149,co2,233370.0,2022
+25456933,Walnut Creek Energy Park,power,electricity-generation,34.0087,-117.9449,co2,232208.0,2022
+32439308,UNACEM Tehachapi Cement Plant,manufacturing,cement,35.1229275322496,-118.369319786485,co2,230836.876244,2022
+25449982,Woodland,power,electricity-generation,37.6526,-121.0204,co2,226110.0,2022
+25449458,Humboldt Bay,power,electricity-generation,40.7415,-124.2103,co2,220900.0,2022
+1898044,Oro Grande Cement Plant,manufacturing,cement,34.6087404946648,-117.337637292918,co2,220300.3107,2022
+25456270,Covanta Stanislaus Energy,power,electricity-generation,37.3853,-121.141,co2,201280.0,2022
+49534109,Ivanpah 2 power station,power,electricity-generation,35.5561,-115.4686,co2,201050.0,2022
+49534108,Ivanpah 3 power station,power,electricity-generation,35.5808,-115.4825,co2,201050.0,2022
+53059048,Round Mountain CA,fossil-fuel-operations,oil-and-gas-production,35.49737167,-118.8928909,co2,196374.92525501628,2022
+25456112,Argus Cogen Plant,power,electricity-generation,35.765,-117.3833,co2,192530.0,2022
+49534110,Ivanpah 1 power station,power,electricity-generation,35.5331,-115.4525,co2,190480.0,2022
+25457091,Stanton Energy Reliability Center Hybrid,power,electricity-generation,33.8068,-117.9858,co2,186500.0,2022
+32439286,Nevada Cement Plant,manufacturing,cement,39.6195048419845,-119.26311362064,co2,186246.028674,2022
+25449989,Redding Power,power,electricity-generation,40.5073,-122.4233,co2,185137.0,2022
+25456023,El Segundo Cogen,power,electricity-generation,33.9058,-118.4031,co2,170170.0,2022
+25456367,Richmond Cogen,power,electricity-generation,37.9418,-122.3909,co2,168340.0,2022
+1753368,Kern Oil & Refining Bakersfield Refinery,fossil-fuel-operations,oil-and-gas-refining,35.294719,-118.917953,co2,167670.8666969811,2022
+25449207,Ormond Beach,power,electricity-generation,34.1292,-119.1689,co2,161984.66400000002,2022
+25456774,Malburg,power,electricity-generation,33.9989,-118.2206,co2,157626.0,2022
+25456821,Roseville Energy Park,power,electricity-generation,38.7928,-121.3811,co2,155900.0,2022
+25456849,Western 102 Power Plant,power,electricity-generation,39.5603,-119.5108,co2,155570.0,2022
+25449452,McClure,power,electricity-generation,37.6294,-120.9314,co2,152360.0,2022
+40698817,SEGS IX,power,electricity-generation,35.033,-117.338,co2,139080.0,2022
+25449991,Almond Power Plant,power,electricity-generation,37.5744,-120.985,co2,138500.0,2022
+25456036,King City Power Plant,power,electricity-generation,36.225,-121.1278,co2,125848.0,2022
+25456750,Tracy Combined Cycle Power Plant,power,electricity-generation,37.7107,-121.4906,co2,125311.0,2022
+25456296,South Belridge Cogeneration Facility,power,electricity-generation,35.4386,-119.7075,co2,124607.0,2022
+25456317,Salinas River Cogeneration,power,electricity-generation,35.9515,-120.8679,co2,123584.0,2022
+25449908,Coachella,power,electricity-generation,33.6758,-116.1714,co2,122213.0,2022
+25449921,Dynegy Oakland Power Plant,power,electricity-generation,37.7966,-122.2812,co2,121744.0,2022
+25456416,Saguaro Power,power,electricity-generation,36.0422,-115.0117,co2,120178.0,2022
+25456251,Equilon Los Angeles Refining,power,electricity-generation,33.7917,-118.2347,co2,114135.0,2022
+25456044,Marathon Bay Area Cogen,power,electricity-generation,38.021,-122.0675,co2,107235.0,2022
+53059223,Ventura CA,fossil-fuel-operations,oil-and-gas-production,34.32070403,-119.2669057,co2,104157.02639541487,2022
+25456013,Fresno Cogen Partners,power,electricity-generation,36.617,-120.0998,co2,103098.0,2022
+25449473,McClellan (CA),power,electricity-generation,38.6527,-121.3933,co2,101853.0,2022
+25456252,Harbor Cogen,power,electricity-generation,33.7771,-118.2303,co2,101474.0,2022
+1753375,San Joaquin Refining Bakersfield Refinery,fossil-fuel-operations,oil-and-gas-refining,35.38733,-119.047922,co2,96733.1923128737,2022
+25456490,Martinez Refining,power,electricity-generation,38.0168,-122.1129,co2,94484.0,2022
+25456952,El Segundo Power and Energy Center LLC power station,power,electricity-generation,33.9102,-118.4246,co2,92644.6,2022
+25456048,Greenleaf 1,power,electricity-generation,39.0525,-121.6926,co2,92329.0,2022
+25456422,Nevada Cogen Associates 2 Black Mountain,power,electricity-generation,36.2253,-114.8783,co2,90987.0,2022
+25456236,Oxnard,power,electricity-generation,34.196,-119.1667,co2,90873.0,2022
+25456423,Nevada Cogen Assoc#1 GarnetVly,power,electricity-generation,36.3432,-114.9207,co2,89568.0,2022
+53058952,Mount Poso CA,fossil-fuel-operations,oil-and-gas-production,35.59732819,-118.9677124,co2,86477.30585067114,2022
+25449978,Gianera,power,electricity-generation,37.401,-121.9687,co2,85450.0,2022
+25450015,Carson Power Plant,power,electricity-generation,38.4457,-121.4624,co2,82852.0,2022
+25450111,Lake One,power,electricity-generation,34.1772,-118.3147,co2,80026.0,2022
+25450140,Ellwood,power,electricity-generation,34.4314,-119.9001,co2,76719.0,2022
+25456777,THUMS,power,electricity-generation,33.7684,-118.2141,co2,75926.0,2022
+25456070,Puente Hills Energy Recovery,power,electricity-generation,34.0233,-118.0241,co2,75587.0,2022
+25456747,Wellhead Power Panoche,power,electricity-generation,36.6535,-120.5783,co2,74999.0,2022
+53058851,Inglewood CA,fossil-fuel-operations,oil-and-gas-production,34.01014709,-118.3744125,co2,74075.57518293126,2022
+53058814,Huntington Beach CA,fossil-fuel-operations,oil-and-gas-production,33.6778275,-118.0247566,co2,72644.05836164806,2022
+25456172,Phillips 66 Rodeo Refinery,power,electricity-generation,38.0417,-122.2583,co2,72617.0,2022
+53058902,Long Beach CA,fossil-fuel-operations,oil-and-gas-production,33.80402282,-118.1690756,co2,72606.1754618524,2022
+25450008,Alameda,power,electricity-generation,37.7886,-122.2889,co2,72485.0,2022
+25456908,Canyon Power Plant,power,electricity-generation,33.8581,-117.8617,co2,66461.9,2022
+25456384,Yuba City Cogen Partners,power,electricity-generation,39.1367,-121.6398,co2,66006.0,2022
+25456742,Valero Refinery Cogeneration Unit 1,power,electricity-generation,38.0736,-122.1411,co2,66006.0,2022
+25456247,Kern Front Limited,power,electricity-generation,35.5157,-119.0401,co2,65872.0,2022
+25456839,Grapeland Hybrid,power,electricity-generation,34.0903,-117.5343,co2,65872.0,2022
+25456248,High Sierra Limited,power,electricity-generation,35.509,-119.0305,co2,65872.0,2022
+25449900,Walnut,power,electricity-generation,37.4903,-120.9044,co2,65872.0,2022
+25456246,Double C Generation Limited Partnership,power,electricity-generation,35.5005,-119.046,co2,65872.0,2022
+25456800,Chowchilla II,power,electricity-generation,37.1073,-120.2485,co2,65611.0,2022
+25456208,AltaGas Ripon Energy Inc.,power,electricity-generation,37.7325,-121.116,co2,65477.0,2022
+25456047,Greenleaf 2 Power Plant,power,electricity-generation,39.1392,-121.6388,co2,65477.0,2022
+25449427,Marsh Landing Generating Station,power,electricity-generation,38.0169,-121.765,co2,65426.8,2022
+25456366,Kern River Eastridge Cogen,power,electricity-generation,35.4406,-118.9617,co2,64551.0,2022
+25456132,E F Oxnard Energy Facility,power,electricity-generation,34.1958,-119.1664,co2,64153.0,2022
+25456170,US Borax,power,electricity-generation,35.0329,-117.701,co2,63757.0,2022
+25456735,Yuba City Energy Center,power,electricity-generation,39.139,-121.6378,co2,62565.0,2022
+25456734,King City Peaking,power,electricity-generation,36.2248,-121.1246,co2,62565.0,2022
+25456725,Los Esteros Critical Energy Center,power,electricity-generation,37.425,-121.9319,co2,61648.0,2022
+25456799,Red Bluff,power,electricity-generation,40.1501,-122.2124,co2,61375.0,2022
+25456154,Chalk Cliff Limited,power,electricity-generation,35.0968,-119.4299,co2,60847.0,2022
+25456752,Drews Generating Facility,power,electricity-generation,34.0607,-117.3539,co2,59260.0,2022
+25456751,Century Generating Facility,power,electricity-generation,34.0606,-117.3533,co2,59260.0,2022
+25456935,Algonquin Power Sanger LLC,power,electricity-generation,36.6842,-119.5522,co2,58107.0,2022
+53058519,Arroyo Grande CA,fossil-fuel-operations,oil-and-gas-production,35.182703,-120.623695,co2,57647.19607997509,2022
+25456362,Berry Placerita Cogen,power,electricity-generation,34.3841,-118.4949,co2,56613.0,2022
+1753381,World Oil Co South Gate Refinery,fossil-fuel-operations,oil-and-gas-refining,33.946372,-118.166647,co2,54815.47564362842,2022
+53058968,North Belridge CA,fossil-fuel-operations,oil-and-gas-production,35.54259325,-119.7948565,co2,53918.86073844853,2022
+25450056,Rockwood,power,electricity-generation,32.9553,-115.5364,co2,53280.0,2022
+25456790,Springs Generating Station,power,electricity-generation,33.9308,-117.2933,co2,52909.0,2022
+25456014,Carson Cogeneration,power,electricity-generation,33.8759,-118.2491,co2,52721.0,2022
+53059018,Placerita CA,fossil-fuel-operations,oil-and-gas-production,34.38684464,-118.4910263,co2,51571.939389130355,2022
+25456180,Berry Cogen,power,electricity-generation,35.093,-119.4436,co2,51191.0,2022
+25449463,Harbor,power,electricity-generation,33.7706,-118.2656,co2,50611.6,2022
+25456690,Chula Vista Energy Center,power,electricity-generation,32.5917,-117.0586,co2,49205.0,2022
+53058607,Buena Vista CA,fossil-fuel-operations,oil-and-gas-production,35.204632,-119.463635,co2,48251.08912635863,2022
+25456860,Niland Gas Turbine Plant,power,electricity-generation,33.243,-115.4991,co2,47314.0,2022
+25456828,Clearwater Power Plant,power,electricity-generation,33.8912,-117.6085,co2,46296.0,2022
+25457131,Valero Wilmington Cogeneration Plant,power,electricity-generation,33.7787,-118.2385,co2,44310.0,2022
+25456930,Mariposa Energy Project,power,electricity-generation,37.7892,-121.6019,co2,43993.4,2022
+25456106,Bear Mountain Limited,power,electricity-generation,35.4192,-118.9266,co2,43835.16,2022
+25456064,New-Indy Ontario Mill,power,electricity-generation,34.0454,-117.5402,co2,43651.0,2022
+25457098,Hyperion Treatment Plant CHP Plant,power,electricity-generation,33.9261,-118.4291,co2,43651.0,2022
+25456846,Black Mountain Generating Station,power,electricity-generation,35.0361,-114.1594,co2,43564.4,2022
+53059002,Orcutt CA,fossil-fuel-operations,oil-and-gas-production,34.82800674,-120.4128113,co2,41088.03301421251,2022
+1753385,Valero Wilmington Asphalt Plant Refinery,fossil-fuel-operations,oil-and-gas-refining,33.798301,-118.236861,co2,40627.94077080695,2022
+25456355,UCLA So Campus Cogen Project,power,electricity-generation,34.0673,-118.4463,co2,40627.0,2022
+25456934,Pio Pico Energy Center,power,electricity-generation,32.5739,-116.9178,co2,39216.3,2022
+25456264,"Torrance Refining Company, LLC",power,electricity-generation,33.8534,-118.33,co2,38698.0,2022
+25456937,Oxnard Paper Mill,power,electricity-generation,34.1414,-119.1831,co2,38358.0,2022
+25456695,Wilmington Hydrogen Plant,power,electricity-generation,33.7803,-118.24,co2,38004.0,2022
+25456789,Riverside Energy Resource Center,power,electricity-generation,33.9636,-117.4528,co2,37378.4,2022
+25456427,Western Power & Steam Inc,power,electricity-generation,35.4408,-119.0129,co2,36640.0,2022
+25456004,Total Energy Facilities,power,electricity-generation,33.7683,-118.2836,co2,36281.0,2022
+25456059,Kingsburg Cogen,power,electricity-generation,36.5397,-119.5794,co2,34202.0,2022
+25456965,Brea Expansion Plant,power,electricity-generation,33.932,-117.8402,co2,33730.0,2022
+25456474,Live Oak Limited,power,electricity-generation,35.4962,-119.0089,co2,33702.7,2022
+53058630,Cat Canyon CA,fossil-fuel-operations,oil-and-gas-production,34.82804108,-120.2984772,co2,33123.995520824814,2022
+25456218,Phillips 66 Carbon Plant,power,electricity-generation,38.0181,-122.2344,co2,32523.0,2022
+25456741,Feather River Energy Center,power,electricity-generation,39.1089,-121.6092,co2,32348.9,2022
+25456295,Southeast Kern River Cogen,power,electricity-generation,35.4206,-118.9644,co2,31747.0,2022
+25457052,"Bowerman Power LFG, LLC",power,electricity-generation,33.7189,-117.7022,co2,31483.0,2022
+25456936,University of California San Diego Hybri,power,electricity-generation,32.8747,-117.2392,co2,31179.0,2022
+25457006,Sunshine Gas Producers,power,electricity-generation,34.3357,-118.5192,co2,30424.0,2022
+25456294,Agnews Power Plant,power,electricity-generation,37.4058,-121.9272,co2,30235.0,2022
+25456312,CSUCI Site Authority,power,electricity-generation,34.162,-119.0479,co2,29383.0,2022
+25456311,CamChino Leasing LLC,power,electricity-generation,33.9896,-117.6809,co2,29101.0,2022
+25456310,PE Berkeley,power,electricity-generation,37.8703,-122.2634,co2,26927.0,2022
+25456000,Gilroy Power Plant,power,electricity-generation,37.0001,-121.5367,co2,26417.5,2022
+720454,CP Kelco San Diego Plant,power,electricity-generation,32.6947,-117.1436,co2,25397.0,2022
+25456262,Berry Cogen Tanne Hills 18,power,electricity-generation,35.0898,-119.4409,co2,23809.0,2022
+25456732,Henrietta Peaker,power,electricity-generation,36.2397,-119.9044,co2,22592.0,2022
+25457033,MCAGCC Cogen Plant,power,electricity-generation,34.2372,-116.0542,co2,21694.0,2022
+25456363,Plant No 2 Orange County,power,electricity-generation,33.6433,-117.9556,co2,19840.0,2022
+25456781,SJ/SC WPCP,power,electricity-generation,37.4344,-121.9464,co2,18517.0,2022
+25456359,Coalinga 25D Cogen,power,electricity-generation,36.1556,-120.3972,co2,17991.0,2022
+25456918,UCI Facilities Management Central Plant,power,electricity-generation,33.6481,-117.8467,co2,17953.0,2022
+25457007,Glass House Camarillo Cultivation,power,electricity-generation,34.1797,-119.0831,co2,17460.0,2022
+25456087,Tesoro Wilmington Calciner,power,electricity-generation,33.777,-118.2282,co2,17191.0,2022
+25456364,Cymric 36W Cogen,power,electricity-generation,35.3633,-119.6756,co2,16401.0,2022
+25456358,Taft 26C Cogen,power,electricity-generation,35.1133,-119.4706,co2,16401.0,2022
+25457092,"Republic Services Renewable Energy, LLC",power,electricity-generation,36.3587,-114.8748,co2,15873.0,2022
+25456356,McKittrick Cogen,power,electricity-generation,35.3161,-119.6597,co2,15873.0,2022
+25456107,Badger Creek Limited,power,electricity-generation,35.4837,-119.0299,co2,15835.699999999999,2022
+25456691,Indigo Energy Facility,power,electricity-generation,33.9109,-116.553,co2,15679.24,2022
+720849,H. Gonzales,power,electricity-generation,33.9986,-118.2215,co2,15609.0,2022
+25456463,Yuma Cogeneration Associates,power,electricity-generation,32.7288,-114.6541,co2,15595.0,2022
+25456692,Larkspur Energy Facility,power,electricity-generation,32.567,-116.9442,co2,15571.75,2022
+25456807,Miramar Energy Facility,power,electricity-generation,32.8761,-117.1655,co2,15502.0,2022
+25456838,McGrath Peaker,power,electricity-generation,34.2056,-119.2479,co2,15319.9,2022
+721192,Berry NMW Cogens,power,electricity-generation,35.3076,-119.6116,co2,15078.0,2022
+25456896,Ameresco Ox Mountain,power,electricity-generation,37.5042,-122.406,co2,15078.0,2022
+53058603,Brea-Olinda CA,fossil-fuel-operations,oil-and-gas-production,33.93738174,-117.8899994,co2,14061.064450976191,2022
+25456021,Loma Linda University Cogen,power,electricity-generation,34.0504,-117.2484,co2,13757.0,2022
+25456160,San Diego State University,power,electricity-generation,32.7782,-117.0701,co2,13511.0,2022
+25456733,Gilroy Peaking Energy Center,power,electricity-generation,36.999,-121.5363,co2,13448.0,2022
+25456840,Mira Loma Peaker,power,electricity-generation,34.0053,-117.5604,co2,13202.0,2022
+1753388,Foreland Refining Ely Refinery,fossil-fuel-operations,oil-and-gas-refining,38.621486,-115.617898,co2,12897.75897438316,2022
+25456987,Parnassus Central Utility Plant,power,electricity-generation,37.7625,-122.4567,co2,12659.2,2022
+25449943,Kings Beach,power,electricity-generation,39.2458,-120.0272,co2,12255.2,2022
+41635906,Calabasas Gas to Energy Facility,power,electricity-generation,34.1511,-118.7236,co2,12169.1,2022
+25456841,Barre Peaker,power,electricity-generation,33.8073,-117.9832,co2,10817.5,2022
+25456867,Midway Peaking LLC,power,electricity-generation,36.6541,-120.5797,co2,10522.31,2022
+41635349,MM West Covina,power,electricity-generation,34.0332,-117.9061,co2,10279.6,2022
+25449953,Pebbly Beach Generating Station Hybrid,power,electricity-generation,33.3331,-118.3103,co2,10061.1,2022
+25456787,Ripon Generation Station,power,electricity-generation,37.7312,-121.1253,co2,9775.19,2022
+25456357,Lost Hills Cogeneration Plant,power,electricity-generation,35.6661,-119.7669,co2,9259.2,2022
+25456899,Orange Grove Peaking Facility,power,electricity-generation,33.3594,-117.1114,co2,9169.7,2022
+25456717,Hanford Energy Park Peaker,power,electricity-generation,36.2701,-119.6481,co2,8782.3,2022
+25456756,Riverview Energy Center,power,electricity-generation,38.0144,-121.7907,co2,8318.6,2022
+25456682,Border Hybrid Energy Center,power,electricity-generation,32.5624,-116.9439,co2,8283.59,2022
+25456811,Malaga Power LLC,power,electricity-generation,36.69,-119.7404,co2,8038.5199999999995,2022
+25456684,CalPeak Power Enterprise Peaker Plant,power,electricity-generation,33.1219,-117.1174,co2,7132.29,2022
+25456974,Delano Energy Center,power,electricity-generation,35.7909,-119.2945,co2,6938.23,2022
+25456905,El Cajon Energy Center,power,electricity-generation,32.7972,-116.972,co2,6395.49,2022
+25456701,Goose Haven Energy Center,power,electricity-generation,38.2268,-121.8433,co2,6334.86,2022
+25456676,CalPeak Power Vaca Dixon Peaker Plant,power,electricity-generation,38.3989,-121.924,co2,6177.14,2022
+25456755,Agua Mansa Power Plant,power,electricity-generation,34.0414,-117.3603,co2,6090.0,2022
+25456683,Cuyamaca Peak Energy Plant,power,electricity-generation,32.7965,-116.9721,co2,5891.39,2022
+25456689,Escondido Energy Center,power,electricity-generation,33.1284,-117.1203,co2,5695.63,2022
+25456700,Lambie Energy Center,power,electricity-generation,38.2216,-121.8683,co2,5117.87,2022
+25456260,McKittrick Limited,power,electricity-generation,35.3195,-119.662,co2,4991.0,2022
+25456699,Creed Energy Center,power,electricity-generation,38.2422,-121.8547,co2,4880.89,2022
+25456744,Wolfskill Energy Center,power,electricity-generation,38.2285,-122.0753,co2,4267.12,2022
+25456842,Center Hybrid,power,electricity-generation,33.9296,-118.1046,co2,4044.96,2022
+25456467,Goal Line LP,power,electricity-generation,33.1185,-117.0995,co2,3632.6,2022
+25456681,CalPeak Power Panoche Peaker Plant,power,electricity-generation,36.6531,-120.5807,co2,3270.59,2022
+53058457,Aliso Canyon CA,fossil-fuel-operations,oil-and-gas-production,34.313,-118.558,co2,1424.158631917543,2022
+50384883,Dinuba Energy,power,electricity-generation,36.5715,-119.4192,co2,0.0,2022
+25456169,Sierra Pacific Quincy Facility,power,electricity-generation,39.9412,-120.9092,co2,0.0,2022
+25456209,VESI Pomona,power,electricity-generation,34.0594,-117.7742,co2,0.0,2022
+25456255,Pacific-Ultrapower Chinese Station,power,electricity-generation,37.8741,-120.4776,co2,0.0,2022
+50383789,Desert View Power,power,electricity-generation,33.586,-116.0873,co2,0.0,2022
+49534106,SEGS VIII power station,power,electricity-generation,35.0308,-117.3563,co2,0.0,2022
+49701606,Madera Biomass power station,power,electricity-generation,36.8615,-120.339,co2,0.0,2022
+1753927,Talley Asphalts Products Kern Refinery,fossil-fuel-operations,oil-and-gas-refining,35.144875,-119.427423,co2,0.0,2022
+25456323,Wheelabrator Shasta,power,electricity-generation,40.4283,-122.2792,co2,0.0,2022
+25456263,Gaviota Oil Plant,power,electricity-generation,34.4751,-120.2051,co2,0.0,2022
+25456168,Sierra Pacific Loyalton Facility,power,electricity-generation,39.6699,-120.2394,co2,0.0,2022
+25456386,"Otay Landfill Gas, LLC",power,electricity-generation,32.5983,-117.0178,co2,0.0,2022
+25456167,Sierra Pacific Burney Facility,power,electricity-generation,40.8767,-121.7016,co2,0.0,2022
+25456108,Burney Forest Products,power,electricity-generation,40.8797,-121.7203,co2,0.0,2022
+25450023,Anaheim GT,power,electricity-generation,33.8535,-117.8563,co2,0.0,2022
+720994,Mesquite Lake Water & Power Plant 1,power,electricity-generation,32.9066,-115.5137,co2,0.0,2022
+25456010,Sierra Pacific Lincoln Facility,power,electricity-generation,38.9032,-121.3097,co2,0.0,2022
+25456743,Inland Empire Energy Center,power,electricity-generation,33.7388,-117.1704,co2,0.0,2022
+25456837,Roseburg Forest Products Biomass,power,electricity-generation,41.4356,-122.3769,co2,0.0,2022
+25456099,Civic Center,power,electricity-generation,34.0564,-118.2436,co2,0.0,2022
+25456109,Collins Pine Project,power,electricity-generation,40.3034,-121.2444,co2,0.0,2022
+41636007,Buena Vista Biomass Power,power,electricity-generation,38.2778,-120.9136,co2,0.0,2022
+25456129,Rio Bravo Rocklin,power,electricity-generation,38.8319,-121.3137,co2,0.0,2022
+25456133,HL Power,power,electricity-generation,40.3683,-120.2648,co2,0.0,2022
+25456142,Woodland Biomass Power Ltd,power,electricity-generation,38.6905,-121.7371,co2,0.0,2022
+1927695,Sierra Pacific Sonora,power,electricity-generation,37.9664,-120.3178,co2,0.0,2022
+1753392,Tesoro Martinez Refinery,fossil-fuel-operations,oil-and-gas-refining,38.026078,-122.064118,co2,0.0,2022
+25456158,Humboldt Sawmill Company,power,electricity-generation,40.4728,-124.1014,co2,0.0,2022
+42298757,Coolwater,power,electricity-generation,34.8606,-116.8539,co2,0.0,2022
+41635935,Shasta Renewable Resources Plant,power,electricity-generation,40.4708,-122.3311,co2,0.0,2022
+41635943,Colton Plant,power,electricity-generation,34.0597,-117.3453,co2,0.0,2022
+41627844,Pittsburg Power,power,electricity-generation,38.0392,-121.8945,co2,0.0,2022
+41628179,Reid Gardner,power,electricity-generation,36.6573,-114.6333,co2,0.0,2022
+41627858,Broadway (CA),power,electricity-generation,34.1254,-118.148,co2,0.0,2022
+41627853,Mandalay,power,electricity-generation,34.2067,-119.2511,co2,0.0,2022
+41627848,Miramar,power,electricity-generation,32.8761,-117.1664,co2,0.0,2022
+41627847,Kearny,power,electricity-generation,32.834,-117.1338,co2,0.0,2022
+41627845,El Cajon,power,electricity-generation,32.7958,-116.9722,co2,0.0,2022
+40699916,ERock MID Claribel Generation Station,power,electricity-generation,37.7103,-120.9685,co2,0.0,2022
+41634932,Commerce Refuse To Energy,power,electricity-generation,33.9949,-118.1538,co2,0.0,2022
+40699915,Enchanted Rock Turlock Irrigation Distri,power,electricity-generation,37.4359,-121.131,co2,0.0,2022
+40699914,Enchanted Rock Lodi,power,electricity-generation,38.1477,-121.2997,co2,0.0,2022
+40699202,Mt Poso Cogeneration,power,electricity-generation,35.5763,-119.0062,co2,0.0,2022
+25456970,Fullerton Mill CHP,power,electricity-generation,33.8617,-117.8931,co2,0.0,2022
+25456433,Los Angeles Refinery Wilmington,power,electricity-generation,33.7686,-118.2867,co2,0.0,2022
+25456413,Stockton Biomass Cogeneration Facility,power,electricity-generation,37.9119,-121.2611,co2,0.0,2022
+41634931,Pulp Mill Power House,power,electricity-generation,40.8054,-124.1949,co2,0.0,2022
+41634944,Cardinal Cogen,power,electricity-generation,37.4298,-122.1763,co2,0.0,2022
+25457055,SPI Anderson 2,power,electricity-generation,40.4723,-122.3242,co2,0.0,2022
+41635098,HGST San Jose Standby Generator,power,electricity-generation,37.2444,-121.7963,co2,0.0,2022
+41635652,Tri Center Naniwa Energy,power,electricity-generation,39.5572,-119.5178,co2,0.0,2022
+41635413,Graphic Packaging International,power,electricity-generation,37.3682,-121.9436,co2,0.0,2022
+41635389,Oildale Energy LLC,power,electricity-generation,35.417,-119.0102,co2,0.0,2022
+41635329,Ingredion Stockton,power,electricity-generation,37.9128,-121.2614,co2,0.0,2022
+41635280,Central Utility Plant,power,electricity-generation,33.9249,-118.0679,co2,0.0,2022
+41635106,San Joaquin Cogen,power,electricity-generation,37.8062,-121.2771,co2,0.0,2022
+41635082,North Island Energy Facility,power,electricity-generation,32.7052,-117.1897,co2,0.0,2022
+41634991,GRS Coyote Canyon,power,electricity-generation,33.613,-117.8219,co2,0.0,2022
+41635081,Naval Station Energy Facility,power,electricity-generation,32.6793,-117.1224,co2,0.0,2022
+41635080,NTC/MCRD Energy Facility,power,electricity-generation,32.7353,-117.2083,co2,0.0,2022
+41635041,"Corona Energy Partners, Ltd",power,electricity-generation,33.8827,-117.5565,co2,0.0,2022
+41635014,Thermal Energy Development Part LP,power,electricity-generation,37.7199,-121.4887,co2,0.0,2022
+41635008,Pitchess Cogen Station,power,electricity-generation,34.4639,-118.594,co2,0.0,2022
+41635005,Spadra Landfill Gas to Energy,power,electricity-generation,34.0408,-117.8217,co2,0.0,2022
+41627850,Etiwanda Generating Station,power,electricity-generation,34.0912,-117.5266,co2,0.0,2022
