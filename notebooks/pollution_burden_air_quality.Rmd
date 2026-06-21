@@ -1,0 +1,173 @@
+---
+title: "Connect pollution burden to air quality"
+subtitle: "Terrain intermediate project · R · CalEnviroScreen + EPA AirNow"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Connect pollution burden to air quality
+
+**Terrain intermediate project · R · CalEnviroScreen + EPA AirNow**
+
+Join CalEnviroScreen burden scores at monitoring locations with EPA AirNow readings to ask: **do higher-burden communities show worse measured air quality?**
+
+**You will build:** a scatter plot and simple linear model linking CES scores to PM2.5 / AQI.
+
+**Before you start**
+
+- Open in **RStudio** or Posit Cloud.
+- CalEnviroScreen is fetched live from California's ArcGIS service.
+- AirNow defaults to bundled monitor readings; set `USE_LIVE_AIRNOW <- TRUE` and add a free [API key](https://docs.airnowapi.org/account/request/) for live data.
+
+## 1. Setup
+
+```{r packages}
+required <- c("jsonlite", "httr", "dplyr", "ggplot2", "readr", "broom")
+missing <- required[!vapply(required, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
+if (length(missing)) install.packages(missing, repos = "https://cloud.r-project.org")
+library(jsonlite)
+library(httr)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(broom)
+library(scales)
+```
+
+## 2. Load AirNow monitor readings
+
+```{r airnow}
+USE_LIVE_AIRNOW <- FALSE
+AIRNOW_API_KEY <- ""
+
+GITHUB_RAW <- "https://raw.githubusercontent.com/KrishM23/Environmental-Data-Science/main/notebooks/data"
+
+load_airnow_sample <- function() {
+  paths <- c("data/airnow_la_sample.json", "notebooks/data/airnow_la_sample.json")
+  for (p in paths) {
+    if (file.exists(p)) return(fromJSON(p, flatten = TRUE))
+  }
+  fromJSON(paste0(GITHUB_RAW, "/airnow_la_sample.json"), flatten = TRUE)
+}
+
+fetch_airnow_live <- function(api_key, lat = 34.05, lon = -118.25, distance = 75) {
+  resp <- GET(
+    "https://www.airnowapi.org/aq/observation/latLong/current/",
+    query = list(
+      format = "application/json",
+      latitude = lat,
+      longitude = lon,
+      distance = distance,
+      API_KEY = api_key
+    )
+  )
+  stop_for_status(resp)
+  fromJSON(content(resp, as = "text", encoding = "UTF-8"), flatten = TRUE)
+}
+
+if (USE_LIVE_AIRNOW && nzchar(AIRNOW_API_KEY)) {
+  monitors <- fetch_airnow_live(AIRNOW_API_KEY)
+  message("Fetched ", nrow(monitors), " live AirNow observations")
+} else {
+  monitors <- load_airnow_sample()
+  message("Using bundled AirNow sample (", nrow(monitors), " observations)")
+}
+
+monitors <- monitors |>
+  mutate(
+    AQI = as.numeric(AQI),
+    Latitude = as.numeric(Latitude),
+    Longitude = as.numeric(Longitude)
+  ) |>
+  filter(!is.na(AQI), !is.na(Latitude), !is.na(Longitude)) |>
+  group_by(SiteName) |>
+  slice_max(AQI, n = 1, with_ties = FALSE) |>
+  ungroup()
+
+head(monitors |> select(SiteName, ReportingArea, ParameterName, AQI, Latitude, Longitude))
+```
+
+## 3. Look up CalEnviroScreen scores at each monitor
+
+For each monitor location we query CalEnviroScreen 4.0 and read the **CIscoreP** percentile for that census tract.
+
+```{r ces_lookup}
+CES_URL <- paste0(
+  "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/",
+  "CalEnviroScreen_4_0_Results_/FeatureServer/0/query"
+)
+
+lookup_ces <- function(lon, lat) {
+  resp <- GET(CES_URL, query = list(
+    geometry = paste(lon, lat, sep = ","),
+    geometryType = "esriGeometryPoint",
+    inSR = 4326,
+    spatialRel = "esriSpatialRelIntersects",
+    outFields = "TractTXT,CIscoreP,PollutionScore,PopCharScore,pmP",
+    returnGeometry = "false",
+    f = "json"
+  ))
+  stop_for_status(resp)
+  parsed <- fromJSON(content(resp, as = "text", encoding = "UTF-8"))
+  attrs <- parsed$features$attributes
+  if (is.null(attrs) || nrow(attrs) == 0) return(NULL)
+  attrs[1, ]
+}
+
+ces_at_monitors <- vector("list", nrow(monitors))
+for (i in seq_len(nrow(monitors))) {
+  ces <- lookup_ces(monitors$Longitude[i], monitors$Latitude[i])
+  if (is.null(ces)) next
+  ces_at_monitors[[i]] <- bind_cols(
+    monitors[i, c("SiteName", "ReportingArea", "ParameterName", "AQI", "Latitude", "Longitude")],
+    ces
+  )
+}
+joined <- bind_rows(ces_at_monitors)
+  mutate(
+    CIscoreP = as.numeric(CIscoreP),
+    PollutionScore = as.numeric(PollutionScore),
+    pmP = as.numeric(pmP)
+  )
+
+message("Matched ", nrow(joined), " monitors to census tracts")
+joined |> select(SiteName, ReportingArea, AQI, CIscoreP, PollutionScore, pmP)
+```
+
+## 4. Explore the relationship
+
+```{r model}
+fit <- lm(AQI ~ CIscoreP, data = joined)
+tidy(fit)
+
+cor_test <- cor.test(joined$CIscoreP, joined$AQI)
+cor_test
+```
+
+```{r scatter, fig.width=8, fig.height=5}
+ggplot(joined, aes(x = CIscoreP, y = AQI)) +
+  geom_point(aes(color = ParameterName), size = 3, alpha = 0.85) +
+  geom_smooth(method = "lm", se = TRUE, color = "#2F6B4F", fill = "#C7E0A8") +
+  scale_x_continuous(labels = label_number(suffix = "%")) +
+  labs(
+    title = "CalEnviroScreen burden vs. measured air quality",
+    subtitle = "Each point is an AirNow monitor; x-axis is CES percentile (CIscoreP) for that tract",
+    x = "CalEnviroScreen percentile (CIscoreP)",
+    y = "Air Quality Index (AQI)",
+    color = "Pollutant",
+    caption = "Sources: OEHHA CalEnviroScreen 4.0 · EPA AirNow"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+## 5. Write your takeaway
+
+1. Is the correlation positive, negative, or weak? Does that match your expectations?
+2. Why is **correlation not causation** here? (Think monitor placement, weather, timing.)
+3. What would you need to strengthen this analysis (daily averages, PM2.5 concentrations, more sites)?
+
+**Next:** Compare with the [beginner CalEnviroScreen notebook](calenviroscreen_burden.Rmd) or the [AirNow map project](la_air_quality_map.ipynb).
