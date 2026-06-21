@@ -5,6 +5,12 @@
   publish = "."
 
 [[headers]]
+  for = "/notebooks/*.ipynb"
+  [headers.values]
+    Content-Type = "application/x-ipynb+json"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"

@@ -234,6 +234,7 @@
     </a>
     <h1>Build something real, start to finish</h1>
     <p>Each project uses a real dataset from our library. Beginner projects include runnable notebooks; video walkthroughs are on the way. No paid software required.</p>
+    <p class="colab-note" style="margin-top:14px;font-size:14px;color:var(--ink-soft);max-width:62ch;">Colab needs a <strong>public</strong> GitHub repo or a deployed site URL in <code>assets/site-config.js</code>. If Colab opens blank, check repo visibility under GitHub Settings.</p>
   </div>
 </header>
 
@@ -326,6 +327,7 @@
   </div>
 </footer>
 
+<script src="assets/site-config.js"></script>
 <script>
   /* ===== PROJECT LIBRARY =====
      Add a project by appending an object below. Fields:
@@ -340,7 +342,9 @@
        skills      , array of skills practiced (shown as pills)
        video       . URL to the walkthrough video ('#' until you record it)
        notebook    . path under notebooks/ ('#' until you build it) */
-  const GITHUB_REPO = 'KrishM23/Environmental-Data-Science';
+  const GITHUB_REPO = (window.TERRAIN && window.TERRAIN.github) || 'KrishM23/Environmental-Data-Science';
+  const GITHUB_BRANCH = (window.TERRAIN && window.TERRAIN.branch) || 'main';
+  const PUBLIC_ORIGIN = (window.TERRAIN && window.TERRAIN.publicOrigin) || '';
   const projects = [
     {
       title: 'Map LA\u2019s air quality in an afternoon',
@@ -436,21 +440,29 @@
     return `<a class="pbtn${primary ? ' pbtn-primary' : ''}" href="${url}" target="_blank" rel="noopener">${label}</a>`;
   }
 
+  function notebookColabUrl(path) {
+    if (path.endsWith('.Rmd')) {
+      return `https://github.com/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
+    }
+    if (PUBLIC_ORIGIN) {
+      const siteUrl = new URL(path, PUBLIC_ORIGIN.endsWith('/') ? PUBLIC_ORIGIN : PUBLIC_ORIGIN + '/').href;
+      return `https://colab.research.google.com/#create=true&url=${encodeURIComponent(siteUrl)}`;
+    }
+    /* Standard Colab GitHub opener — loads the .ipynb directly (repo must be public). */
+    return `https://colab.research.google.com/github/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
+  }
+
   function notebookBtn(path) {
     if (!path || path === '#') {
       return actionBtn('#', 'Open notebook', false);
     }
-    const localUrl = path;
-    const absoluteUrl = new URL(path, window.location.href).href;
-    const colabFromSite = `https://colab.research.google.com/#create=true&url=${encodeURIComponent(absoluteUrl)}`;
-    const colabFromGitHub = `https://colab.research.google.com/github/${GITHUB_REPO}/blob/main/${path}`;
-    const onLocalhost = /^(localhost|127\.(?:\d+\.){2}\d+)$/.test(window.location.hostname);
-
-    let html = `<a class="pbtn pbtn-primary" href="${localUrl}">Open notebook</a>`;
-    html += onLocalhost
-      ? `<a class="pbtn" href="${colabFromGitHub}" target="_blank" rel="noopener">Open in Colab</a>`
-      : `<a class="pbtn" href="${colabFromSite}" target="_blank" rel="noopener">Open in Colab</a>`;
-    return html;
+    const colabUrl = notebookColabUrl(path);
+    const colabLabel = path.endsWith('.Rmd') ? 'View on GitHub' : 'Open in Colab';
+    const colabTitle = path.endsWith('.Rmd')
+      ? 'R notebooks open in RStudio — download the .Rmd file'
+      : 'Requires a public GitHub repo (Settings → change visibility) or set publicOrigin in assets/site-config.js';
+    return `<a class="pbtn pbtn-primary" href="${path}">Open notebook</a>
+      <a class="pbtn" href="${colabUrl}" target="_blank" rel="noopener" title="${colabTitle}">${colabLabel}</a>`;
   }
 
   function cardHTML(p) {

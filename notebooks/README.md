@@ -14,9 +14,16 @@ Runnable code for beginner projects on [Terrain](https://github.com/KrishM23/Env
 
 ### Python (Colab — easiest)
 
-1. Open a notebook on GitHub and click **Open in Colab**, or use the link on the project card.
+1. On a project card, click **Open in Colab**.
 2. Run cells top to bottom (`Runtime → Run all`).
-3. For **AirNow**, either use the bundled sample data or set `USE_LIVE_DATA = True` and paste a free [API key](https://docs.airnowapi.org/account/request/).
+
+**If Colab opens a blank notebook:** the old link format failed silently when GitHub returned 404 (private repo). Use **Open in Colab** after the repo is public, or upload the `.ipynb` manually via Colab → File → Upload notebook.
+
+- **Recommended:** GitHub → repo **Settings → General → Change repository visibility → Public** (Terrain is meant to be open anyway).
+- **Or:** deploy the site on Netlify, then set your live URL in [`assets/site-config.js`](../assets/site-config.js) as `publicOrigin: 'https://your-site.netlify.app'`.
+- **Or:** in Colab, use **File → Upload notebook** and select the `.ipynb` from this folder.
+
+3. For **AirNow**, either use bundled sample data or set `USE_LIVE_DATA = True` and paste a free [API key](https://docs.airnowapi.org/account/request/).
 
 ### Python (local)
 
