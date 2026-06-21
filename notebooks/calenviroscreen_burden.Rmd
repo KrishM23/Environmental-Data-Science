@@ -1,0 +1,135 @@
+---
+title: "Who carries the pollution burden?"
+subtitle: "Terrain starter project · R · CalEnviroScreen"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Who carries the pollution burden?
+
+**Terrain starter project · R · CalEnviroScreen**
+
+Use CalEnviroScreen 4.0 to explore which Los Angeles County communities face the highest combined pollution and vulnerability.
+
+**You will build:** a ranked chart of the most-burdened census tracts and a short written takeaway.
+
+**Before you start**
+
+- Open this file in **RStudio** (or Posit Cloud) and click **Knit**, or run chunk-by-chunk with `Ctrl/Cmd + Shift + Enter`.
+- Install packages once if needed (see chunk below).
+- Read the [CalEnviroScreen explainer](../explainer.html?id=calenviroscreen) on Terrain.
+
+## 1. Setup
+
+```{r packages}
+required <- c("jsonlite", "httr", "dplyr", "ggplot2", "scales")
+missing <- required[!vapply(required, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
+if (length(missing)) {
+  install.packages(missing, repos = "https://cloud.r-project.org")
+}
+library(jsonlite)
+library(dplyr)
+library(ggplot2)
+library(scales)
+```
+
+## 2. Load CalEnviroScreen data (Los Angeles County)
+
+We pull CES 4.0 from California's public ArcGIS service. Tract IDs starting with `6037` are in Los Angeles County.
+
+```{r fetch}
+fetch_ces_la <- function() {
+  base <- paste0(
+    "https://services1.arcgis.com/PCHfdHz4GlDNAhBb/arcgis/rest/services/",
+    "CalEnviroScreen_4_0_Results_/FeatureServer/0/query"
+  )
+  rows <- list()
+  offset <- 0
+  repeat {
+    q <- list(
+      where = "TractTXT LIKE '6037%'",
+      outFields = "TractTXT,CIscoreP,PollutionScore,PopCharScore,pmP,dieselP,trafficP",
+      returnGeometry = "false",
+      resultOffset = offset,
+      resultRecordCount = 2000,
+      f = "json"
+    )
+    resp <- httr::GET(base, query = q)
+    httr::stop_for_status(resp)
+    parsed <- jsonlite::fromJSON(httr::content(resp, as = "text", encoding = "UTF-8"))
+    batch <- parsed$features$attributes
+    if (is.null(batch) || nrow(batch) == 0) break
+    rows[[length(rows) + 1]] <- batch
+    if (!isTRUE(parsed$exceededTransferLimit)) break
+    offset <- offset + nrow(batch)
+  }
+  dplyr::bind_rows(rows)
+}
+
+USE_SAMPLE <- FALSE  # set TRUE to use bundled JSON offline
+
+if (USE_SAMPLE) {
+  sample_path <- if (file.exists("data/ces4_la_county.json")) {
+    "data/ces4_la_county.json"
+  } else {
+    "notebooks/data/ces4_la_county.json"
+  }
+  ces <- fromJSON(sample_path, flatten = TRUE) |> as_tibble()
+  message("Using bundled sample (", nrow(ces), " tracts)")
+} else {
+  ces <- fetch_ces_la()
+  message("Fetched ", nrow(ces), " LA County tracts from ArcGIS")
+}
+
+head(ces)
+```
+
+## 3. Rank the highest-burden tracts
+
+`CIscoreP` is the CalEnviroScreen percentile (0–100; higher = greater cumulative burden).
+
+```{r rank}
+ranked <- ces |>
+  mutate(
+    tract_label = paste0("Tract ", TractTXT),
+    CIscoreP = as.numeric(CIscoreP)
+  ) |>
+  arrange(desc(CIscoreP)) |>
+  mutate(rank = row_number())
+
+top15 <- ranked |> slice_head(n = 15)
+
+summary(ranked$CIscoreP)
+top15 |> select(rank, TractTXT, CIscoreP, PollutionScore, PopCharScore)
+```
+
+## 4. Plot
+
+```{r plot, fig.width=8, fig.height=5}
+ggplot(top15, aes(x = CIscoreP, y = reorder(tract_label, CIscoreP), fill = CIscoreP)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_gradient(low = "#D98E5A", high = "#7B2D26") +
+  scale_x_continuous(labels = label_number(suffix = "%")) +
+  labs(
+    title = "Highest CalEnviroScreen burden in Los Angeles County",
+    subtitle = "Top 15 census tracts by CIscoreP (CalEnviroScreen 4.0)",
+    x = "CalEnviroScreen percentile (CIscoreP)",
+    y = NULL,
+    caption = "Source: OEHHA CalEnviroScreen 4.0 via California ArcGIS Open Data"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+## 5. Write your takeaway
+
+Answer in 3–4 sentences:
+
+1. What percentile range do the top tracts fall in?
+2. For the #1 tract, is pollution burden or population vulnerability higher (`PollutionScore` vs `PopCharScore`)?
+3. Why is CalEnviroScreen a *screening* tool, not an individual risk score?
+
+**Next:** Pair this with live air readings in the [AirNow Python notebook](la_air_quality_map.ipynb), or browse more on [Terrain](../datasets.html).

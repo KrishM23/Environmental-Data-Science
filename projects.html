@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site-nav.css">
 <style>
   :root {
     --paper: #FBFAF6;
@@ -187,7 +188,6 @@
   .foot-bottom a:hover { text-decoration: underline; }
 
   @media (max-width: 820px) {
-    .nav-links { display: none; }
     .proj-grid { grid-template-columns: 1fr; }
     .path { flex-direction: column; }
     .path-step:not(:last-child) { border-right: none; border-bottom: 1px solid var(--line); }
@@ -206,7 +206,7 @@
       </svg>
       Terrain
     </a>
-    <div class="nav-links">
+    <div class="nav-links" id="siteNavMenu">
       <a href="index.html#start">How it works</a>
       <a href="datasets.html">Datasets</a>
       <a href="projects.html" class="active">Projects</a>
@@ -215,8 +215,16 @@
       <a href="team.html">Team</a>
       <a href="index.html#join" class="nav-cta">Join the list</a>
     </div>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open menu">
+      <span class="nav-toggle-bars" aria-hidden="true">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </span>
+    </button>
   </div>
 </nav>
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
 
 <header class="lib-head">
   <div class="wrap">
@@ -225,7 +233,7 @@
       Back to home
     </a>
     <h1>Build something real, start to finish</h1>
-    <p>Each project uses a real dataset from our library. You get a video walkthrough, a notebook to run in your browser, and a clear end product. No paid software required. Work through them in order or pick one that fits your interests.</p>
+    <p>Each project uses a real dataset from our library. Beginner projects include runnable notebooks; video walkthroughs are on the way. No paid software required.</p>
   </div>
 </header>
 
@@ -239,7 +247,7 @@
     <div class="path-step">
       <div class="path-k">Step 2</div>
       <h4>Follow the walkthrough</h4>
-      <p>Watch the video and run the notebook line by line, all in your browser.</p>
+      <p>Open the notebook in Colab or RStudio and run it step by step. Video walkthroughs coming soon.</p>
     </div>
     <div class="path-step">
       <div class="path-k">Step 3</div>
@@ -331,41 +339,42 @@
        datasetLink , link to that dataset (use 'datasets.html' to point at the library)
        skills      , array of skills practiced (shown as pills)
        video       . URL to the walkthrough video ('#' until you record it)
-       notebook    . URL to the Colab/notebook ('#' until you build it) */
+       notebook    . path under notebooks/ ('#' until you build it) */
+  const GITHUB_REPO = 'KrishM23/Environmental-Data-Science';
   const projects = [
     {
       title: 'Map LA\u2019s air quality in an afternoon',
       level: 'beginner', time: '~45 min', lang: 'Python',
       desc: 'Pull live air-quality readings from EPA AirNow and plot them on a map of Los Angeles. Your first taste of working with a real API and turning raw numbers into something you can see.',
       build: 'An interactive map of LA air-quality stations, color-coded by AQI.',
-      dataset: 'EPA AirNow', datasetLink: 'datasets.html',
+      dataset: 'EPA AirNow', datasetLink: 'explainer.html?id=epa-airnow',
       skills: ['Reading an API', 'pandas basics', 'Plotting a map'],
-      video: '#', notebook: '#'
+      video: '#', notebook: 'notebooks/la_air_quality_map.ipynb'
     },
     {
       title: 'Who carries the pollution burden?',
       level: 'beginner', time: '~1 hr', lang: 'R',
       desc: 'Use CalEnviroScreen to explore which California communities face the highest combined pollution and vulnerability. The foundational move in any environmental-justice analysis, done gently.',
       build: 'A ranked chart of the most-burdened census tracts, with a short written takeaway.',
-      dataset: 'CalEnviroScreen', datasetLink: 'datasets.html',
+      dataset: 'CalEnviroScreen', datasetLink: 'explainer.html?id=calenviroscreen',
       skills: ['Loading a CSV', 'Sorting & filtering', 'Bar charts in ggplot'],
-      video: '#', notebook: '#'
+      video: '#', notebook: 'notebooks/calenviroscreen_burden.Rmd'
     },
     {
       title: 'Is your hometown getting hotter?',
       level: 'beginner', time: '~1 hr', lang: 'Python',
-      desc: 'Grab decades of temperature records from NOAA for any U.S. city and plot the long-run trend. A clean, motivating intro to time-series data with a personal hook.',
+      desc: 'Grab decades of temperature records from NOAA for a U.S. city and plot the long-run trend. A clean, motivating intro to time-series data with a personal hook.',
       build: 'A temperature-trend line chart for a city you choose, with the warming rate.',
-      dataset: 'NOAA Climate Data', datasetLink: 'datasets.html',
+      dataset: 'NOAA Climate Data', datasetLink: 'explainer.html?id=noaa-climate',
       skills: ['Time-series basics', 'Resampling by year', 'Trend lines'],
-      video: '#', notebook: '#'
+      video: '#', notebook: 'notebooks/hometown_temperature_trend.ipynb'
     },
     {
       title: 'Rebuild the UCLA carbon tracker',
       level: 'intermediate', time: '~1.5 hr', lang: 'R',
-      desc: 'Fit a trend line to UCLA\u2019s emissions data and project when campus could reach net-zero. This is the same analysis used in the carbon tracker on Terrain\u2019s homepage.',
-      build: 'A reproducible chart of actual vs. pledged emissions, plus a projected net-zero year.',
-      dataset: 'UCLA Emissions Reports', datasetLink: 'datasets.html',
+      desc: 'Fit a trend line to UCLA\u2019s verified emissions data and compare progress against UC\u2019s 90%-by-2045 commitment. This is the same analysis used in the carbon tracker on Terrain\u2019s homepage.',
+      build: 'A reproducible chart of reported vs. committed emissions, plus a projected year to reach the 2045 target.',
+      dataset: 'UCLA Emissions Reports', datasetLink: 'explainer.html?id=ucla-emissions',
       demo: 'index.html#tracker',
       skills: ['Linear regression', 'Extrapolation', 'Annotated plots'],
       video: '#', notebook: '#'
@@ -375,7 +384,7 @@
       level: 'intermediate', time: '~2 hr', lang: 'Python',
       desc: 'Use USGS streamflow data to follow how a river system responds before, during, and after a dry spell. Introduces joining multiple sites and reasoning about seasonality.',
       build: 'A multi-site streamflow dashboard showing drought impact over time.',
-      dataset: 'USGS Water Data', datasetLink: 'datasets.html',
+      dataset: 'USGS Water Data', datasetLink: 'explainer.html?id=usgs-water',
       skills: ['Multi-source joins', 'Seasonality', 'Small dashboards'],
       video: '#', notebook: '#'
     },
@@ -384,7 +393,7 @@
       level: 'intermediate', time: '~2 hr', lang: 'R',
       desc: 'Combine CalEnviroScreen and EPA AirNow to test whether the communities flagged as most burdened actually breathe worse air. Your first real two-dataset question with a regression behind it.',
       build: 'A scatter plot and simple model linking EJ scores to measured air quality.',
-      dataset: 'CalEnviroScreen', datasetLink: 'datasets.html',
+      dataset: 'CalEnviroScreen', datasetLink: 'explainer.html?id=calenviroscreen',
       skills: ['Joining datasets', 'Correlation vs. cause', 'Linear models'],
       video: '#', notebook: '#'
     },
@@ -393,7 +402,7 @@
       level: 'advanced', time: '~3 hr', lang: 'Python',
       desc: 'Open real NASA Earthdata satellite files and extract a usable sea-ice signal from raw NetCDF. A genuine step into the formats and scale that professional earth-science work runs on.',
       build: 'A processed sea-ice map rendered from raw satellite files.',
-      dataset: 'NASA Earthdata', datasetLink: 'datasets.html',
+      dataset: 'NASA Earthdata', datasetLink: 'explainer.html?id=nasa-earthdata',
       skills: ['NetCDF / HDF', 'Array handling (xarray)', 'Geospatial plotting'],
       video: '#', notebook: '#'
     },
@@ -402,7 +411,7 @@
       level: 'advanced', time: '~4 hr', lang: 'Python',
       desc: 'Start with scattered sensor readings and estimate missing values across space using kriging. A standard method for turning incomplete environmental data into a continuous map.',
       build: 'A continuous interpolated surface from scattered input points, with uncertainty.',
-      dataset: 'NASA Earthdata', datasetLink: 'datasets.html',
+      dataset: 'NASA Earthdata', datasetLink: 'explainer.html?id=nasa-earthdata',
       skills: ['Kriging', 'Spatial statistics', 'Uncertainty mapping'],
       video: '#', notebook: '#'
     }
@@ -427,6 +436,23 @@
     return `<a class="pbtn${primary ? ' pbtn-primary' : ''}" href="${url}" target="_blank" rel="noopener">${label}</a>`;
   }
 
+  function notebookBtn(path) {
+    if (!path || path === '#') {
+      return actionBtn('#', 'Open notebook', false);
+    }
+    const localUrl = path;
+    const absoluteUrl = new URL(path, window.location.href).href;
+    const colabFromSite = `https://colab.research.google.com/#create=true&url=${encodeURIComponent(absoluteUrl)}`;
+    const colabFromGitHub = `https://colab.research.google.com/github/${GITHUB_REPO}/blob/main/${path}`;
+    const onLocalhost = /^(localhost|127\.(?:\d+\.){2}\d+)$/.test(window.location.hostname);
+
+    let html = `<a class="pbtn pbtn-primary" href="${localUrl}">Open notebook</a>`;
+    html += onLocalhost
+      ? `<a class="pbtn" href="${colabFromGitHub}" target="_blank" rel="noopener">Open in Colab</a>`
+      : `<a class="pbtn" href="${colabFromSite}" target="_blank" rel="noopener">Open in Colab</a>`;
+    return html;
+  }
+
   function cardHTML(p) {
     return `
       <div class="pcard">
@@ -446,7 +472,7 @@
         <div class="skills">${p.skills.map(s => `<span class="skill">${s}</span>`).join('')}</div>
         <div class="pcard-foot">
           ${actionBtn(p.video, '▶ Watch walkthrough', true)}
-          ${actionBtn(p.notebook, 'Open notebook', false)}
+          ${notebookBtn(p.notebook)}
           ${p.demo ? `<a class="pbtn" href="${p.demo}">See live demo</a>` : ''}
         </div>
       </div>`;
@@ -499,6 +525,7 @@
   searchEl.addEventListener('input', render);
   render();
 </script>
+<script src="assets/site-nav.js"></script>
 
 </body>
 </html>

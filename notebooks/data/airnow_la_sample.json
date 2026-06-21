@@ -1,0 +1,17 @@
+[
+  {"SiteName": "Los Angeles-North Main Street", "Latitude": 34.066, "Longitude": -118.226, "ParameterName": "PM2.5", "AQI": 62, "Category": "Moderate", "ReportingArea": "Los Angeles", "StateCode": "CA"},
+  {"SiteName": "Los Angeles-Pico Union", "Latitude": 34.052, "Longitude": -118.278, "ParameterName": "Ozone", "AQI": 88, "Category": "Moderate", "ReportingArea": "Los Angeles", "StateCode": "CA"},
+  {"SiteName": "West Los Angeles", "Latitude": 34.051, "Longitude": -118.464, "ParameterName": "PM2.5", "AQI": 41, "Category": "Good", "ReportingArea": "Los Angeles", "StateCode": "CA"},
+  {"SiteName": "North Hollywood", "Latitude": 34.168, "Longitude": -118.378, "ParameterName": "Ozone", "AQI": 74, "Category": "Moderate", "ReportingArea": "Los Angeles", "StateCode": "CA"},
+  {"SiteName": "Glendale-N. Brand", "Latitude": 34.169, "Longitude": -118.254, "ParameterName": "PM2.5", "AQI": 55, "Category": "Moderate", "ReportingArea": "Glendale", "StateCode": "CA"},
+  {"SiteName": "Pasadena", "Latitude": 34.148, "Longitude": -118.144, "ParameterName": "Ozone", "AQI": 92, "Category": "Moderate", "ReportingArea": "Pasadena", "StateCode": "CA"},
+  {"SiteName": "Long Beach-Downtown", "Latitude": 33.770, "Longitude": -118.194, "ParameterName": "PM2.5", "AQI": 48, "Category": "Good", "ReportingArea": "Long Beach", "StateCode": "CA"},
+  {"SiteName": "Compton", "Latitude": 34.026, "Longitude": -118.220, "ParameterName": "PM2.5", "AQI": 71, "Category": "Moderate", "ReportingArea": "Compton", "StateCode": "CA"},
+  {"SiteName": "Anaheim", "Latitude": 33.837, "Longitude": -117.914, "ParameterName": "Ozone", "AQI": 85, "Category": "Moderate", "ReportingArea": "Anaheim", "StateCode": "CA"},
+  {"SiteName": "Burbank", "Latitude": 34.181, "Longitude": -118.309, "ParameterName": "PM2.5", "AQI": 52, "Category": "Moderate", "ReportingArea": "Burbank", "StateCode": "CA"},
+  {"SiteName": "Torrance", "Latitude": 34.036, "Longitude": -118.341, "ParameterName": "Ozone", "AQI": 68, "Category": "Moderate", "ReportingArea": "Torrance", "StateCode": "CA"},
+  {"SiteName": "Santa Clarita", "Latitude": 34.392, "Longitude": -118.543, "ParameterName": "PM2.5", "AQI": 38, "Category": "Good", "ReportingArea": "Santa Clarita", "StateCode": "CA"},
+  {"SiteName": "Pomona", "Latitude": 34.055, "Longitude": -117.750, "ParameterName": "Ozone", "AQI": 79, "Category": "Moderate", "ReportingArea": "Pomona", "StateCode": "CA"},
+  {"SiteName": "San Pedro", "Latitude": 33.736, "Longitude": -118.292, "ParameterName": "PM2.5", "AQI": 44, "Category": "Good", "ReportingArea": "San Pedro", "StateCode": "CA"},
+  {"SiteName": "Reseda", "Latitude": 34.201, "Longitude": -118.536, "ParameterName": "Ozone", "AQI": 81, "Category": "Moderate", "ReportingArea": "Los Angeles", "StateCode": "CA"}
+]
