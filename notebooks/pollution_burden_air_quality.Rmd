@@ -68,6 +68,9 @@ library(scales)
 **Mentor check-in:** *What is AQI — a pollutant concentration or an index?*
 
 ```{r airnow}
+if (file.exists(".env")) readRenviron(".env")
+if (file.exists("../.env")) readRenviron("../.env")
+
 AIRNOW_API_KEY <- Sys.getenv("AIRNOW_API_KEY", "")
 
 fetch_airnow_live <- function(api_key, lat = 34.05, lon = -118.25, distance = 75) {
