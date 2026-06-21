@@ -34,7 +34,7 @@ Join CalEnviroScreen burden scores at monitoring locations with EPA AirNow readi
 - **Prerequisites:** Beginner CalEnviroScreen project helps; comfort with scatter plots.
 - **Two datasets:** CES = long-term burden ranking · AirNow = recent monitor snapshot.
 - **Watch for:** Students expecting perfect correlation — real air quality varies hour-to-hour; CES is long-term.
-- **Live AirNow:** Requires a free API key — set `AIRNOW_API_KEY` in your environment or paste below.
+- **Live AirNow:** Paste your key in **Section 1b** below (Colab), or use a local `.env` file.
 
 ---
 
@@ -57,6 +57,17 @@ library(scales)
 
 ---
 
+## 1b. Your AirNow API key
+
+**Colab / Posit Cloud:** Paste your free key below. **Local:** leave `""` and use `.env` in the project root.
+
+```{r airnow-key}
+# Paste key here for Colab (leave "" if using .env locally)
+AIRNOW_API_KEY_PASTE <- ""
+```
+
+---
+
 ## 2. Load AirNow monitor readings
 
 **Goal:** Build a table of LA-area monitors with latitude, longitude, and AQI.
@@ -71,7 +82,11 @@ library(scales)
 if (file.exists(".env")) readRenviron(".env")
 if (file.exists("../.env")) readRenviron("../.env")
 
-AIRNOW_API_KEY <- Sys.getenv("AIRNOW_API_KEY", "")
+AIRNOW_API_KEY <- if (nzchar(AIRNOW_API_KEY_PASTE)) {
+  AIRNOW_API_KEY_PASTE
+} else {
+  Sys.getenv("AIRNOW_API_KEY", "")
+}
 
 fetch_airnow_live <- function(api_key, lat = 34.05, lon = -118.25, distance = 75) {
   resp <- GET(
@@ -90,8 +105,8 @@ fetch_airnow_live <- function(api_key, lat = 34.05, lon = -118.25, distance = 75
 
 if (!nzchar(AIRNOW_API_KEY)) {
   stop(
-    "AirNow requires a free API key. Get one at https://docs.airnowapi.org/account/request/ ",
-    "then set AIRNOW_API_KEY in your R environment or paste it above."
+    "Paste your AirNow key in Section 1b (Colab) or add AIRNOW_API_KEY to a .env file (local). ",
+    "Free key: https://docs.airnowapi.org/account/request/"
   )
 }
 

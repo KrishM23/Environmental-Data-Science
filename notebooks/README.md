@@ -33,6 +33,16 @@ Runnable code for projects on [Terrain](https://github.com/KrishM23/Environmenta
 - **R / RStudio:** Open the `.Rmd`, run chunk-by-chunk, use **Mentor check-in** questions literally — they are written for you.
 - Each section follows: **Goal → Concept → Run cell → You should see → Mentor check-in**
 
+### AirNow API key (Colab)
+
+1. Open the notebook in Colab.
+2. Run **Step 0** and paste your free key between the quotes.
+3. Run the rest top to bottom.
+
+No Colab Secrets needed. **Do not commit a notebook that still contains your key.**
+
+Local runs: leave Step 0 empty and use a `.env` file (see `.env.example`).
+
 ### Python (Colab)
 
 1. On a project card, click **Open in Colab** (`.ipynb` only).
