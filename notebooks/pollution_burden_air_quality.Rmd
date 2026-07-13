@@ -63,18 +63,17 @@ library(scales)
 
 ```{r airnow-key}
 # Paste key here for Colab (leave "" if using .env locally)
-AIRNOW_API_KEY_PASTE <- ""
+AIRNOW_API_KEY_PASTE <- 
 ```
 
 ---
-
 ## 2. Load AirNow monitor readings
 
 **Goal:** Build a table of LA-area monitors with latitude, longitude, and AQI.
 
-**Concept:** Each row is a **monitoring site**, not a person. We keep one reading per site (highest AQI if duplicates).
+**Concept:** Each row is a **monitoring site**, not a person. We query several LA-area sub-regions separately (AirNow's live feed doesn't reliably return every station from one big radius call) and combine them, keeping one reading per site/pollutant.
 
-**You should see:** ~15 rows with `SiteName`, `AQI`, `Latitude`, `Longitude`.
+**You should see:** several rows across multiple `ReportingArea` values, not just one station.
 
 **Mentor check-in:** *What is AQI — a pollutant concentration or an index?*
 
@@ -88,7 +87,14 @@ AIRNOW_API_KEY <- if (nzchar(AIRNOW_API_KEY_PASTE)) {
   Sys.getenv("AIRNOW_API_KEY", "")
 }
 
-fetch_airnow_live <- function(api_key, lat = 34.05, lon = -118.25, distance = 75) {
+if (!nzchar(AIRNOW_API_KEY)) {
+  stop(
+    "Paste your AirNow key in Section 1b (Colab) or add AIRNOW_API_KEY to a .env file (local). ",
+    "Free key: https://docs.airnowapi.org/account/request/"
+  )
+}
+
+fetch_airnow_live <- function(api_key, lat = 34.05, lon = -118.25, distance = 40) {
   resp <- GET(
     "https://www.airnowapi.org/aq/observation/latLong/current/",
     query = list(
@@ -103,31 +109,52 @@ fetch_airnow_live <- function(api_key, lat = 34.05, lon = -118.25, distance = 75
   fromJSON(content(resp, as = "text", encoding = "UTF-8"), flatten = TRUE)
 }
 
-if (!nzchar(AIRNOW_API_KEY)) {
-  stop(
-    "Paste your AirNow key in Section 1b (Colab) or add AIRNOW_API_KEY to a .env file (local). ",
-    "Free key: https://docs.airnowapi.org/account/request/"
-  )
-}
+# Query several LA-area anchor points instead of one big radius call,
+# since AirNow's "current" endpoint often only returns 1-2 stations
+# per call even at large distances.
+centers <- tribble(
+  ~label,              ~lat,    ~lon,
+  "Downtown LA",       34.05,  -118.25,
+  "Pasadena",          34.14,  -118.13,
+  "Long Beach",        33.77,  -118.19,
+  "San Fernando Valley", 34.28, -118.44,
+  "Orange County",     33.68,  -117.83,
+  "South Bay",         33.85,  -118.29,
+  "San Gabriel Valley", 34.06, -117.97
+)
 
-monitors <- fetch_airnow_live(AIRNOW_API_KEY)
-message("Fetched ", nrow(monitors), " live AirNow observations")
+monitors_raw <- purrr::map2_dfr(
+  centers$lat, centers$lon,
+  ~fetch_airnow_live(AIRNOW_API_KEY, lat = .x, lon = .y, distance = 40)
+) |>
+  distinct(ReportingArea, ParameterName, AQI, Latitude, Longitude, .keep_all = TRUE)
 
-monitors <- monitors |>
+message("RAW rows from AirNow across all centers: ", nrow(monitors_raw))
+print(monitors_raw |> select(ReportingArea, ParameterName, AQI, Latitude, Longitude))
+
+monitors <- monitors_raw |>
   mutate(
     AQI = as.numeric(AQI),
     Latitude = as.numeric(Latitude),
     Longitude = as.numeric(Longitude)
   ) |>
   filter(!is.na(AQI), !is.na(Latitude), !is.na(Longitude)) |>
-  group_by(SiteName) |>
+  group_by(ReportingArea, ParameterName) |>
   slice_max(AQI, n = 1, with_ties = FALSE) |>
   ungroup()
 
-head(monitors |> select(SiteName, ReportingArea, ParameterName, AQI, Latitude, Longitude))
-```
+message("Monitors after cleaning/dedup: ", nrow(monitors))
 
----
+if (nrow(monitors) < 3) {
+  stop(
+    "Only ", nrow(monitors), " monitors after dedup — not enough for a regression. ",
+    "AirNow's live feed may be sparse right now; try increasing `distance` per center ",
+    "or adding more centers to the `centers` table above."
+  )
+}
+
+head(monitors |> select(ReportingArea, ParameterName, AQI, Latitude, Longitude))
+```
 
 ## 3. Look up CalEnviroScreen at each monitor
 
@@ -169,7 +196,7 @@ for (i in seq_len(nrow(monitors))) {
   ces <- lookup_ces(monitors$Longitude[i], monitors$Latitude[i])
   if (is.null(ces)) next
   ces_at_monitors[[i]] <- bind_cols(
-    monitors[i, c("SiteName", "ReportingArea", "ParameterName", "AQI", "Latitude", "Longitude")],
+    monitors[i, c("ReportingArea", "ParameterName", "AQI", "Latitude", "Longitude")],
     ces
   )
 }
@@ -182,7 +209,7 @@ joined <- bind_rows(ces_at_monitors) |>
   )
 
 message("Matched ", nrow(joined), " monitors to census tracts")
-joined |> select(SiteName, ReportingArea, AQI, CIscoreP, PollutionScore, pmP)
+joined |> select(ReportingArea, ParameterName, AQI, CIscoreP, PollutionScore, pmP)
 ```
 
 ---
@@ -203,7 +230,7 @@ tidy(fit)
 
 cor_test <- cor.test(joined$CIscoreP, joined$AQI)
 cor_test
-```
+``` 
 
 ---
 

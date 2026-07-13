@@ -130,8 +130,33 @@ fetch_ces_attributes <- function() {
 }
 
 centroid_from_rings <- function(rings) {
-  mat <- do.call(rbind, rings)
+  if (is.null(rings) || length(rings) == 0) return(c(lon = NA_real_, lat = NA_real_))
+  mat <- tryCatch(do.call(rbind, rings), error = function(e) NULL)
+  if (is.null(mat) || nrow(mat) == 0) return(c(lon = NA_real_, lat = NA_real_))
   c(lon = mean(mat[, 1]), lat = mean(mat[, 2]))
+}
+
+# Pulls the rings list for feature i, regardless of whether `geometry`
+# came back as a list-of-objects (feats$geometry[[i]]$rings) or a
+# data-frame-of-list-columns (feats$geometry$rings[[i]]) — jsonlite's
+# output shape here can vary by version.
+get_rings_for_feature <- function(feats, i) {
+  geom <- feats$geometry
+  if (is.null(geom)) return(NULL)
+
+  # Shape A: geometry is a data.frame/tibble with a `rings` list-column
+  if (is.data.frame(geom) && "rings" %in% names(geom)) {
+    if (i > nrow(geom)) return(NULL)
+    return(geom$rings[[i]])
+  }
+
+  # Shape B: geometry is a list, one element per feature, each with $rings
+  if (is.list(geom) && !is.data.frame(geom)) {
+    if (i > length(geom)) return(NULL)
+    return(geom[[i]]$rings)
+  }
+
+  NULL
 }
 
 fetch_ces_centroids <- function() {
@@ -152,23 +177,51 @@ fetch_ces_centroids <- function() {
     parsed <- fromJSON(content(resp, as = "text", encoding = "UTF-8"))
     feats <- parsed$features
     if (is.null(feats) || nrow(feats) == 0) break
-    for (i in seq_len(nrow(feats))) {
-      rings <- feats$geometry[[i]]$rings[[1]]
+
+    n_attr <- nrow(feats$attributes)
+    n_skipped <- 0L
+
+    for (i in seq_len(n_attr)) {
+      rings <- get_rings_for_feature(feats, i)
+      if (is.null(rings) || length(rings) == 0) { n_skipped <- n_skipped + 1; next }
+
       cc <- centroid_from_rings(rings)
+      if (is.na(cc[["lon"]]) || is.na(cc[["lat"]])) { n_skipped <- n_skipped + 1; next }
+
       rows[[length(rows) + 1]] <- tibble(
         TractTXT = feats$attributes$TractTXT[i],
         lon = cc[["lon"]],
         lat = cc[["lat"]]
       )
     }
+
+    if (n_skipped > 0) {
+      message("Skipped ", n_skipped, " of ", n_attr, " tracts in this batch (missing/bad geometry)")
+    }
+
     if (!isTRUE(parsed$exceededTransferLimit)) break
-    offset <- offset + nrow(feats)
+    offset <- offset + n_attr
   }
   bind_rows(rows)
 }
 
-ces_scores <- fetch_ces_attributes()
 ces_centroids <- fetch_ces_centroids()
+
+if (nrow(ces_centroids) == 0 || !"TractTXT" %in% names(ces_centroids)) {
+  stop(
+    "fetch_ces_centroids() returned 0 usable rows — geometry parsing failed for every tract.\n",
+    "Run this to inspect the raw shape:\n",
+    "  q <- list(where=\"TractTXT LIKE '6037%'\", outFields=\"TractTXT\", returnGeometry=\"true\",\n",
+    "            outSR=4326, resultRecordCount=5, f=\"json\")\n",
+    "  resp <- GET(CES_URL, query = q)\n",
+    "  parsed <- fromJSON(content(resp, as='text', encoding='UTF-8'))\n",
+    "  str(parsed$features, max.level = 3)"
+  )
+}
+
+ces_scores <- fetch_ces_attributes()
+
+message("Centroids: ", nrow(ces_centroids), " | Scores: ", nrow(ces_scores))
 
 tracts <- ces_centroids |>
   inner_join(ces_scores, by = "TractTXT") |>
@@ -252,7 +305,7 @@ ggplot() +
     subtitle = paste0("Orange triangles = top ", TOP_N_EMITTERS, " emitters · buffer = ", BUFFER_KM, " km"),
     x = "Longitude", y = "Latitude",
     color = "CES percentile",
-    size = "CO₂ (t)"
+    size = "CO2 (t)"
   ) +
   theme_minimal(base_size = 13) +
   theme(plot.title = element_text(face = "bold"))
