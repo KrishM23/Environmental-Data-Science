@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dataset explainer | Terrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site-nav.css?v=3">
+<link rel="stylesheet" href="assets/terrain-soft.css?v=3">
+
+<style>
+  :root {
+    --paper: #FBFAF6; --paper-2: #F3F1E8; --ink: #1B2A26; --ink-soft: #4A5A54;
+    --moss: #2F6B4F; --moss-deep: #1F4D38; --sky: #5B8BB0; --clay: #D98E5A;
+    --line: #E3DFD2; --glow: #C7E0A8; --radius: 16px; --maxw: 1180px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink);
+    line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--glow); color: var(--ink); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  a { color: inherit; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,250,246,0.82); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 21px;
+    color: var(--ink); text-decoration: none;
+  }
+  .logo-mark { height: 40px; width: auto; flex-shrink: 0; display: block; }
+  .nav-links { display: flex; align-items: center; gap: 34px; }
+  .nav-links a {
+    color: var(--ink-soft); text-decoration: none; font-size: 15px;
+    font-weight: 450; transition: color .2s;
+  }
+  .nav-links a:not(.nav-cta):hover, .nav-links a:not(.nav-cta).active { color: var(--moss); }
+  .nav-cta {
+    background: var(--moss); color: #fff !important; padding: 9px 18px;
+    border-radius: 10px; font-weight: 500 !important; font-size: 14.5px !important;
+  }
+  .nav-cta:hover {  background: var(--moss-deep); color: #fff !important; }
+
+  .expl-hero { padding: 56px 0 36px; border-bottom: 1px solid var(--line); }
+  .crumb {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink-soft);
+    margin-bottom: 18px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  }
+  .crumb:hover { color: var(--moss); }
+  .expl-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; align-items: center; }
+  .expl-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 500;
+    padding: 5px 11px; border-radius: 6px; text-transform: uppercase; letter-spacing: .03em;
+  }
+  .expl-tag.topic { background: var(--paper-2); color: var(--ink-soft); }
+  .expl-tag.lvl-beginner { background: #E8F0E0; color: #3C7A4A; }
+  .expl-tag.lvl-intermediate { background: #FBEEDF; color: #C07A3E; }
+  .expl-tag.lvl-advanced { background: #E5EEF5; color: #3F7197; }
+  .expl-hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(32px, 4.5vw, 48px); line-height: 1.08;
+    letter-spacing: -.025em; margin-bottom: 12px; max-width: 20ch;
+  }
+  .expl-source { font-size: 16px; color: var(--ink-soft); margin-bottom: 16px; }
+  .expl-lede { font-size: 18px; color: var(--ink-soft); max-width: 62ch; line-height: 1.6; }
+  .expl-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .expl-btn {
+    text-decoration: none; font-size: 14.5px; font-weight: 500; padding: 11px 18px;
+    border-radius: 10px; border: 1px solid var(--line); color: var(--ink);
+    transition: border-color .2s, transform .2s, background .2s;
+  }
+  .expl-btn:hover { border-color: var(--moss); transform: translateY(-1px); }
+  .expl-btn-primary { background: var(--moss); color: #fff; border-color: var(--moss); }
+  .expl-btn-primary:hover { background: var(--moss-deep); border-color: var(--moss-deep); }
+
+  .expl-body { padding: 48px 0 80px; }
+  .expl-layout {
+    display: grid; grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 48px; align-items: start;
+  }
+  .expl-section { margin-bottom: 40px; }
+  .expl-section:last-child { margin-bottom: 0; }
+  .expl-section h2 {
+    font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600;
+    letter-spacing: -.02em; margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .expl-section p { color: var(--ink-soft); margin-bottom: 14px; font-size: 15px; }
+  .expl-section p:last-child { margin-bottom: 0; }
+  .expl-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .expl-list li {
+    font-size: 15px; color: var(--ink-soft); padding-left: 18px; position: relative;
+  }
+  .expl-list li::before {
+    content: ''; position: absolute; left: 0; top: .55em;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--moss);
+  }
+  .expl-list.questions li::before { background: var(--sky); }
+
+  .expl-steps { counter-reset: step; list-style: none; display: flex; flex-direction: column; gap: 16px; }
+  .expl-steps li {
+    counter-increment: step; padding: 18px 18px 18px 56px; position: relative;
+    background: #fff; border: 1px solid var(--line); border-radius: 12px;
+    font-size: 15px; color: var(--ink-soft);
+  }
+  .expl-steps li::before {
+    content: counter(step); position: absolute; left: 18px; top: 18px;
+    width: 28px; height: 28px; border-radius: 8px; background: var(--paper-2);
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
+    color: var(--moss); display: flex; align-items: center; justify-content: center;
+  }
+  .expl-steps strong { color: var(--ink); font-weight: 600; }
+
+  .expl-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  table.expl-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .expl-table th {
+    text-align: left; padding: 12px 16px; background: var(--paper-2);
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    text-transform: uppercase; letter-spacing: .04em; color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+  }
+  .expl-table td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .expl-table tr:last-child td { border-bottom: none; }
+  .expl-table code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+    background: var(--paper-2); padding: 2px 6px; border-radius: 4px; color: var(--moss-deep);
+  }
+  .expl-table td:first-child { color: var(--ink); font-weight: 500; width: 34%; }
+
+  .expl-callout {
+    padding: 18px 20px; border-radius: 12px; font-size: 14.5px; line-height: 1.55;
+    border: 1px solid var(--line);
+  }
+  .expl-callout.tip { background: #EAF2E3; border-color: #C7E0A8; color: var(--moss-deep); }
+  .expl-callout.warn { background: #FDF6EE; border-color: #F0D4B8; color: #8A5A32; }
+  .expl-callout strong { font-weight: 600; }
+
+  pre.expl-code {
+    background: var(--ink); color: #E8EDE9; padding: 18px 20px; border-radius: 12px;
+    overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    line-height: 1.55; margin-top: 12px;
+  }
+  pre.expl-code .cm { color: #7A9488; }
+
+  .expl-sidebar { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 16px; }
+  .expl-card {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px;
+  }
+  .expl-card h3 {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); margin-bottom: 14px;
+  }
+  .expl-facts { display: flex; flex-direction: column; gap: 12px; }
+  .expl-fact dt {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-soft);
+    text-transform: uppercase; letter-spacing: .04em; margin-bottom: 3px;
+  }
+  .expl-fact dd { font-size: 14.5px; color: var(--ink); font-weight: 500; }
+  .expl-related { display: flex; flex-direction: column; gap: 8px; }
+  .expl-related a {
+    font-size: 14px; color: var(--moss); text-decoration: none; font-weight: 500;
+    padding: 8px 0; border-bottom: 1px solid var(--line);
+  }
+  .expl-related a:last-child { border-bottom: none; }
+  .expl-related a:hover { color: var(--moss-deep); }
+
+  .expl-missing {
+    text-align: center; padding: 100px 20px 120px;
+  }
+  .expl-missing h1 {
+    font-family: 'Fraunces', serif; font-size: 32px; margin-bottom: 12px;
+  }
+  .expl-missing p { color: var(--ink-soft); margin-bottom: 24px; }
+
+  footer { border-top: 1px solid var(--line); padding: 50px 0 38px; }
+  .foot-inner { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+  .foot-brand { max-width: 280px; }
+  .foot-brand p { font-size: 14px; color: var(--ink-soft); margin-top: 12px; }
+  .foot-cols { display: flex; gap: 64px; flex-wrap: wrap; }
+  .foot-col h5 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); margin-bottom: 14px; font-weight: 600; }
+  .foot-col a { display: block; font-size: 14.5px; color: var(--ink); text-decoration: none; margin-bottom: 9px; }
+  .foot-col a:hover { color: var(--moss); }
+  .foot-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .foot-bottom a { color: var(--moss); text-decoration: none; }
+
+  @media (max-width: 920px) {
+    .expl-layout { grid-template-columns: 1fr; }
+    .expl-sidebar { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
+    </a>
+    <div class="nav-links" id="siteNavMenu"></div>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open menu">
+      <span class="nav-toggle-bars" aria-hidden="true">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </span>
+    </button>
+  </div>
+</nav>
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
+
+<main id="main"></main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
+    </a>
+        <p>A student-built entry point for environmental data science at UCLA.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Explore</h5>
+          <a href="datasets.html">Dataset library</a>
+          <a href="skills.html">Skills</a>
+          <a href="projects.html">Project library</a>
+          <a href="programs.html">Programs</a>
+        </div>
+        <div class="foot-col">
+          <h5>Connect</h5>
+          <a href="mailto:uclaterrain@gmail.com">Contact</a>
+          <a class="foot-social" href="https://www.linkedin.com/company/terrainucla" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 114.127 0 2.062 2.062 0 01-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Terrain · Student-built at UCLA</span>
+      <span><a href="mailto:uclaterrain@gmail.com">uclaterrain@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="explainers-data.js"></script>
+<script>
+  const levelClass = { beginner: 'lvl-beginner', intermediate: 'lvl-intermediate', advanced: 'lvl-advanced' };
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  const data = id && window.EXPLAINERS ? window.EXPLAINERS[id] : null;
+  const main = document.getElementById('main');
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  }
+
+  function renderList(items, cls) {
+    return `<ul class="expl-list${cls ? ' ' + cls : ''}">${items.map(i => `<li>${i}</li>`).join('')}</ul>`;
+  }
+
+  function renderSteps(steps) {
+    return `<ol class="expl-steps">${steps.map(s => `<li><strong>${esc(s.title)}</strong> — ${s.text}</li>`).join('')}</ol>`;
+  }
+
+  function renderFields(fields) {
+    if (!fields.length) return '';
+    return `<div class="expl-table-wrap"><table class="expl-table"><thead><tr><th>Field / layer</th><th>What it tells you</th></tr></thead><tbody>${fields.map(f => `<tr><td><code>${esc(f.name)}</code></td><td>${f.desc}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  function renderFacts(facts) {
+    return facts.map(f => `<div class="expl-fact"><dt>${esc(f.label)}</dt><dd>${f.value}</dd></div>`).join('');
+  }
+
+  if (!data) {
+    document.title = 'Explainer not found | Terrain';
+    main.innerHTML = `<div class="wrap expl-missing">
+      <h1>Explainer not found</h1>
+      <p>We couldn't find a guide for that dataset. Browse the full library instead.</p>
+      <a class="expl-btn expl-btn-primary" href="datasets.html">Browse datasets</a>
+    </div>`;
+  } else {
+    document.title = `${data.name} | Terrain explainer`;
+    const related = (data.related || []).map(r =>
+      `<a href="explainer.html?id=${esc(r.id)}">${esc(r.name)}</a>`
+    ).join('');
+
+    main.innerHTML = `
+      <header class="expl-hero">
+        <div class="wrap">
+          <a href="datasets.html" class="crumb">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Dataset library
+          </a>
+          <div class="expl-meta">
+            <span class="expl-tag topic">${esc(data.topic)}</span>
+            <span class="expl-tag ${levelClass[data.level]}">${esc(data.level)}</span>
+          </div>
+          <h1>${esc(data.name)}</h1>
+          <p class="expl-source">${esc(data.source)}</p>
+          <p class="expl-lede">${data.lede}</p>
+          <div class="expl-actions">
+            <a class="expl-btn expl-btn-primary" href="${esc(data.dataUrl)}" target="_blank" rel="noopener">Get the data ↗</a>
+            ${data.docsUrl ? `<a class="expl-btn" href="${esc(data.docsUrl)}" target="_blank" rel="noopener">Official docs ↗</a>` : ''}
+            <a class="expl-btn" href="projects.html">Starter projects</a>
+          </div>
+        </div>
+      </header>
+      <div class="expl-body">
+        <div class="wrap expl-layout">
+          <article>
+            <section class="expl-section">
+              <h2>Overview</h2>
+              ${data.overview.map(p => `<p>${p}</p>`).join('')}
+            </section>
+            <section class="expl-section">
+              <h2>Why it matters</h2>
+              ${data.why.map(p => `<p>${p}</p>`).join('')}
+            </section>
+            ${data.fields ? `<section class="expl-section"><h2>Key fields &amp; layers</h2>${renderFields(data.fields)}</section>` : ''}
+            <section class="expl-section">
+              <h2>How to access</h2>
+              ${renderSteps(data.access)}
+              ${data.code ? `<pre class="expl-code">${data.code}</pre>` : ''}
+            </section>
+            <section class="expl-section">
+              <h2>Questions you can answer</h2>
+              ${renderList(data.questions, 'questions')}
+            </section>
+            <section class="expl-section">
+              <h2>Analysis tips</h2>
+              ${renderList(data.tips)}
+            </section>
+            <section class="expl-section">
+              <h2>Caveats</h2>
+              <div class="expl-callout warn">${data.caveats.map(c => `<p>${c}</p>`).join('')}</div>
+            </section>
+            ${data.proTip ? `<section class="expl-section"><div class="expl-callout tip"><strong>Starter tip:</strong> ${data.proTip}</div></section>` : ''}
+          </article>
+          <aside class="expl-sidebar">
+            <div class="expl-card">
+              <h3>At a glance</h3>
+              <dl class="expl-facts">${renderFacts(data.facts)}</dl>
+            </div>
+            ${related ? `<div class="expl-card"><h3>Related datasets</h3><div class="expl-related">${related}</div></div>` : ''}
+            <div class="expl-card">
+              <h3>Next step</h3>
+              <p style="font-size:14px;color:var(--ink-soft);line-height:1.55;margin-bottom:14px;">Pair this dataset with a starter project from the Terrain library.</p>
+              <a class="expl-btn expl-btn-primary" href="projects.html" style="display:inline-block;">Browse projects</a>
+            </div>
+          </aside>
+        </div>
+      </div>`;
+  }
+</script>
+<script src="assets/site-nav.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suggestion received | Terrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FBFAF6; --ink: #1B2A26; --ink-soft: #4A5A54;
+    --moss: #2F6B4F; --moss-deep: #1F4D38; --line: #E3DFD2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink);
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 40px 24px; text-align: center;
+  }
+  .card {
+    max-width: 520px; background: #fff; border: 1px solid var(--line);
+    border-radius: 20px; padding: 48px 36px;
+    box-shadow: 0 24px 48px -24px rgba(27,42,38,.18);
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-size: clamp(28px, 5vw, 36px);
+    font-weight: 600; letter-spacing: -.02em; margin-bottom: 14px;
+  }
+  p { font-size: 17px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 16px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 28px; }
+  a {
+    display: inline-flex; align-items: center; gap: 8px;
+    text-decoration: none; padding: 14px 22px; border-radius: 12px;
+    font-weight: 500; font-size: 15px; transition: background .2s, transform .2s, border-color .2s;
+  }
+  a.primary { background: var(--moss); color: #fff; }
+  a.primary:hover { background: var(--moss-deep); transform: translateY(-2px); }
+  a.secondary { border: 1px solid var(--line); color: var(--ink); background: #fff; }
+  a.secondary:hover { border-color: var(--moss); color: var(--moss); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Thanks for the suggestion</h1>
+    <p>We received your dataset recommendation and will review it for the Terrain library.</p>
+    <p>If we add it, we&apos;ll write an explainer and link it from the dataset page.</p>
+    <div class="actions">
+      <a class="primary" href="datasets.html">Browse datasets</a>
+      <a class="secondary" href="index.html">Back to home</a>
+    </div>
+  </div>
+</body>
+</html>

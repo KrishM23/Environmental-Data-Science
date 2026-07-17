@@ -7,7 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site-nav.css">
+<link rel="stylesheet" href="assets/site-nav.css?v=3">
+<link rel="stylesheet" href="assets/terrain-soft.css?v=3">
+
 <style>
   :root {
     --paper: #FBFAF6;
@@ -45,19 +47,19 @@
     font-family: 'Fraunces', serif; font-weight: 600; font-size: 21px;
     color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
   }
-  .logo-mark { width: 30px; height: 30px; flex-shrink: 0; }
+  .logo-mark { height: 40px; width: auto; flex-shrink: 0; display: block; }
   .nav-links { display: flex; align-items: center; gap: 34px; }
   .nav-links a {
     color: var(--ink-soft); text-decoration: none; font-size: 15px;
     font-weight: 450; transition: color .2s;
   }
-  .nav-links a:hover, .nav-links a.active { color: var(--moss); }
+  .nav-links a:not(.nav-cta):hover, .nav-links a:not(.nav-cta).active { color: var(--moss); }
   .nav-cta {
     background: var(--moss); color: #fff !important; padding: 9px 18px;
     border-radius: 10px; font-weight: 500 !important; font-size: 14.5px !important;
     transition: background .2s, transform .2s;
   }
-  .nav-cta:hover { background: var(--moss-deep); transform: translateY(-1px); }
+  .nav-cta:hover {  background: var(--moss-deep); transform: translateY(-1px); color: #fff !important; }
 
   /* HEADER */
   .lib-head { padding: 64px 0 36px; }
@@ -121,12 +123,34 @@
   .proj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
   .pcard {
     background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
-    padding: 26px; display: flex; flex-direction: column; gap: 14px;
+    padding: 0; display: flex; flex-direction: column; gap: 0; overflow: hidden;
     transition: transform .22s, box-shadow .22s, border-color .22s;
   }
   .pcard:hover { transform: translateY(-3px); box-shadow: 0 18px 38px -24px rgba(27,42,38,.3); border-color: var(--glow); }
+  .pcard-thumb {
+    position: relative; height: 120px; overflow: hidden;
+    border-bottom: 1px solid var(--line); background: var(--paper-2);
+  }
+  .pcard-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pcard-thumb::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, transparent 45%, rgba(8,18,16,.12) 100%);
+  }
+  .pcard-time-overlay {
+    position: absolute; top: 10px; right: 10px; z-index: 1;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    color: var(--ink); background: rgba(255,255,255,.92); backdrop-filter: blur(6px);
+    padding: 5px 9px; border-radius: 6px; border: 1px solid rgba(227,223,210,.9);
+    white-space: nowrap;
+  }
+  .pcard-inner { padding: 22px 26px 26px; display: flex; flex-direction: column; gap: 14px; flex-grow: 1; }
   .pcard-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-  .pcard h3 { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 600; letter-spacing: -.01em; line-height: 1.2; }
+  .pcard h3 { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 600; letter-spacing: -.01em; line-height: 1.2; flex: 1; }
+  .pcard-lang {
+    flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 500; color: var(--ink-soft); background: var(--paper-2);
+    padding: 5px 9px; border-radius: 6px; white-space: nowrap;
+  }
   .pcard-time {
     flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
     color: var(--ink-soft); background: var(--paper-2); padding: 5px 10px; border-radius: 6px; white-space: nowrap;
@@ -173,6 +197,11 @@
     padding: 13px 26px; border-radius: 12px; display: inline-block; position: relative; transition: background .2s;
   }
   .cta-band a:hover { background: var(--glow); }
+  .cta-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+  .cta-band .cta-ghost {
+    background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.35);
+  }
+  .cta-band .cta-ghost:hover { background: rgba(255,255,255,.1); }
 
   /* FOOTER */
   footer { border-top: 1px solid var(--line); padding: 50px 0 38px; }
@@ -198,23 +227,10 @@
 
 <nav>
   <div class="wrap nav-inner">
-    <a href="index.html" class="logo">
-      <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
-        <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
-        <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="23" cy="8" r="2.4" fill="#fff"/>
-      </svg>
-      Terrain
+    <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
     </a>
-    <div class="nav-links" id="siteNavMenu">
-      <a href="index.html#start">How it works</a>
-      <a href="datasets.html">Datasets</a>
-      <a href="projects.html" class="active">Projects</a>
-      <a href="programs.html">Programs</a>
-      <a href="index.html#faculty">Faculty</a>
-      <a href="team.html">Team</a>
-      <a href="index.html#join" class="nav-cta">Join the list</a>
-    </div>
+    <div class="nav-links" id="siteNavMenu"></div>
     <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open menu">
       <span class="nav-toggle-bars" aria-hidden="true">
         <span class="nav-toggle-bar"></span>
@@ -233,25 +249,42 @@
       Back to home
     </a>
     <h1>Build something real, start to finish</h1>
-    <p>Each project uses a real dataset from our library. Beginner projects include runnable notebooks; video walkthroughs are on the way. No paid software required.</p>
+    <p>Each project uses a real dataset from our library. Every project has a runnable notebook; mentor walkthrough videos are on the way. No paid software required.</p>
     <p class="colab-note" style="margin-top:14px;font-size:14px;color:var(--ink-soft);max-width:62ch;">Colab needs a <strong>public</strong> GitHub repo or a deployed site URL in <code>assets/site-config.js</code>. If Colab opens blank, check repo visibility under GitHub Settings.</p>
   </div>
 </header>
 
 <div class="wrap">
+  <aside class="flow-banner flow-banner--skills" aria-label="Skills curriculum">
+    <div>
+      <p class="flow-k">New to coding?</p>
+      <h2>Start with the free skills curriculum</h2>
+      <p>17 full lessons on Python, pandas, maps, and more — everything these projects assume you know. Work through them first, then come back here.</p>
+    </div>
+    <a href="skills.html" class="flow-banner-btn">
+      Start learning
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </aside>
+
   <div class="path">
     <div class="path-step">
       <div class="path-k">Step 1</div>
+      <h4>Learn the skills</h4>
+      <p>Work through the <a href="skills.html" style="color:var(--moss);font-weight:500;text-decoration:none;">skills curriculum</a> if you are new to coding or rusty.</p>
+    </div>
+    <div class="path-step">
+      <div class="path-k">Step 2</div>
       <h4>Pick a project</h4>
       <p>Choose by level or by the dataset you want to work with.</p>
     </div>
     <div class="path-step">
-      <div class="path-k">Step 2</div>
-      <h4>Follow the walkthrough</h4>
-      <p>Open the notebook in Colab or RStudio and run it step by step. Video walkthroughs coming soon.</p>
+      <div class="path-k">Step 3</div>
+      <h4>Run the notebook</h4>
+      <p>Open the project in Colab or RStudio and work through it step by step. Video walkthroughs with mentors are coming soon.</p>
     </div>
     <div class="path-step">
-      <div class="path-k">Step 3</div>
+      <div class="path-k">Step 4</div>
       <h4>Finish with something to show</h4>
       <p>End with a real chart, map, or model you built yourself.</p>
     </div>
@@ -278,7 +311,10 @@
   <div class="cta-band">
     <h2>Finished one? You're ready for the real thing.</h2>
     <p>The next step is a faculty lab, a community project, or a UCLA research program. We'll point you to the right door.</p>
-    <a href="programs.html">See programs</a>
+    <div class="cta-links">
+      <a href="programs.html">See programs</a>
+      <a href="skills.html" class="cta-ghost">Brush up on skills</a>
+    </div>
   </div>
 </div>
 
@@ -286,14 +322,9 @@
   <div class="wrap">
     <div class="foot-inner">
       <div class="foot-brand">
-        <a href="index.html" class="logo">
-          <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
-            <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
-            <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="23" cy="8" r="2.4" fill="#fff"/>
-          </svg>
-          Terrain
-        </a>
+        <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
+    </a>
         <p>A student-built entry point for environmental data science at UCLA.</p>
       </div>
       <div class="foot-cols">
@@ -301,6 +332,7 @@
           <h5>Explore</h5>
           <a href="index.html#start">How it works</a>
           <a href="datasets.html">Dataset library</a>
+          <a href="skills.html">Skills</a>
           <a href="projects.html">Project library</a>
           <a href="index.html#faculty">Faculty directory</a>
           <a href="programs.html">Programs</a>
@@ -313,16 +345,21 @@
         </div>
         <div class="foot-col">
           <h5>Connect</h5>
+          <a href="creators.html">Summer internship</a>
           <a href="team.html">Join the team</a>
           <a href="index.html#join">Join the list</a>
-          <a href="mailto:krishmatai23@ucla.edu">Contact</a>
+          <a href="mailto:uclaterrain@gmail.com">Contact</a>
+          <a class="foot-social" href="https://www.linkedin.com/company/terrainucla" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 114.127 0 2.062 2.062 0 01-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
           <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX ↗</a>
         </div>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Terrain · <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX</a> student initiative</span>
-      <span>Need data first? <a href="datasets.html">Browse datasets →</a></span>
+      <span>© 2026 Terrain · Student-built at UCLA</span>
+      <span><a href="mailto:uclaterrain@gmail.com">uclaterrain@gmail.com</a></span>
     </div>
   </div>
 </footer>
@@ -341,7 +378,9 @@
        datasetLink , link to that dataset (use 'datasets.html' to point at the library)
        skills      , array of skills practiced (shown as pills)
        video       . URL to the walkthrough video ('#' until you record it)
-       notebook    . path under notebooks/ ('#' until you build it) */
+       notebook    . path under notebooks/ ('#' until you build it)
+       image       . card thumbnail path
+       imageAlt    . short alt text for the thumbnail */
   const GITHUB_REPO = (window.TERRAIN && window.TERRAIN.github) || 'KrishM23/Environmental-Data-Science';
   const GITHUB_BRANCH = (window.TERRAIN && window.TERRAIN.branch) || 'main';
   const PUBLIC_ORIGIN = (window.TERRAIN && window.TERRAIN.publicOrigin) || '';
@@ -353,7 +392,9 @@
       build: 'An interactive map of LA air-quality stations, color-coded by AQI.',
       dataset: 'EPA AirNow', datasetLink: 'explainer.html?id=epa-airnow',
       skills: ['Reading an API', 'pandas basics', 'Plotting a map'],
-      video: '#', notebook: 'notebooks/la_air_quality_map.ipynb'
+      video: '#', notebook: 'notebooks/la_air_quality_map.ipynb',
+      image: 'assets/images/la-skyline.jpg',
+      imageAlt: 'Los Angeles skyline with basin haze'
     },
     {
       title: 'Who carries the pollution burden?',
@@ -362,7 +403,9 @@
       build: 'A ranked chart of the most-burdened census tracts, with a short written takeaway.',
       dataset: 'CalEnviroScreen', datasetLink: 'explainer.html?id=calenviroscreen',
       skills: ['Loading a CSV', 'Sorting & filtering', 'Bar charts in ggplot'],
-      video: '#', notebook: 'notebooks/calenviroscreen_burden.Rmd'
+      video: '#', notebook: 'notebooks/calenviroscreen_burden.Rmd',
+      image: 'assets/images/san-francisco.jpg',
+      imageAlt: 'Golden Gate Bridge at dusk'
     },
     {
       title: 'Is your hometown getting hotter?',
@@ -371,7 +414,9 @@
       build: 'A temperature-trend line chart for a city you choose, with the warming rate.',
       dataset: 'NOAA Climate Data', datasetLink: 'explainer.html?id=noaa-climate',
       skills: ['Time-series basics', 'Resampling by year', 'Trend lines'],
-      video: '#', notebook: 'notebooks/hometown_temperature_trend.ipynb'
+      video: '#', notebook: 'notebooks/hometown_temperature_trend.ipynb',
+      image: 'assets/hero/misty-lake.png',
+      imageAlt: 'Misty lake at dawn'
     },
     {
       title: 'Rebuild the UCLA carbon tracker',
@@ -381,7 +426,9 @@
       dataset: 'UCLA Emissions Reports', datasetLink: 'explainer.html?id=ucla-emissions',
       demo: 'index.html#tracker',
       skills: ['Linear regression', 'Extrapolation', 'Annotated plots'],
-      video: '#', notebook: 'notebooks/ucla_carbon_tracker.Rmd'
+      video: '#', notebook: 'notebooks/ucla_carbon_tracker.Rmd',
+      image: 'assets/images/royce-hall.jpg',
+      imageAlt: 'Royce Hall on the UCLA campus'
     },
     {
       title: 'Track a watershed through a drought',
@@ -390,7 +437,9 @@
       build: 'A multi-site streamflow dashboard showing drought impact over time.',
       dataset: 'USGS Water Data', datasetLink: 'explainer.html?id=usgs-water',
       skills: ['Multi-source joins', 'Seasonality', 'Small dashboards'],
-      video: '#', notebook: 'notebooks/watershed_drought.ipynb'
+      video: '#', notebook: 'notebooks/watershed_drought.ipynb',
+      image: 'assets/hero/river.png',
+      imageAlt: 'River flowing through a green valley'
     },
     {
       title: 'Connect pollution burden to air quality',
@@ -399,7 +448,9 @@
       build: 'A scatter plot and simple model linking EJ scores to measured air quality.',
       dataset: 'CalEnviroScreen', datasetLink: 'explainer.html?id=calenviroscreen',
       skills: ['Joining datasets', 'Correlation vs. cause', 'Linear models'],
-      video: '#', notebook: 'notebooks/pollution_burden_air_quality.Rmd'
+      video: '#', notebook: 'notebooks/pollution_burden_air_quality.Rmd',
+      image: 'assets/images/hollywood-sign.jpg',
+      imageAlt: 'Hollywood Hills above Los Angeles'
     },
     {
       title: 'Map California\u2019s largest emitters',
@@ -408,7 +459,9 @@
       build: 'A geospatial map of top emitters plus a sector breakdown chart for your chosen county or region.',
       dataset: 'Climate TRACE', datasetLink: 'explainer.html?id=climate-trace',
       skills: ['Large CSV wrangling', 'Geospatial joins', 'Sector aggregation'],
-      video: '#', notebook: 'notebooks/california_emitters_map.ipynb'
+      video: '#', notebook: 'notebooks/california_emitters_map.ipynb',
+      image: 'assets/images/climate-trace.png',
+      imageAlt: 'Climate TRACE global emissions map'
     },
     {
       title: 'Measure ice-sheet change with ICESat-2',
@@ -417,7 +470,9 @@
       build: 'An elevation-change profile along an ice sheet with uncertainty bands and a short methods note.',
       dataset: 'ICESat-2', datasetLink: 'explainer.html?id=icesat-2',
       skills: ['HDF5 / xarray', 'Along-track analysis', 'Change detection'],
-      video: '#', notebook: 'notebooks/icesat2_elevation_change.ipynb'
+      video: '#', notebook: 'notebooks/icesat2_elevation_change.ipynb',
+      image: 'assets/hero/iceberg.png',
+      imageAlt: 'Iceberg in polar waters'
     },
     {
       title: 'Compare heat-wave trends across Western cities',
@@ -426,7 +481,9 @@
       build: 'A multi-city dashboard of heat-wave frequency and duration with decade-over-decade comparison.',
       dataset: 'NOAA Climate Data', datasetLink: 'explainer.html?id=noaa-climate',
       skills: ['Multi-station pulls', 'Event detection', 'Decade comparison'],
-      video: '#', notebook: 'notebooks/western_heat_waves.ipynb'
+      video: '#', notebook: 'notebooks/western_heat_waves.ipynb',
+      image: 'assets/images/la-skyline.jpg',
+      imageAlt: 'Los Angeles basin on a clear day'
     },
     {
       title: 'Do burdened communities sit near major emitters?',
@@ -435,7 +492,9 @@
       build: 'A map linking census-tract burden scores to nearby facilities, plus a buffer analysis and written interpretation.',
       dataset: 'CalEnviroScreen', datasetLink: 'explainer.html?id=calenviroscreen',
       skills: ['Spatial buffers', 'Two-dataset joins', 'EJ interpretation'],
-      video: '#', notebook: 'notebooks/burden_near_emitters.Rmd'
+      video: '#', notebook: 'notebooks/burden_near_emitters.Rmd',
+      image: 'assets/images/climate-trace.png',
+      imageAlt: 'Climate TRACE facility emissions map'
     }
   ];
   const groupsEl = document.getElementById('groups');
@@ -457,6 +516,23 @@
     return `<a class="pbtn${primary ? ' pbtn-primary' : ''}" href="${url}" target="_blank" rel="noopener">${label}</a>`;
   }
 
+  function githubBlobUrl(path) {
+    return `https://github.com/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
+  }
+
+  function githubRawUrl(path) {
+    return `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}`;
+  }
+
+  function notebookDownloadLink(path) {
+    const filename = path.split('/').pop();
+    /* Same-origin when the site is served (Netlify, local server): file is in the repo */
+    const href = (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+      ? path
+      : githubRawUrl(path);
+    return `<a class="pbtn" href="${href}" download="${filename}">Download .Rmd</a>`;
+  }
+
   function notebookColabUrl(path) {
     if (path.endsWith('.Rmd')) {
       return `https://github.com/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
@@ -473,10 +549,10 @@
     if (!path || path === '#') {
       return actionBtn('#', 'Open notebook', false);
     }
-    const ghUrl = `https://github.com/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
+    const ghUrl = githubBlobUrl(path);
     if (path.endsWith('.Rmd')) {
       return `<a class="pbtn pbtn-primary" href="${ghUrl}" target="_blank" rel="noopener">View on GitHub</a>
-        <a class="pbtn" href="${ghUrl}?raw=true" target="_blank" rel="noopener" download>Download .Rmd</a>`;
+        ${notebookDownloadLink(path)}`;
     }
     const colabUrl = notebookColabUrl(path);
     return `<a class="pbtn pbtn-primary" href="${colabUrl}" target="_blank" rel="noopener" title="Opens in Google Colab from GitHub (${GITHUB_REPO})">Open in Colab</a>
@@ -484,26 +560,34 @@
   }
 
   function cardHTML(p) {
+    const thumb = p.image ? `
+      <div class="pcard-thumb">
+        <img src="${p.image}" alt="${p.imageAlt || ''}" loading="lazy">
+        <span class="pcard-time-overlay">${p.time}</span>
+      </div>` : '';
     return `
       <div class="pcard">
-        <div class="pcard-top">
-          <h3>${p.title}</h3>
-          <span class="pcard-time">${p.time}</span>
-        </div>
-        <p class="pcard-desc">${p.desc}</p>
-        <div class="pcard-build"><strong>You\u2019ll build:</strong> ${p.build}</div>
-        <div class="pcard-meta">
-          <span class="meta-item">${p.lang}</span>
-          <a class="meta-data" href="${p.datasetLink}">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1.5" y="2.5" width="9" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 5h9" stroke="currentColor" stroke-width="1.2"/></svg>
-            ${p.dataset}
-          </a>
-        </div>
-        <div class="skills">${p.skills.map(s => `<span class="skill">${s}</span>`).join('')}</div>
-        <div class="pcard-foot">
-          ${actionBtn(p.video, '▶ Watch walkthrough', true)}
-          ${notebookBtn(p.notebook)}
-          ${p.demo ? `<a class="pbtn" href="${p.demo}">See live demo</a>` : ''}
+        ${thumb}
+        <div class="pcard-inner">
+          <div class="pcard-top">
+            <h3>${p.title}</h3>
+            <span class="pcard-lang">${p.lang}</span>
+          </div>
+          <p class="pcard-desc">${p.desc}</p>
+          <div class="pcard-build"><strong>You\u2019ll build:</strong> ${p.build}</div>
+          <div class="pcard-meta">
+            ${p.image ? '' : `<span class="meta-item">${p.time}</span>`}
+            <a class="meta-data" href="${p.datasetLink}">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1.5" y="2.5" width="9" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 5h9" stroke="currentColor" stroke-width="1.2"/></svg>
+              ${p.dataset}
+            </a>
+          </div>
+          <div class="skills">${p.skills.map(s => `<span class="skill">${s}</span>`).join('')}</div>
+          <div class="pcard-foot">
+            ${actionBtn(p.video, '▶ Watch walkthrough', true)}
+            ${notebookBtn(p.notebook)}
+            ${p.demo ? `<a class="pbtn" href="${p.demo}">See live demo</a>` : ''}
+          </div>
         </div>
       </div>`;
   }
@@ -555,7 +639,7 @@
   searchEl.addEventListener('input', render);
   render();
 </script>
-<script src="assets/site-nav.js"></script>
+<script src="assets/site-nav.js?v=3"></script>
 
 </body>
 </html>

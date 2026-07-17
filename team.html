@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site-nav.css?v=3">
+<link rel="stylesheet" href="assets/terrain-soft.css?v=3">
+
 <style>
   :root {
     --paper: #FBFAF6;
@@ -44,19 +47,19 @@
     font-family: 'Fraunces', serif; font-weight: 600; font-size: 21px;
     color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
   }
-  .logo-mark { width: 30px; height: 30px; flex-shrink: 0; }
+  .logo-mark { height: 40px; width: auto; flex-shrink: 0; display: block; }
   .nav-links { display: flex; align-items: center; gap: 34px; }
   .nav-links a {
     color: var(--ink-soft); text-decoration: none; font-size: 15px;
     font-weight: 450; transition: color .2s;
   }
-  .nav-links a:hover, .nav-links a.active { color: var(--moss); }
+  .nav-links a:not(.nav-cta):hover, .nav-links a:not(.nav-cta).active { color: var(--moss); }
   .nav-cta {
     background: var(--moss); color: #fff !important; padding: 9px 18px;
     border-radius: 10px; font-weight: 500 !important; font-size: 14.5px !important;
     transition: background .2s, transform .2s;
   }
-  .nav-cta:hover { background: var(--moss-deep); transform: translateY(-1px); }
+  .nav-cta:hover {  background: var(--moss-deep); transform: translateY(-1px); color: #fff !important; }
 
   /* HEADER */
   .team-head { padding: 64px 0 40px; }
@@ -92,6 +95,10 @@
     width: 72px; height: 72px; border-radius: 18px; display: flex;
     align-items: center; justify-content: center; font-family: 'Fraunces', serif;
     font-weight: 600; font-size: 28px; color: #fff; letter-spacing: -.01em;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .member-avatar img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
   }
   .member-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
   .member-role { font-size: 13.5px; color: var(--clay); font-weight: 500; margin-top: 2px; }
@@ -104,6 +111,50 @@
     transition: border-color .2s, background .2s;
   }
   .member-link:hover { border-color: var(--moss); background: #EAF2E3; }
+
+  /* PARTNERS */
+  .partners-section { padding: 36px 0 10px; }
+  .partners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .partner-card {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .22s, box-shadow .22s, border-color .22s;
+  }
+  .partner-card:hover { transform: translateY(-3px); box-shadow: 0 18px 38px -24px rgba(27,42,38,.3); border-color: var(--glow); }
+  .partner-logo {
+    height: 132px; background: #000; overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .partner-logo img {
+    width: 100%; height: 100%; display: block;
+    object-fit: cover; object-position: center center;
+  }
+  .partner-body { padding: 22px 26px 26px; display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
+  .partner-name { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
+  .partner-type { font-size: 12.5px; color: var(--sky); font-weight: 500; text-transform: uppercase; letter-spacing: .04em; }
+  .partner-desc { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; flex-grow: 1; }
+
+  /* COLLABORATE */
+  .collab-section { padding: 36px 0 10px; }
+  .collab-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .collab-card {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px; display: flex; flex-direction: column; gap: 12px;
+    transition: transform .22s, box-shadow .22s, border-color .22s;
+  }
+  .collab-card:hover { transform: translateY(-3px); box-shadow: 0 18px 38px -24px rgba(27,42,38,.3); border-color: var(--glow); }
+  .collab-mark {
+    width: 56px; height: 56px; border-radius: 14px; display: flex;
+    align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace;
+    font-weight: 500; font-size: 13px; color: #fff; letter-spacing: -.02em; flex-shrink: 0;
+  }
+  .collab-name { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
+  .collab-type { font-size: 12.5px; color: var(--sky); font-weight: 500; text-transform: uppercase; letter-spacing: .04em; }
+  .collab-desc { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; flex-grow: 1; }
+  .collab-card.join {
+    border-style: dashed; background: transparent;
+  }
+  .collab-card.join .collab-mark { background: var(--paper-2); color: var(--moss); border: 1px dashed var(--line); }
 
   /* JOIN CARD (dashed placeholder for growth) */
   .member.join {
@@ -142,10 +193,11 @@
   .foot-bottom a { color: var(--moss); text-decoration: none; }
   .foot-bottom a:hover { text-decoration: underline; }
 
-  @media (max-width: 900px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 900px) {
+    .team-grid, .collab-grid, .partners-grid { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 620px) {
-    .nav-links { display: none; }
-    .team-grid { grid-template-columns: 1fr; }
+    .team-grid, .collab-grid, .partners-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -153,25 +205,20 @@
 
 <nav>
   <div class="wrap nav-inner">
-    <a href="index.html" class="logo">
-      <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
-        <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
-        <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="23" cy="8" r="2.4" fill="#fff"/>
-      </svg>
-      Terrain
+    <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
     </a>
-    <div class="nav-links">
-      <a href="index.html#start">How it works</a>
-      <a href="datasets.html">Datasets</a>
-      <a href="projects.html">Projects</a>
-      <a href="programs.html">Programs</a>
-      <a href="index.html#faculty">Faculty</a>
-      <a href="team.html" class="active">Team</a>
-      <a href="index.html#join" class="nav-cta">Join the list</a>
-    </div>
+    <div class="nav-links" id="siteNavMenu"></div>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open menu">
+      <span class="nav-toggle-bars" aria-hidden="true">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </span>
+    </button>
   </div>
 </nav>
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
 
 <header class="team-head">
   <div class="wrap">
@@ -180,7 +227,7 @@
       Back to home
     </a>
     <h1>The people behind Terrain</h1>
-    <p>Terrain is a student project under UCLA DataX. We built it because getting started in environmental data science at UCLA was harder than it needed to be.</p>
+    <p>Terrain is a student-built platform from students, for students. We built it because getting started in environmental data science at UCLA was harder than it needed to be.</p>
   </div>
 </header>
 
@@ -190,10 +237,22 @@
     <div class="team-grid" id="teamGrid"></div>
   </section>
 
+  <section class="partners-section">
+    <div class="section-label">Partners <span class="bar"></span></div>
+    <p style="font-size:16px;color:var(--ink-soft);max-width:64ch;margin-bottom:24px;">Groups and initiatives that collaborate with Terrain or help us reach students. Interested in partnering? <a href="mailto:uclaterrain@gmail.com" style="color:var(--moss);font-weight:500;">uclaterrain@gmail.com</a></p>
+    <div class="partners-grid" id="partnersGrid"></div>
+  </section>
+
+  <section class="collab-section">
+    <div class="section-label">Work with us <span class="bar"></span></div>
+    <p style="font-size:16px;color:var(--ink-soft);max-width:64ch;margin-bottom:24px;">Terrain is free to use. If you&rsquo;re a student, instructor, campus group, or local organization that wants our projects, explainers, or demos—or to collaborate on outreach—we&rsquo;d love to hear from you.</p>
+    <div class="collab-grid" id="collabGrid"></div>
+  </section>
+
   <div class="cta-band">
     <h2>Want to help build Terrain?</h2>
     <p>We are looking for students to help write projects, curate datasets, or connect Terrain to campus groups. No prior experience required.</p>
-    <a href="mailto:krishmatai23@ucla.edu">
+    <a href="mailto:uclaterrain@gmail.com">
       Get in touch
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
@@ -204,21 +263,17 @@
   <div class="wrap">
     <div class="foot-inner">
       <div class="foot-brand">
-        <a href="index.html" class="logo">
-          <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
-            <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
-            <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="23" cy="8" r="2.4" fill="#fff"/>
-          </svg>
-          Terrain
-        </a>
-        <p>A student-built entry point for environmental data science at UCLA.</p>
+        <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
+    </a>
+        <p>A student-built entry point for environmental data science at UCLA—from students, for students.</p>
       </div>
       <div class="foot-cols">
         <div class="foot-col">
           <h5>Explore</h5>
           <a href="index.html#start">How it works</a>
           <a href="datasets.html">Dataset library</a>
+          <a href="skills.html">Skills</a>
           <a href="projects.html">Project library</a>
           <a href="index.html#faculty">Faculty directory</a>
           <a href="programs.html">Programs</a>
@@ -231,16 +286,20 @@
         </div>
         <div class="foot-col">
           <h5>Connect</h5>
+          <a href="creators.html">Summer internship</a>
           <a href="team.html">Join the team</a>
           <a href="index.html#join">Join the list</a>
-          <a href="mailto:krishmatai23@ucla.edu">Contact</a>
-          <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX ↗</a>
+          <a href="mailto:uclaterrain@gmail.com">Contact</a>
+          <a class="foot-social" href="https://www.linkedin.com/company/terrainucla" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 114.127 0 2.062 2.062 0 01-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
         </div>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Terrain · <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX</a> student initiative</span>
-      <span><a href="mailto:krishmatai23@ucla.edu">krishmatai23@ucla.edu</a></span>
+      <span>© 2026 Terrain · Student-built at UCLA</span>
+      <span><a href="mailto:uclaterrain@gmail.com">uclaterrain@gmail.com</a></span>
     </div>
   </div>
 </footer>
@@ -250,7 +309,8 @@
      Add a member by appending an object. Fields:
        name      - full name
        role      - their role on Terrain / their program
-       initials  - 1-2 letters for the avatar
+       photo     - optional path to headshot (falls back to initials + color)
+       initials  - 1-2 letters for the avatar fallback
        color     - avatar background (hex)
        bio       - short description
        email     - their email (omit or leave '' to hide the email button)
@@ -258,18 +318,108 @@
   const team = [
     {
       name: 'Krish Matai',
-      role: 'Founder · B.S. Statistics & Data Science, UCLA',
+      role: 'Founder · Website Developer, UCLA',
+      photo: 'assets/team/krish-matai.png',
       initials: 'KM',
       color: '#2F6B4F',
       bio: 'Started Terrain after struggling to find a way into environmental data science as a first-year. Researches Arctic sea ice with NASA ICESat-2 data and builds the datasets, projects, and tracker behind the site.',
       email: 'krishmatai23@ucla.edu',
       links: []
+    },
+    {
+      name: 'Crawford Sly',
+      role: 'Lead, Outreach & Coordination · UCLA',
+      photo: 'assets/team/crawford-sly.png',
+      initials: 'CS',
+      color: '#5B8BB0',
+      bio: 'Leads outreach and partnerships for Terrain—promoting the project, connecting with campus groups and external organizations, and helping grow the team.',
+      email: 'crawfordws25@g.ucla.edu',
+      links: []
+    },
+    {
+      name: 'Connor Soelberg',
+      role: 'Outreach, Mentors & Videos · UCLA',
+      photo: 'assets/team/connor-soelberg.png',
+      initials: 'Co',
+      color: '#7B6BA8',
+      bio: 'Works on outreach and promotion for Terrain—getting the word out on campus, helping recruit mentors for projects, and mentoring students through walkthrough videos.',
+      email: 'consoelberg@gmail.com',
+      links: []
+    },
+    {
+      name: 'Nikhil Bhasin',
+      role: 'Project Mentoring & Video Walkthroughs · UCLA',
+      initials: 'NB',
+      color: '#4A9A5F',
+      bio: 'Mentors students through Terrain starter projects and leads walkthrough videos so newcomers can follow along step by step.',
+      email: 'nikhilbhasin@g.ucla.edu',
+      links: []
+    }
+  ];
+
+  /* ===== PARTNERS =====
+     Fields: name, type, logo, desc, url, label */
+  const partners = [
+    {
+      name: 'UCLA DataX',
+      type: 'Campus partner',
+      logo: 'assets/images/datax-logo.png',
+      desc: 'UCLA\u2019s data science community—connecting students, faculty, and projects across campus. Our first partner in helping spread Terrain\u2019s resources to more Bruins.',
+      url: 'https://datax.ucla.edu/',
+      label: 'Visit DataX'
+    }
+  ];
+
+  /* ===== WORK WITH US =====
+     Audience cards for people who use Terrain or want to collaborate.
+     Fields: name, type, mark, color, desc, link (optional mailto or URL), linkLabel */
+  const collaborators = [
+    {
+      name: 'Students',
+      type: 'Use Terrain',
+      mark: 'St',
+      color: '#2F6B4F',
+      desc: 'Pick a starter project, open a notebook in Colab or RStudio, and work through real environmental data at your own pace—or with a club or study group.',
+      link: 'projects.html',
+      linkLabel: 'Browse projects'
+    },
+    {
+      name: 'Faculty & TAs',
+      type: 'Use Terrain',
+      mark: 'Fa',
+      color: '#5B8BB0',
+      desc: 'Point students to curated datasets, explainers, and guided projects for labs, sections, or independent study. Everything is public and free to link.',
+      link: 'datasets.html',
+      linkLabel: 'See the library'
+    },
+    {
+      name: 'Campus groups',
+      type: 'Collaborate',
+      mark: 'Cg',
+      color: '#D98E5A',
+      desc: 'Student orgs, programs, and initiatives—share Terrain with your members, co-host a workshop, or help us reach students who want an on-ramp into environmental data science.',
+      link: 'mailto:uclaterrain@gmail.com?subject=Terrain%20collaboration',
+      linkLabel: 'Get in touch'
+    },
+    {
+      name: 'Community & local orgs',
+      type: 'Collaborate',
+      mark: 'Lo',
+      color: '#7B6BA8',
+      desc: 'NGOs, agencies, and community groups—use our public resources for teaching or outreach, or talk with us about pointing your audience to projects built on California and national open data.',
+      link: 'mailto:uclaterrain@gmail.com?subject=Terrain%20collaboration',
+      linkLabel: 'Reach out'
     }
   ];
 
   const grid = document.getElementById('teamGrid');
+  const partnersGrid = document.getElementById('partnersGrid');
+  const collabGrid = document.getElementById('collabGrid');
 
   function memberHTML(m) {
+    const avatar = m.photo
+      ? `<div class="member-avatar"><img src="${m.photo}" alt="${m.name}" width="72" height="72" loading="lazy"></div>`
+      : `<div class="member-avatar" style="background:${m.color}">${m.initials}</div>`;
     const emailBtn = m.email ? `
       <a class="member-link" href="mailto:${m.email}">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="2.5" width="11" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M2 3.5l5 3.5 5-3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
@@ -279,13 +429,49 @@
       <a class="member-link" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
     return `
       <div class="member">
-        <div class="member-avatar" style="background:${m.color}">${m.initials}</div>
+        ${avatar}
         <div>
           <div class="member-name">${m.name}</div>
           <div class="member-role">${m.role}</div>
         </div>
         <p class="member-bio">${m.bio}</p>
         <div class="member-links">${emailBtn}${extra}</div>
+      </div>`;
+  }
+
+  function partnerHTML(p) {
+    const linkBtn = p.url ? `
+      <a class="member-link" href="${p.url}" target="_blank" rel="noopener">${p.label || 'Visit site'} ↗</a>` : '';
+    const logo = p.logo
+      ? `<div class="partner-logo"><img src="${p.logo}" alt="${p.name}"></div>`
+      : '';
+    return `
+      <div class="partner-card">
+        ${logo}
+        <div class="partner-body">
+          <div>
+            <div class="partner-name">${p.name}</div>
+            <div class="partner-type">${p.type}</div>
+          </div>
+          <p class="partner-desc">${p.desc}</p>
+          <div class="member-links">${linkBtn}</div>
+        </div>
+      </div>`;
+  }
+
+  function collabHTML(c) {
+    const isExternal = c.link && (c.link.startsWith('http') || c.link.startsWith('mailto'));
+    const linkBtn = c.link ? `
+      <a class="member-link" href="${c.link}"${isExternal ? ' target="_blank" rel="noopener"' : ''}>${c.linkLabel || 'Learn more'}${isExternal && !c.link.startsWith('mailto') ? ' ↗' : ''}</a>` : '';
+    return `
+      <div class="collab-card">
+        <div class="collab-mark" style="background:${c.color}">${c.mark}</div>
+        <div>
+          <div class="collab-name">${c.name}</div>
+          <div class="collab-type">${c.type}</div>
+        </div>
+        <p class="collab-desc">${c.desc}</p>
+        <div class="member-links">${linkBtn}</div>
       </div>`;
   }
 
@@ -299,10 +485,27 @@
       </div>
       <p class="member-bio">More of the team is coming shortly. Want to be one of them?</p>
       <div class="member-links">
-        <a class="member-link" href="mailto:krishmatai23@ucla.edu">Join the team</a>
+        <a class="member-link" href="mailto:uclaterrain@gmail.com">Join the team</a>
+      </div>
+    </div>`;
+
+  partnersGrid.innerHTML = partners.map(partnerHTML).join('');
+
+  collabGrid.innerHTML = collaborators.map(collabHTML).join('') + `
+    <div class="collab-card join">
+      <div class="collab-mark">+</div>
+      <div>
+        <div class="collab-name">Sound like you?</div>
+        <div class="collab-type">We&rsquo;re open to ideas</div>
+      </div>
+      <p class="collab-desc">Whether you want to use Terrain as-is or explore something together—mentoring, promotion, a guest workshop—we&rsquo;re a small student team and happy to talk.</p>
+      <div class="member-links">
+        <a class="member-link" href="mailto:uclaterrain@gmail.com?subject=Terrain%20collaboration">Email us</a>
+        <a class="member-link" href="mailto:consoelberg@gmail.com?subject=Terrain%20collaboration">Email Connor</a>
       </div>
     </div>`;
 </script>
+<script src="assets/site-nav.js?v=3"></script>
 
 </body>
 </html>

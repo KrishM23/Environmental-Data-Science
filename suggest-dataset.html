@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suggest a dataset | Terrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site-nav.css?v=3">
+<link rel="stylesheet" href="assets/terrain-soft.css?v=3">
+
+<style>
+  :root {
+    --paper: #FBFAF6; --paper-2: #F3F1E8; --ink: #1B2A26; --ink-soft: #4A5A54;
+    --moss: #2F6B4F; --moss-deep: #1F4D38; --sky: #5B8BB0; --line: #E3DFD2;
+    --glow: #C7E0A8; --radius: 16px; --maxw: 1180px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--glow); color: var(--ink); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  a { color: inherit; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,250,246,0.82); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 21px;
+    color: var(--ink); text-decoration: none;
+  }
+  .logo-mark { height: 40px; width: auto; flex-shrink: 0; display: block; }
+  .nav-links { display: flex; align-items: center; gap: 34px; }
+  .nav-links a {
+    color: var(--ink-soft); text-decoration: none; font-size: 15px;
+    font-weight: 450; transition: color .2s;
+  }
+  .nav-links a:not(.nav-cta):hover, .nav-links a:not(.nav-cta).active { color: var(--moss); }
+  .nav-cta {
+    background: var(--moss); color: #fff !important; padding: 9px 18px;
+    border-radius: 10px; font-weight: 500 !important; font-size: 14.5px !important;
+  }
+  .nav-cta:hover {  background: var(--moss-deep); color: #fff !important; }
+
+  .page-head { padding: 56px 0 32px; }
+  .crumb {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink-soft);
+    margin-bottom: 18px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  }
+  .crumb:hover { color: var(--moss); }
+  .page-head h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(32px, 4.5vw, 48px); line-height: 1.08;
+    letter-spacing: -.025em; margin-bottom: 14px; max-width: 16ch;
+  }
+  .page-head p { font-size: 18px; color: var(--ink-soft); max-width: 58ch; }
+
+  .suggest-layout {
+    display: grid; grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 40px; align-items: start; padding-bottom: 80px;
+  }
+
+  .form-card {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 32px; box-shadow: 0 18px 38px -28px rgba(27,42,38,.18);
+  }
+  .form-card h2 {
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600;
+    margin-bottom: 8px; letter-spacing: -.01em;
+  }
+  .form-intro { font-size: 15px; color: var(--ink-soft); margin-bottom: 28px; line-height: 1.55; }
+
+  .field { margin-bottom: 22px; }
+  .field label {
+    display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--ink);
+  }
+  .field label span { font-weight: 450; color: var(--ink-soft); font-size: 13px; }
+  .field input, .field textarea {
+    width: 100%; font-family: 'Inter', sans-serif; font-size: 15px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    padding: 13px 15px; transition: border-color .2s, box-shadow .2s;
+  }
+  .field textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+  .field input:focus, .field textarea:focus {
+    outline: none; border-color: var(--moss);
+    box-shadow: 0 0 0 3px rgba(47,107,79,.1);
+  }
+  .field-hint {
+    font-size: 13px; color: var(--ink-soft); margin-top: 7px; line-height: 1.45;
+  }
+
+  .form-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 28px; }
+  .btn-submit {
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500;
+    padding: 13px 22px; border-radius: 10px; border: none; cursor: pointer;
+    background: var(--moss); color: #fff; transition: background .2s, transform .2s;
+  }
+  .btn-submit:hover { background: var(--moss-deep); transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: .7; cursor: wait; transform: none; }
+  .form-note { font-size: 13px; color: var(--ink-soft); }
+
+  .form-honey { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; overflow: hidden; }
+
+  .aside-card {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px;
+  }
+  .aside-card h3 {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); margin-bottom: 14px;
+  }
+  .aside-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .aside-list li {
+    font-size: 14px; color: var(--ink-soft); padding-left: 16px; position: relative; line-height: 1.5;
+  }
+  .aside-list li::before {
+    content: ''; position: absolute; left: 0; top: .55em;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--moss);
+  }
+  .aside-card + .aside-card { margin-top: 16px; }
+  .aside-link {
+    display: inline-block; margin-top: 14px; font-size: 14px; font-weight: 500;
+    color: var(--moss); text-decoration: none;
+  }
+  .aside-link:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--line); padding: 50px 0 38px; }
+  .foot-bottom {
+    font-size: 13px; color: var(--ink-soft); display: flex;
+    justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+  .foot-bottom a { color: var(--moss); text-decoration: none; }
+
+  @media (max-width: 860px) {
+    .suggest-layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
+    </a>
+    <div class="nav-links" id="siteNavMenu"></div>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open menu">
+      <span class="nav-toggle-bars" aria-hidden="true">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </span>
+    </button>
+  </div>
+</nav>
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
+
+<header class="page-head">
+  <div class="wrap">
+    <a href="datasets.html" class="crumb">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Dataset library
+    </a>
+    <h1>Suggest a dataset</h1>
+    <p>Know a public dataset that would help UCLA students doing environmental data science? Tell us what it is and why it belongs in Terrain.</p>
+  </div>
+</header>
+
+<div class="wrap suggest-layout">
+  <div class="form-card">
+    <h2>Your recommendation</h2>
+    <p class="form-intro">We prioritize free, well-documented sources with clear environmental use cases. You don&apos;t need to be affiliated with UCLA to submit.</p>
+
+    <form method="POST" action="https://formsubmit.co/uclaterrain@gmail.com" id="suggestForm">
+      <input type="hidden" name="_subject" value="Terrain dataset suggestion">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" id="suggestNext" value="">
+      <input type="text" name="_honey" class="form-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="field">
+        <label for="datasetName">Dataset name</label>
+        <input type="text" id="datasetName" name="dataset_name" required maxlength="200" placeholder="e.g. CalEnviroScreen 4.0">
+      </div>
+
+      <div class="field">
+        <label for="datasetUrl">Link to the data</label>
+        <input type="url" id="datasetUrl" name="dataset_url" required placeholder="https://…">
+        <p class="field-hint">Official download page, API docs, or catalog entry — not a paywalled source unless a free tier exists.</p>
+      </div>
+
+      <div class="field">
+        <label for="whyMatters">Why it matters <span>(2–4 sentences)</span></label>
+        <textarea id="whyMatters" name="why_it_matters" required maxlength="2000" placeholder="What environmental questions does it help answer? Who publishes it? Why would students at UCLA use it?"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="submitterEmail">Your email <span>(optional)</span></label>
+        <input type="email" id="submitterEmail" name="email" placeholder="your@ucla.edu">
+        <p class="field-hint">Only if you&apos;d like a reply when we review your suggestion.</p>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit" id="suggestBtn">Submit suggestion</button>
+        <span class="form-note">Reviewed by the Terrain team · usually within a few weeks</span>
+      </div>
+    </form>
+  </div>
+
+  <aside>
+    <div class="aside-card">
+      <h3>What we look for</h3>
+      <ul class="aside-list">
+        <li>Public or free for research and education</li>
+        <li>Clear documentation and stable access</li>
+        <li>Relevant to climate, air, water, justice, or local LA/CA work</li>
+        <li>Usable by beginners with an explainer, or worth the effort for advanced students</li>
+      </ul>
+    </div>
+    <div class="aside-card">
+      <h3>What happens next</h3>
+      <ul class="aside-list">
+        <li>We verify the source and check for overlap with existing listings</li>
+        <li>If it fits, we add a library card and write an explainer</li>
+        <li>We may follow up by email if you left an address</li>
+      </ul>
+      <a class="aside-link" href="datasets.html">See current datasets →</a>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <div class="wrap foot-bottom">
+    <span>© 2026 Terrain · Student-built at UCLA</span>
+    <span>
+      <a class="foot-social" href="https://www.linkedin.com/company/terrainucla" target="_blank" rel="noopener" style="margin-right:14px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 114.127 0 2.062 2.062 0 01-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="mailto:uclaterrain@gmail.com">uclaterrain@gmail.com</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var next = document.getElementById('suggestNext');
+    if (next) next.value = new URL('suggest-success.html', window.location.href).href;
+    var form = document.getElementById('suggestForm');
+    var btn = document.getElementById('suggestBtn');
+    if (form && btn) {
+      form.addEventListener('submit', function () { btn.disabled = true; btn.textContent = 'Sending…'; });
+    }
+  })();
+</script>
+<script src="assets/site-nav.js?v=3"></script>
+</body>
+</html>

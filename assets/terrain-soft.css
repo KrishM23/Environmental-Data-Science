@@ -1,0 +1,159 @@
+/* Terrain — shared soft / inviting atmosphere
+   Keep landing and inner pages peaceful: warm paper, soft cards, gentle motion. */
+
+:root {
+  --soft-shadow: 0 10px 32px -20px rgba(27, 42, 38, 0.16);
+  --soft-shadow-hover: 0 16px 36px -18px rgba(27, 42, 38, 0.2);
+  --soft-border: rgba(227, 223, 210, 0.85);
+  --soft-wash: radial-gradient(900px 420px at 8% -20%, rgba(199, 224, 168, 0.28), transparent 55%),
+               radial-gradient(780px 380px at 100% 0%, rgba(91, 139, 176, 0.1), transparent 50%);
+}
+
+/* Soft sticky nav on inner pages */
+nav {
+  background: rgba(251, 250, 246, 0.78) !important;
+  backdrop-filter: blur(16px) saturate(1.15) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.15) !important;
+  border-bottom-color: var(--soft-border) !important;
+  box-shadow: none !important;
+}
+.nav-inner { height: 64px !important; }
+.nav-links {
+  gap: 2px !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+.nav-links > a,
+.nav-links .nav-dd-trigger {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  text-decoration: none !important;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+.nav-links > a:not(.nav-cta):hover,
+.nav-links .nav-dd-trigger:hover,
+.nav-links > a:not(.nav-cta):focus,
+.nav-links .nav-dd-trigger:focus {
+  text-decoration: none !important;
+  background: rgba(47, 107, 79, 0.06);
+  color: var(--moss, #2F6B4F) !important;
+}
+a.nav-cta {
+  margin-left: 6px !important;
+  border-radius: 10px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  background: var(--moss, #2F6B4F) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+a.nav-cta:hover,
+a.nav-cta:focus,
+a.nav-cta:active {
+  background: var(--moss-deep, #1F4D38) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+/* Soft page headers */
+.lib-head,
+.page-head {
+  position: relative;
+  padding-top: 56px !important;
+  padding-bottom: 40px !important;
+}
+.lib-head::before,
+.page-head::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 220px;
+  background: var(--soft-wash);
+  pointer-events: none;
+  z-index: -1;
+}
+.lib-head h1,
+.page-head h1 {
+  letter-spacing: -0.03em;
+}
+.lib-head p,
+.page-head .lead,
+.page-head p {
+  color: var(--ink-soft, #4A5A54);
+  line-height: 1.55;
+}
+
+/* Soft cards across libraries */
+.pcard,
+.dcard,
+.icard,
+.track-card,
+.card,
+.form-card,
+.aside-card,
+.faq details,
+.apply-card,
+.tl-step,
+.fact {
+  border-color: var(--soft-border) !important;
+  box-shadow: var(--soft-shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.pcard:hover,
+.dcard:hover,
+.icard:hover,
+.track-card:hover,
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--soft-shadow-hover);
+  border-color: rgba(199, 224, 168, 0.85) !important;
+}
+
+/* Soft path / step strips */
+.path,
+.facts,
+.controls .search-box,
+.filter-panel,
+.chip {
+  border-color: var(--soft-border) !important;
+}
+.search-box,
+.chip,
+.path,
+.facts {
+  box-shadow: 0 6px 20px -16px rgba(27, 42, 38, 0.12);
+}
+.chip {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+.chip:hover {
+  background: #fff !important;
+}
+.chip.active {
+  background: var(--moss, #2F6B4F) !important;
+  border-color: var(--moss, #2F6B4F) !important;
+  color: #fff !important;
+  box-shadow: none;
+}
+
+/* Soft CTA bands remain rich but edges feel calmer */
+.cta-band {
+  box-shadow: 0 22px 50px -28px rgba(31, 77, 56, 0.45);
+}
+
+/* Footer calm */
+footer {
+  border-top-color: var(--soft-border) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcard, .dcard, .icard, .track-card, .card {
+    transition: none;
+  }
+  .pcard:hover, .dcard:hover, .icard:hover, .track-card:hover, .card:hover {
+    transform: none;
+  }
+}

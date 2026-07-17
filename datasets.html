@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site-nav.css?v=3">
+<link rel="stylesheet" href="assets/terrain-soft.css?v=3">
+
 <style>
   :root {
     --paper: #FBFAF6;
@@ -44,19 +47,19 @@
     font-family: 'Fraunces', serif; font-weight: 600; font-size: 21px;
     color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
   }
-  .logo-mark { width: 30px; height: 30px; flex-shrink: 0; }
+  .logo-mark { height: 40px; width: auto; flex-shrink: 0; display: block; }
   .nav-links { display: flex; align-items: center; gap: 34px; }
   .nav-links a {
     color: var(--ink-soft); text-decoration: none; font-size: 15px;
     font-weight: 450; transition: color .2s;
   }
-  .nav-links a:hover, .nav-links a.active { color: var(--moss); }
+  .nav-links a:not(.nav-cta):hover, .nav-links a:not(.nav-cta).active { color: var(--moss); }
   .nav-cta {
     background: var(--moss); color: #fff !important; padding: 9px 18px;
     border-radius: 10px; font-weight: 500 !important; font-size: 14.5px !important;
     transition: background .2s, transform .2s;
   }
-  .nav-cta:hover { background: var(--moss-deep); transform: translateY(-1px); }
+  .nav-cta:hover {  background: var(--moss-deep); transform: translateY(-1px); color: #fff !important; }
 
   /* HEADER */
   .lib-head { padding: 64px 0 36px; }
@@ -123,10 +126,13 @@
   }
   .ds-card {
     background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
-    padding: 26px; display: flex; flex-direction: column; gap: 14px;
+    padding: 0; display: flex; flex-direction: column; gap: 0; overflow: hidden;
     transition: transform .22s, box-shadow .22s, border-color .22s;
   }
   .ds-card:hover { transform: translateY(-3px); box-shadow: 0 18px 38px -24px rgba(27,42,38,.3); border-color: var(--glow); }
+  .ds-thumb { height: 120px; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .ds-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ds-inner { padding: 22px 26px 26px; display: flex; flex-direction: column; gap: 14px; flex-grow: 1; }
   .ds-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
   .ds-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
   .ds-source { font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
@@ -155,7 +161,6 @@
   .ds-btn:hover { border-color: var(--moss); transform: translateY(-1px); }
   .ds-btn-primary { background: var(--moss); color: #fff; border-color: var(--moss); }
   .ds-btn-primary:hover { background: var(--moss-deep); border-color: var(--moss-deep); }
-  .ds-btn-soon { opacity: .55; cursor: default; pointer-events: none; }
 
   .empty {
     grid-column: 1 / -1; text-align: center; padding: 60px 20px;
@@ -183,7 +188,6 @@
   .foot-bottom a:hover { text-decoration: underline; }
 
   @media (max-width: 820px) {
-    .nav-links { display: none; }
     .lib-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -192,25 +196,20 @@
 
 <nav>
   <div class="wrap nav-inner">
-    <a href="index.html" class="logo">
-      <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
-        <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
-        <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="23" cy="8" r="2.4" fill="#fff"/>
-      </svg>
-      Terrain
+    <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
     </a>
-    <div class="nav-links">
-      <a href="index.html#start">How it works</a>
-      <a href="datasets.html" class="active">Datasets</a>
-      <a href="projects.html">Projects</a>
-      <a href="programs.html">Programs</a>
-      <a href="index.html#faculty">Faculty</a>
-      <a href="team.html">Team</a>
-      <a href="index.html#join" class="nav-cta">Join the list</a>
-    </div>
+    <div class="nav-links" id="siteNavMenu"></div>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open menu">
+      <span class="nav-toggle-bars" aria-hidden="true">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </span>
+    </button>
   </div>
 </nav>
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
 
 <header class="lib-head">
   <div class="wrap">
@@ -219,7 +218,7 @@
       Back to home
     </a>
     <h1>The dataset library</h1>
-    <p>Public, free datasets for environmental work. Each listing includes a short explainer, example questions you can answer, and a link to download the data.</p>
+    <p>Public, free datasets for environmental work. Each listing includes a short explainer, example questions you can answer, and a link to download the data. Missing something? <a href="suggest-dataset.html" style="color:var(--moss);font-weight:500;">Suggest a dataset →</a></p>
   </div>
 </header>
 
@@ -263,14 +262,9 @@
   <div class="wrap">
     <div class="foot-inner">
       <div class="foot-brand">
-        <a href="index.html" class="logo">
-          <svg class="logo-mark" viewBox="0 0 30 30" fill="none">
-            <rect width="30" height="30" rx="8" fill="#2F6B4F"/>
-            <path d="M7 20 L12 13 L16 17 L23 8" stroke="#C7E0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="23" cy="8" r="2.4" fill="#fff"/>
-          </svg>
-          Terrain
-        </a>
+        <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
+    </a>
         <p>A student-built entry point for environmental data science at UCLA.</p>
       </div>
       <div class="foot-cols">
@@ -278,6 +272,7 @@
           <h5>Explore</h5>
           <a href="index.html#start">How it works</a>
           <a href="datasets.html">Dataset library</a>
+          <a href="skills.html">Skills</a>
           <a href="projects.html">Project library</a>
           <a href="index.html#faculty">Faculty directory</a>
           <a href="programs.html">Programs</a>
@@ -290,16 +285,21 @@
         </div>
         <div class="foot-col">
           <h5>Connect</h5>
+          <a href="creators.html">Summer internship</a>
           <a href="team.html">Join the team</a>
           <a href="index.html#join">Join the list</a>
-          <a href="mailto:krishmatai23@ucla.edu">Contact</a>
+          <a href="mailto:uclaterrain@gmail.com">Contact</a>
+          <a class="foot-social" href="https://www.linkedin.com/company/terrainucla" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 114.127 0 2.062 2.062 0 01-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
           <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX ↗</a>
         </div>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Terrain · <a href="https://datax.ucla.edu/" target="_blank" rel="noopener">UCLA DataX</a> student initiative</span>
-      <span>Know a dataset? <a href="index.html#join">Suggest one →</a></span>
+      <span>© 2026 Terrain · Student-built at UCLA</span>
+      <span><a href="mailto:uclaterrain@gmail.com">uclaterrain@gmail.com</a></span>
     </div>
   </div>
 </footer>
@@ -308,138 +308,161 @@
   /* ===== DATASET LIBRARY =====
      cats topics: climate, emissions, justice, satellite, water, local, catalog, air
      cats levels: beginner, intermediate, advanced
-     keywords: extra search terms not shown on the card */
+     keywords: extra search terms not shown on the card
+     image: optional card thumbnail (omit if no good match yet) */
   const datasets = [
     {
       name: 'CalEnviroScreen',
+      slug: 'calenviroscreen',
       source: 'CA Office of Environmental Health Hazard Assessment',
       level: 'beginner',
+      image: 'assets/images/san-francisco.jpg',
       desc: 'California\u2019s official map of which communities face the heaviest combined pollution and social vulnerability, scored down to the census tract. The backbone of nearly all environmental-justice analysis in the state.',
       answers: 'Which neighborhoods carry the highest environmental burden, and why?',
       tags: ['CSV', 'Shapefile', 'Census tract'],
       cats: ['beginner', 'justice', 'local'],
       keywords: 'california ces oehha pollution vulnerability census environmental justice',
-      explainer: '#',
+      explainer: 'explainer.html?id=calenviroscreen',
       data: 'https://oehha.ca.gov/calenviroscreen'
     },
     {
       name: 'EPA AirNow',
+      slug: 'epa-airnow',
       source: 'U.S. Environmental Protection Agency',
       level: 'beginner',
+      image: 'assets/images/la-skyline.jpg',
       desc: 'Live and historical air-quality readings (AQI, PM2.5, ozone) from monitoring stations across the U.S. Clean, well-documented, and a perfect first time-series or mapping project.',
       answers: 'How does air quality change over time and across a city?',
       tags: ['API', 'JSON', 'Real-time'],
       cats: ['beginner', 'air', 'local'],
       keywords: 'aqi pm2.5 ozone smog pollution monitoring',
-      explainer: '#',
+      explainer: 'explainer.html?id=epa-airnow',
       data: 'https://www.airnow.gov/'
     },
     {
       name: 'NOAA Climate Data',
+      slug: 'noaa-climate',
       source: 'National Centers for Environmental Information',
       level: 'intermediate',
+      image: 'assets/hero/misty-lake.png',
       desc: 'Temperature, precipitation, and extreme-weather records reaching back over a century. Big and occasionally messy, but the definitive source for U.S. climate trends.',
       answers: 'Is my region getting hotter, drier, or more extreme over decades?',
       tags: ['CSV', 'API', 'Historical'],
       cats: ['intermediate', 'climate'],
       keywords: 'noaa ncei weather temperature precipitation drought extremes',
-      explainer: '#',
+      explainer: 'explainer.html?id=noaa-climate',
       data: 'https://www.ncei.noaa.gov/cdo-web/'
     },
     {
       name: 'NASA Earthdata',
+      slug: 'nasa-earthdata',
       source: 'NASA Earth Science Data Systems',
       level: 'advanced',
+      image: 'assets/images/nasa-earthdata.png',
       desc: 'Satellite earth observation: sea ice, vegetation, land-surface temperature, and more. Files are in formats like HDF and NetCDF. More advanced, but useful for large-scale work.',
       answers: 'What can orbit-level data reveal about a changing planet?',
       tags: ['NetCDF', 'HDF', 'Satellite'],
       cats: ['advanced', 'climate', 'satellite'],
       keywords: 'nasa remote sensing modis landsat earth observation geospatial',
-      explainer: '#',
+      explainer: 'explainer.html?id=nasa-earthdata',
       data: 'https://www.earthdata.nasa.gov/'
     },
     {
       name: 'ICESat-2',
+      slug: 'icesat-2',
       source: 'NASA NSIDC Distributed Active Archive Center',
       level: 'advanced',
+      image: 'assets/hero/iceberg.png',
       desc: 'Laser altimetry from NASA\u2019s ICESat-2 mission. Provides elevation measurements of ice sheets, sea ice, glaciers, and forest canopy height. Widely used in cryosphere and land-change research.',
       answers: 'How are ice sheets, sea ice, and polar landscapes changing at centimeter scale?',
       tags: ['HDF5', 'Laser altimetry', 'Cryosphere'],
       cats: ['advanced', 'climate', 'satellite'],
       keywords: 'icesat nsidc ice sheet sea ice glacier lidar altimetry arctic antarctica snow elevation',
-      explainer: '#',
+      explainer: 'explainer.html?id=icesat-2',
       data: 'https://nsidc.org/data/icesat-2/data'
     },
     {
       name: 'Climate TRACE',
+      slug: 'climate-trace',
       source: 'Climate TRACE Coalition',
       level: 'intermediate',
+      image: 'assets/images/climate-trace.png',
       desc: 'Facility-level greenhouse gas inventory covering power, transport, agriculture, and more. Free CSV downloads and a beta API.',
       answers: 'Who is emitting what, where, and how have facility-level emissions changed over time?',
       tags: ['CSV', 'API', 'Facility-level'],
       cats: ['intermediate', 'climate', 'emissions', 'catalog'],
       keywords: 'climate trace ghg co2 methane inventory power plants shipping agriculture sector',
-      explainer: '#',
+      explainer: 'explainer.html?id=climate-trace',
       data: 'https://climatetrace.org/data'
     },
     {
       name: 'Our World in Data',
+      slug: 'our-world-in-data',
       source: 'Global Change Data Lab / University of Oxford',
       level: 'beginner',
+      image: 'janeb13-earth-1179212.png',
       desc: 'Open charts and downloadable datasets on CO\u2082, energy, disasters, land use, and more. Data are cleaned, cited, and suitable for a first analysis or class project.',
       answers: 'How do emissions, energy, or environmental outcomes compare across countries over time?',
       tags: ['CSV', 'Charts', 'Open license'],
       cats: ['beginner', 'climate', 'emissions', 'catalog'],
       keywords: 'owid our world in data co2 carbon energy renewables disasters biodiversity global',
-      explainer: 'https://ourworldindata.org/data',
+      explainer: 'explainer.html?id=our-world-in-data',
       data: 'https://ourworldindata.org/'
     },
     {
       name: 'Data Rescue Project Portal',
+      slug: 'data-rescue-project',
       source: 'Data Rescue Project',
       level: 'intermediate',
+      image: 'assets/images/preserve.jpg',
       desc: 'A catalog of nearly 3,000 preserved government datasets with metadata, archive links, and notes on data that may have moved or gone offline.',
       answers: 'Where can I find a federal dataset that may have moved, gone offline, or been archived?',
       tags: ['Catalog', 'Metadata', 'Archived'],
       cats: ['intermediate', 'catalog', 'climate', 'water'],
       keywords: 'drp data rescue datalumos government federal archive preserved epa noaa usgs',
-      explainer: '#',
+      explainer: 'explainer.html?id=data-rescue-project',
       data: 'https://portal.datarescueproject.org/'
     },
     {
       name: 'USGS All Data',
+      slug: 'usgs-all-data',
       source: 'U.S. Geological Survey',
       level: 'intermediate',
+      image: 'assets/hero/river.png',
       desc: 'The full USGS data catalog. 16,000+ releases spanning water, geology, ecosystems, hazards, and climate. Filter by topic and format when you need more than streamflow alone.',
       answers: 'What USGS datasets exist for my topic, and how do I browse them by theme?',
       tags: ['Catalog', 'Data releases', 'Real-time'],
       cats: ['intermediate', 'water', 'climate', 'catalog'],
       keywords: 'usgs geology ecosystems hazards biology coasts minerals water nwis',
-      explainer: '#',
+      explainer: 'explainer.html?id=usgs-all-data',
       data: 'https://www.usgs.gov/products/data/all-data'
     },
     {
       name: 'UCLA Emissions Reports',
+      slug: 'ucla-emissions',
       source: 'UCLA Sustainability',
       level: 'beginner',
-      desc: 'Campus energy use and carbon emissions from UCLA\u2019s public sustainability reports. Local data and the source used in Terrain\u2019s carbon tracker.',
-      answers: 'Is UCLA actually on track to meet its carbon-neutrality pledge?',
-      tags: ['PDF', 'Manual entry', 'Local'],
+      image: 'assets/images/royce-hall.jpg',
+      desc: 'Third-party verified campus GHG inventories (Scopes 1\u20133) from UC Annual Sustainability Reports. Source for Terrain\u2019s carbon tracker.',
+      answers: 'Is UCLA on track for UC\u2019s 90%-by-2045 emissions commitment?',
+      tags: ['PDF', 'Verified inventory', 'Local'],
       cats: ['beginner', 'local', 'climate', 'emissions'],
       keywords: 'ucla campus carbon neutrality sustainability energy',
-      explainer: '#',
-      data: 'https://www.sustain.ucla.edu/'
+      explainer: 'explainer.html?id=ucla-emissions',
+      data: 'https://www.sustain.ucla.edu/climate-and-energy/'
     },
     {
       name: 'USGS Water Data',
+      slug: 'usgs-water',
       source: 'U.S. Geological Survey',
       level: 'intermediate',
+      image: 'assets/hero/river.png',
       desc: 'Streamflow, groundwater levels, and water-quality measurements from sites nationwide. Strong for drought, watershed, or water-justice projects with a spatial angle.',
       answers: 'How are water supply and quality shifting across a watershed?',
       tags: ['API', 'CSV', 'Time-series'],
       cats: ['intermediate', 'water', 'local'],
       keywords: 'usgs nwis streamflow groundwater drought watershed quality',
-      explainer: '#',
+      explainer: 'explainer.html?id=usgs-water',
       data: 'https://waterdata.usgs.gov/nwis'
     }
   ];
@@ -517,21 +540,22 @@
 
     grid.innerHTML = list.map(d => `
       <div class="ds-card">
-        <div class="ds-top">
-          <div>
-            <div class="ds-name">${d.name}</div>
-            <div class="ds-source">${d.source}</div>
+        ${d.image ? `<div class="ds-thumb"><img src="${d.image}" alt="" loading="lazy"></div>` : ''}
+        <div class="ds-inner">
+          <div class="ds-top">
+            <div>
+              <div class="ds-name">${d.name}</div>
+              <div class="ds-source">${d.source}</div>
+            </div>
+            <span class="ds-level ${levelClass[d.level]}">${d.level}</span>
           </div>
-          <span class="ds-level ${levelClass[d.level]}">${d.level}</span>
-        </div>
-        <p class="ds-desc">${d.desc}</p>
-        <div class="ds-answers"><strong>Answers:</strong> ${d.answers}</div>
-        <div class="ds-tags">${d.tags.map(t => `<span class="ds-tag">${t}</span>`).join('')}</div>
-        <div class="ds-foot">
-          ${d.explainer === '#' 
-            ? '<span class="ds-btn ds-btn-primary ds-btn-soon">Explainer (coming soon)</span>'
-            : `<a class="ds-btn ds-btn-primary" href="${d.explainer}" target="_blank" rel="noopener">Read the explainer</a>`}
-          <a class="ds-btn" href="${d.data}" target="_blank" rel="noopener">Get the data →</a>
+          <p class="ds-desc">${d.desc}</p>
+          <div class="ds-answers"><strong>Answers:</strong> ${d.answers}</div>
+          <div class="ds-tags">${d.tags.map(t => `<span class="ds-tag">${t}</span>`).join('')}</div>
+          <div class="ds-foot">
+            <a class="ds-btn ds-btn-primary" href="${d.explainer}">Read the explainer</a>
+            <a class="ds-btn" href="${d.data}" target="_blank" rel="noopener">Get the data →</a>
+          </div>
         </div>
       </div>`).join('');
   }
@@ -558,6 +582,7 @@
   searchClear.addEventListener('click', () => { searchEl.value = ''; searchEl.focus(); render(); });
   render();
 </script>
+<script src="assets/site-nav.js?v=3"></script>
 
 </body>
 </html>

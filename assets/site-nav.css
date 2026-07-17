@@ -1,0 +1,395 @@
+/* Terrain — shared mobile navigation */
+
+/* Logo mark — new Terrain landscape logo (PNG) */
+.logo-mark {
+  height: 40px !important;
+  width: auto !important;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+}
+.logo img.logo-mark {
+  max-height: 40px;
+}
+
+/* Nav type — clean UI sans across the site */
+.nav-links a,
+.nav-links .nav-dd-trigger {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.nav-links a:hover,
+.nav-links .nav-dd-trigger:hover,
+.nav-links a:focus,
+.nav-links .nav-dd-trigger:focus {
+  text-decoration: none;
+}
+.nav-links .nav-cta {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  letter-spacing: 0 !important;
+  font-weight: 600 !important;
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line, #E3DFD2);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.nav-toggle:hover { border-color: var(--moss, #2F6B4F); }
+
+.nav-toggle-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 18px;
+}
+
+.nav-toggle-bar {
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--ink, #1B2A26);
+  transition: transform 0.22s ease, opacity 0.22s ease;
+}
+
+nav.on-hero .nav-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+nav.on-hero .nav-toggle-bar { background: #fff; }
+
+.nav-backdrop {
+  display: none;
+  position: fixed;
+  inset: 64px 0 0 0;
+  z-index: 150;
+  background: rgba(27, 42, 38, 0.32);
+  opacity: 0;
+  transition: opacity 0.24s ease;
+  pointer-events: none;
+}
+
+body.nav-open .nav-backdrop {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.nav-open { overflow: hidden; }
+
+/* Dropdown nav group (e.g. Projects > Skills) */
+.nav-links .nav-dd { position: relative; display: flex; align-items: stretch; align-self: stretch; }
+.nav-links .nav-dd-trigger { display: inline-flex; align-items: center; gap: 5px; height: 100%; }
+.nav-links .nav-dd-caret { transition: transform 0.22s ease; opacity: 0.75; }
+.nav-links .nav-dd:hover .nav-dd-caret,
+.nav-links .nav-dd:focus-within .nav-dd-caret { transform: rotate(180deg); }
+
+.nav-links .nav-dd-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  min-width: 222px;
+  padding: 7px;
+  background: var(--paper, #FBFAF6);
+  border: 1px solid var(--line, #E3DFD2);
+  border-radius: 14px;
+  box-shadow: 0 20px 44px -24px rgba(27, 42, 38, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 200;
+}
+
+/* invisible bridge so hover doesn't drop in the gap */
+.nav-links .nav-dd-menu::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -10px;
+  height: 10px;
+}
+
+.nav-links .nav-dd:hover .nav-dd-menu,
+.nav-links .nav-dd:focus-within .nav-dd-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav-links .nav-dd-menu a {
+  display: block;
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 14.5px;
+  font-weight: 450;
+  color: var(--ink, #1B2A26);
+  white-space: nowrap;
+  line-height: 1.3;
+  text-decoration: none;
+}
+.nav-links .nav-dd-menu a .dd-sub {
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink-soft, #4A5A54);
+  font-weight: 400;
+  margin-top: 1px;
+  text-decoration: none;
+}
+.nav-links .nav-dd-menu a:hover,
+.nav-links .nav-dd-menu a.active {
+  background: var(--paper-2, #F3F1E8);
+  color: var(--moss, #2F6B4F);
+  text-decoration: none;
+}
+.nav-links .nav-dd-menu a:hover .dd-sub {
+  color: var(--moss, #2F6B4F);
+  text-decoration: none;
+}
+
+/* Dropdown items always use dark text (even when parent nav is on a light-on-dark hero) */
+nav.on-hero .nav-links .nav-dd-menu a {
+  color: var(--ink, #1B2A26);
+}
+nav.on-hero .nav-links .nav-dd-menu a .dd-sub {
+  color: var(--ink-soft, #4A5A54);
+}
+nav.on-hero .nav-links .nav-dd-menu a:hover,
+nav.on-hero .nav-links .nav-dd-menu a.active {
+  color: var(--moss, #2F6B4F);
+}
+nav.on-hero .nav-links .nav-dd-menu a:hover .dd-sub {
+  color: var(--moss, #2F6B4F);
+}
+
+/* Learn ↔ Projects flow banners */
+.flow-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  padding: 22px 26px; margin: 0 0 28px;
+  border-radius: var(--radius, 16px); border: 1px solid var(--line, #E3DFD2);
+  background: #fff;
+}
+.flow-banner--skills {
+  background: linear-gradient(135deg, #EAF2E3 0%, #F3F1E8 100%);
+  border-color: #C7E0A8;
+}
+.flow-banner--projects {
+  background: linear-gradient(135deg, #E5EEF5 0%, #F3F1E8 100%);
+  border-color: #CBDDEA;
+}
+.flow-k {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .06em; color: var(--moss, #2F6B4F); margin-bottom: 5px;
+}
+.flow-banner h2 {
+  font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600;
+  letter-spacing: -.02em; margin-bottom: 5px; color: var(--ink, #1B2A26);
+}
+.flow-banner p { font-size: 14.5px; color: var(--ink-soft, #4A5A54); max-width: 52ch; line-height: 1.5; margin: 0; }
+.flow-banner-btn {
+  display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+  background: var(--moss, #2F6B4F); color: #fff; text-decoration: none;
+  font-size: 14.5px; font-weight: 500; padding: 12px 20px; border-radius: 11px;
+  transition: background .2s, transform .2s, box-shadow .2s;
+}
+.flow-banner-btn:hover {
+  background: var(--moss-deep, #1F4D38); transform: translateY(-1px);
+  box-shadow: 0 12px 28px -16px rgba(31,77,56,.45);
+}
+.flow-banner-btn svg { transition: transform .2s; }
+.flow-banner-btn:hover svg { transform: translateX(3px); }
+
+@media (max-width: 820px) {
+  .nav-toggle { display: inline-flex; }
+
+  .nav-links {
+    position: fixed;
+    top: 64px;
+    right: 0;
+    z-index: 160;
+    width: min(300px, calc(100vw - 20px));
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    margin: 0;
+    padding: 14px 14px 24px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    background: var(--paper, #FBFAF6);
+    border-left: 1px solid var(--line, #E3DFD2);
+    box-shadow: -12px 0 40px -20px rgba(27, 42, 38, 0.22);
+    transform: translateX(105%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    visibility: hidden;
+  }
+
+  body.nav-open .nav-links {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 12px 12px;
+    border-radius: 10px;
+    font-size: 17px;
+    color: var(--ink, #1B2A26) !important;
+  }
+
+  .nav-links a:not(.nav-cta):hover,
+  .nav-links a:not(.nav-cta).active {
+    background: var(--paper-2, #F3F1E8);
+    color: var(--moss, #2F6B4F) !important;
+  }
+
+  .nav-links .nav-cta {
+    margin-top: 8px;
+    text-align: center;
+    background: var(--moss, #2F6B4F) !important;
+    color: #fff !important;
+    border: none;
+  }
+
+  .nav-links .nav-cta:hover,
+  .nav-links .nav-cta:focus {
+    background: var(--moss-deep, #1F4D38) !important;
+    color: #fff !important;
+  }
+
+  /* Condense nested dropdown labels in the drawer */
+  .nav-links .nav-dd-menu a .dd-sub { display: none; }
+  .nav-links .nav-dd-menu a {
+    font-size: 15px;
+    padding: 10px 12px 10px 14px;
+    color: var(--ink-soft, #4A5A54) !important;
+  }
+
+  nav.on-hero .nav-links {
+    background: var(--paper, #FBFAF6);
+    border-left-color: var(--line, #E3DFD2);
+  }
+
+  body.nav-open .nav-toggle .nav-toggle-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  body.nav-open .nav-toggle .nav-toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  body.nav-open .nav-toggle .nav-toggle-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+@media (max-width: 820px) {
+  /* In the drawer, keep submenus collapsed until opened */
+  .nav-links .nav-dd { flex-direction: column; align-items: stretch; }
+  .nav-links .nav-dd-trigger {
+    font-weight: 600;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .nav-links .nav-dd-caret {
+    display: inline-block;
+    transition: transform 0.22s ease;
+  }
+  .nav-links .nav-dd.is-open .nav-dd-caret { transform: rotate(180deg); }
+  .nav-links .nav-dd-menu {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    min-width: 0;
+    padding: 0;
+    margin: 0 0 4px 0;
+    border-left: 2px solid var(--line, #E3DFD2);
+    margin-left: 12px;
+    display: none;
+  }
+  .nav-links .nav-dd.is-open .nav-dd-menu { display: flex; }
+  .nav-links .nav-dd-menu::before { display: none; }
+  .nav-links .nav-dd-menu a {
+    font-size: 15px;
+    padding: 10px 12px 10px 14px;
+  }
+  .nav-links .nav-dd-menu a .dd-sub { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-links,
+  .nav-backdrop,
+  .nav-toggle-bar {
+    transition: none !important;
+  }
+}
+
+/* Footer — LinkedIn */
+.foot-social {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  font-size: 14.5px;
+}
+.foot-social svg {
+  width: 14px !important;
+  height: 14px !important;
+  max-width: 14px;
+  max-height: 14px;
+  flex-shrink: 0;
+  display: block;
+  color: #0A66C2;
+}
+.foot-social:hover svg { color: #004182; }
+
+/* Get started CTA — keep label readable (never green-on-green) */
+a.nav-cta,
+a.nav-cta:visited {
+  background: var(--moss, #2F6B4F) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+a.nav-cta:hover,
+a.nav-cta:focus,
+a.nav-cta:active {
+  background: var(--moss-deep, #1F4D38) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+nav.on-hero a.nav-cta,
+nav.on-hero a.nav-cta:visited {
+  background: #fff !important;
+  color: #1F4D38 !important;
+  -webkit-text-fill-color: #1F4D38 !important;
+}
+nav.on-hero a.nav-cta:hover,
+nav.on-hero a.nav-cta:focus,
+nav.on-hero a.nav-cta:active {
+  background: #1F4D38 !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
