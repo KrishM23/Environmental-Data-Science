@@ -130,8 +130,30 @@
     transition: transform .22s, box-shadow .22s, border-color .22s;
   }
   .ds-card:hover { transform: translateY(-3px); box-shadow: 0 18px 38px -24px rgba(27,42,38,.3); border-color: var(--glow); }
-  .ds-thumb { height: 120px; overflow: hidden; border-bottom: 1px solid var(--line); }
-  .ds-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ds-thumb {
+    height: 132px; overflow: hidden; border-bottom: 1px solid var(--line);
+    position: relative; background: var(--paper-2);
+  }
+  .ds-thumb img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform .55s cubic-bezier(.22, 1, .36, 1);
+  }
+  .ds-card:hover .ds-thumb img { transform: scale(1.1); }
+  .ds-thumb::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 45%, rgba(27, 42, 38, 0.38) 100%);
+    opacity: 0; transition: opacity .3s ease; pointer-events: none;
+  }
+  .ds-card:hover .ds-thumb::after { opacity: 1; }
+  .ds-thumb-label {
+    position: absolute; left: 14px; bottom: 12px; z-index: 1;
+    font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600;
+    color: #fff; letter-spacing: .01em;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity .28s ease, transform .28s ease;
+    text-shadow: 0 1px 10px rgba(0,0,0,.35);
+  }
+  .ds-card:hover .ds-thumb-label { opacity: 1; transform: translateY(0); }
   .ds-inner { padding: 22px 26px 26px; display: flex; flex-direction: column; gap: 14px; flex-grow: 1; }
   .ds-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
   .ds-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
@@ -141,9 +163,9 @@
     font-weight: 500; padding: 5px 10px; border-radius: 6px; text-transform: uppercase;
     letter-spacing: .03em; white-space: nowrap;
   }
-  .lvl-beginner { background: #E8F0E0; color: #3C7A4A; }
-  .lvl-intermediate { background: #FBEEDF; color: #C07A3E; }
-  .lvl-advanced { background: #E5EEF5; color: #3F7197; }
+  .lvl-beginner { background: #E8F0E0; color: #2F6B4F; }
+  .lvl-intermediate { background: #F3F1E8; color: #8B6540; }
+  .lvl-advanced { background: #E0EBE4; color: #1F4D38; }
   .ds-desc { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; flex-grow: 1; }
   .ds-answers { font-size: 13.5px; color: var(--ink); }
   .ds-answers strong { font-weight: 600; }
@@ -217,7 +239,7 @@
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Back to home
     </a>
-    <h1>The dataset library</h1>
+    <h1>The Dataset Library</h1>
     <p>Public, free datasets for environmental work. Each listing includes a short explainer, example questions you can answer, and a link to download the data. Missing something? <a href="suggest-dataset.html" style="color:var(--moss);font-weight:500;">Suggest a dataset →</a></p>
   </div>
 </header>
@@ -540,7 +562,10 @@
 
     grid.innerHTML = list.map(d => `
       <div class="ds-card">
-        ${d.image ? `<div class="ds-thumb"><img src="${d.image}" alt="" loading="lazy"></div>` : ''}
+        ${d.image ? `<div class="ds-thumb">
+          <img src="${d.image}" alt="" loading="lazy">
+          <span class="ds-thumb-label">Preview</span>
+        </div>` : ''}
         <div class="ds-inner">
           <div class="ds-top">
             <div>

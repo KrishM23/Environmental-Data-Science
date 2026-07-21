@@ -115,9 +115,48 @@
     font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 4px 11px;
     border-radius: 100px; font-weight: 500;
   }
-  .pill-beginner { background: #E8F0E0; color: #3C7A4A; }
-  .pill-intermediate { background: #FBEEDF; color: #C07A3E; }
-  .pill-advanced { background: #E5EEF5; color: #3F7197; }
+  .pill-beginner { background: #E8F0E0; color: #2F6B4F; }
+  .pill-intermediate { background: #F3F1E8; color: #8B6540; }
+  .pill-advanced { background: #E0EBE4; color: #1F4D38; }
+
+  /* Recommended starters */
+  .starter-path {
+    margin: 8px 0 28px; padding: 26px 28px; border-radius: var(--radius);
+    background: #fff; border: 1px solid var(--line);
+  }
+  .starter-path h2 {
+    font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600;
+    letter-spacing: -.015em; margin-bottom: 6px;
+  }
+  .starter-path > p { font-size: 15px; color: var(--ink-soft); max-width: 62ch; margin-bottom: 18px; }
+  .starter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .starter-card {
+    display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: inherit;
+    padding: 16px 18px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--paper); transition: border-color .2s, transform .2s, box-shadow .2s;
+  }
+  .starter-card:hover {
+    border-color: var(--glow); transform: translateY(-2px);
+    box-shadow: 0 12px 28px -20px rgba(27,42,38,.28);
+  }
+  .starter-level {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .04em; align-self: flex-start;
+    padding: 4px 9px; border-radius: 6px;
+  }
+  .starter-card h3 { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; line-height: 1.25; letter-spacing: -.01em; }
+  .starter-card p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.45; flex-grow: 1; }
+  .starter-card .go { font-size: 13px; font-weight: 600; color: var(--moss); }
+  .pcard.is-starter { border-color: rgba(47,107,79,.35); box-shadow: 0 0 0 1px rgba(47,107,79,.08); }
+  .pcard-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    color: var(--moss-deep); background: #E8F0E0; padding: 4px 9px; border-radius: 6px;
+    letter-spacing: .03em; text-transform: uppercase; margin-bottom: 2px;
+  }
+  @media (max-width: 820px) {
+    .starter-grid { grid-template-columns: 1fr; }
+  }
 
   /* PROJECT CARD */
   .proj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
@@ -267,6 +306,31 @@
     </a>
   </aside>
 
+  <section class="starter-path" aria-labelledby="starter-path-heading">
+    <h2 id="starter-path-heading">Start here</h2>
+    <p>One recommended starter at each level. Finish these in order if you want a clear path through the library.</p>
+    <div class="starter-grid">
+      <a class="starter-card" href="#starter-beginner">
+        <span class="starter-level pill-beginner">Beginner</span>
+        <h3>Map LA&rsquo;s air quality</h3>
+        <p>First map + API. ~45 min in Python.</p>
+        <span class="go">Go to project →</span>
+      </a>
+      <a class="starter-card" href="#starter-intermediate">
+        <span class="starter-level pill-intermediate">Intermediate</span>
+        <h3>Track a watershed through a drought</h3>
+        <p>Multi-site streamflow and seasonality. ~2 hr in Python.</p>
+        <span class="go">Go to project →</span>
+      </a>
+      <a class="starter-card" href="#starter-advanced">
+        <span class="starter-level pill-advanced">Advanced</span>
+        <h3>Map California&rsquo;s largest emitters</h3>
+        <p>Facility inventory, sectors, and a geospatial map. ~3 hr in Python.</p>
+        <span class="go">Go to project →</span>
+      </a>
+    </div>
+  </section>
+
   <div class="path">
     <div class="path-step">
       <div class="path-k">Step 1</div>
@@ -386,6 +450,8 @@
   const PUBLIC_ORIGIN = (window.TERRAIN && window.TERRAIN.publicOrigin) || '';
   const projects = [
     {
+      id: 'starter-beginner',
+      starter: true,
       title: 'Map LA\u2019s air quality in an afternoon',
       level: 'beginner', time: '~45 min', lang: 'Python',
       desc: 'Pull live air-quality readings from EPA AirNow and plot them on a map of Los Angeles. Your first taste of working with a real API and turning raw numbers into something you can see.',
@@ -434,6 +500,8 @@
       imageAlt: 'Royce Hall on the UCLA campus'
     },
     {
+      id: 'starter-intermediate',
+      starter: true,
       title: 'Track a watershed through a drought',
       level: 'intermediate', time: '~2 hr', lang: 'Python',
       desc: 'Use USGS streamflow data to follow how a river system responds before, during, and after a dry spell. Introduces joining multiple sites and reasoning about seasonality.',
@@ -457,6 +525,8 @@
       imageAlt: 'Hollywood Hills above Los Angeles'
     },
     {
+      id: 'starter-advanced',
+      starter: true,
       title: 'Map California\u2019s largest emitters',
       level: 'advanced', time: '~3 hr', lang: 'Python',
       desc: 'Download Climate TRACE facility-level greenhouse gas inventory for California, rank the biggest sources by sector, and map where emissions concentrate. Real inventory work at the scale policy analysts use.',
@@ -569,10 +639,15 @@
         <img src="${p.image}" alt="${p.imageAlt || ''}" loading="lazy">
         <span class="pcard-time-overlay">${p.time}</span>
       </div>` : '';
+    const badge = p.starter
+      ? `<div class="pcard-badge">Recommended starter</div>`
+      : '';
+    const anchor = p.id ? ` id="${p.id}"` : '';
     return `
-      <div class="pcard">
+      <div class="pcard${p.starter ? ' is-starter' : ''}"${anchor}>
         ${thumb}
         <div class="pcard-inner">
+          ${badge}
           <div class="pcard-top">
             <h3>${p.title}</h3>
             <span class="pcard-lang">${p.lang}</span>
@@ -642,6 +717,15 @@
 
   searchEl.addEventListener('input', render);
   render();
+
+  function scrollToStarterHash() {
+    const id = (location.hash || '').replace(/^#/, '');
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  window.addEventListener('hashchange', scrollToStarterHash);
+  setTimeout(scrollToStarterHash, 60);
 </script>
 <script src="assets/site-nav.js?v=3"></script>
 

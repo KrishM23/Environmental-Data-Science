@@ -51,9 +51,9 @@
   .ls-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; align-items: center; }
   .ls-tag { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 500; padding: 5px 11px; border-radius: 6px; text-transform: uppercase; letter-spacing: .03em; }
   .ls-tag.track { background: var(--ic-bg, var(--paper-2)); color: var(--ic-fg, var(--ink-soft)); }
-  .ls-tag.lvl-beginner { background: #E8F0E0; color: #3C7A4A; }
-  .ls-tag.lvl-intermediate { background: #FBEEDF; color: #C07A3E; }
-  .ls-tag.lvl-advanced { background: #E5EEF5; color: #3F7197; }
+  .ls-tag.lvl-beginner { background: #E8F0E0; color: #2F6B4F; }
+  .ls-tag.lvl-intermediate { background: #F3F1E8; color: #8B6540; }
+  .ls-tag.lvl-advanced { background: #E0EBE4; color: #1F4D38; }
   .ls-tag.tool { background: var(--paper-2); color: var(--ink-soft); }
   .ls-hero h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: clamp(32px, 4.5vw, 48px); line-height: 1.08; letter-spacing: -.025em; margin-bottom: 14px; max-width: 22ch; }
   .ls-lede { font-size: 18px; color: var(--ink-soft); max-width: 64ch; line-height: 1.6; }
@@ -283,10 +283,10 @@
 <script src="lessons-data.js"></script>
 <script>
   const trackMeta = {
-    foundations: { label: 'Foundations', fg: '#3C7A4A', bg: '#E8F0E0' },
-    data:        { label: 'Working with data', fg: '#3F7197', bg: '#E5EEF5' },
-    viz:         { label: 'Visualization', fg: '#C07A3E', bg: '#FBEEDF' },
-    stats:       { label: 'Statistics', fg: '#6B4F8C', bg: '#F3E8F5' },
+    foundations: { label: 'Foundations', fg: '#2F6B4F', bg: '#E8F0E0' },
+    data:        { label: 'Working with data', fg: '#1F4D38', bg: '#EAF2E3' },
+    viz:         { label: 'Visualization', fg: '#8B6540', bg: '#F3F1E8' },
+    stats:       { label: 'Statistics', fg: '#4A5A54', bg: '#F3F1E8' },
     geo:         { label: 'Geospatial', fg: '#1F4D38', bg: '#E0EBE4' }
   };
   const levelClass = { beginner: 'lvl-beginner', intermediate: 'lvl-intermediate', advanced: 'lvl-advanced' };

@@ -115,10 +115,10 @@
     font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 4px 11px;
     border-radius: 100px; font-weight: 500;
   }
-  .pill-foundations { background: #E8F0E0; color: #3C7A4A; }
-  .pill-data        { background: #E5EEF5; color: #3F7197; }
-  .pill-viz         { background: #FBEEDF; color: #C07A3E; }
-  .pill-stats       { background: #F3E8F5; color: #6B4F8C; }
+  .pill-foundations { background: #E8F0E0; color: #2F6B4F; }
+  .pill-data        { background: #EAF2E3; color: #1F4D38; }
+  .pill-viz         { background: #F3F1E8; color: #8B6540; }
+  .pill-stats       { background: #F3F1E8; color: #4A5A54; }
   .pill-geo         { background: #E0EBE4; color: #1F4D38; }
 
   /* SKILL CARD */
@@ -187,6 +187,56 @@
     display: inline-flex; align-items: center; gap: 5px;
   }
   .scard-unlock a:hover { color: var(--moss-deep); text-decoration: underline; }
+
+  /* What should I learn quiz */
+  .learn-quiz {
+    margin: 8px 0 28px; padding: 26px 28px; border-radius: var(--radius);
+    background: #fff; border: 1px solid var(--line);
+  }
+  .learn-quiz h2 {
+    font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600;
+    letter-spacing: -.015em; margin-bottom: 6px;
+  }
+  .learn-quiz > .quiz-lede { font-size: 15px; color: var(--ink-soft); max-width: 58ch; margin-bottom: 18px; }
+  .quiz-progress {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-soft);
+    margin-bottom: 10px; letter-spacing: .02em;
+  }
+  .quiz-q {
+    font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.35;
+  }
+  .quiz-opts { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    text-align: left; font-family: 'Inter', sans-serif; font-size: 14.5px; font-weight: 500;
+    padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--paper); color: var(--ink); cursor: pointer;
+    transition: border-color .18s, background .18s, transform .18s;
+  }
+  .quiz-opt:hover { border-color: var(--moss); background: #EAF2E3; transform: translateY(-1px); }
+  .quiz-opt:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+  .quiz-result { display: none; }
+  .quiz-result.is-open { display: block; }
+  .quiz-result-k {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
+    color: var(--moss); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px;
+  }
+  .quiz-result h3 {
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600;
+    letter-spacing: -.015em; margin-bottom: 8px;
+  }
+  .quiz-result p { font-size: 15px; color: var(--ink-soft); line-height: 1.55; max-width: 58ch; margin-bottom: 16px; }
+  .quiz-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .quiz-btn {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    font-size: 14px; font-weight: 600; padding: 11px 16px; border-radius: 10px;
+    background: var(--moss); color: #fff; border: none; cursor: pointer;
+    transition: background .2s, transform .2s;
+  }
+  .quiz-btn:hover { background: var(--moss-deep); transform: translateY(-1px); }
+  .quiz-btn.ghost {
+    background: transparent; color: var(--moss); border: 1px solid var(--line);
+  }
+  .quiz-btn.ghost:hover { border-color: var(--moss); background: #EAF2E3; }
 
   .empty { text-align: center; padding: 60px 20px; color: var(--ink-soft); font-size: 16px; }
 
@@ -287,6 +337,25 @@
       <p>Each skill links to a Terrain project that puts it to work on a real dataset.</p>
     </div>
   </div>
+
+  <section class="learn-quiz" id="learnQuiz" aria-labelledby="quiz-heading">
+    <h2 id="quiz-heading">What should I learn?</h2>
+    <p class="quiz-lede">Answer three quick questions and we will point you to the best first lesson.</p>
+    <div id="quizSteps">
+      <div class="quiz-progress" id="quizProgress">Question 1 of 3</div>
+      <p class="quiz-q" id="quizQuestion"></p>
+      <div class="quiz-opts" id="quizOpts" role="group" aria-labelledby="quizQuestion"></div>
+    </div>
+    <div class="quiz-result" id="quizResult" aria-live="polite">
+      <div class="quiz-result-k">Your starting point</div>
+      <h3 id="quizResultTitle"></h3>
+      <p id="quizResultBody"></p>
+      <div class="quiz-actions">
+        <a class="quiz-btn" id="quizResultLink" href="#">Open lesson</a>
+        <button type="button" class="quiz-btn ghost" id="quizRestart">Retake quiz</button>
+      </div>
+    </div>
+  </section>
 
   <div class="controls">
     <div class="search-box">
@@ -574,16 +643,16 @@
 
   const trackMeta = {
     foundations: { label: 'Programming foundations', pill: 'pill-foundations', note: 'Start here \u2014 the basics every project assumes',
-      fg: '#3C7A4A', bg: '#E8F0E0',
+      fg: '#2F6B4F', bg: '#E8F0E0',
       icon: '<path d="M8 6l-5 6 5 6M16 6l5 6-5 6" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' },
     data: { label: 'Working with data', pill: 'pill-data', note: 'Load, clean, reshape and join real datasets',
-      fg: '#3F7197', bg: '#E5EEF5',
+      fg: '#1F4D38', bg: '#EAF2E3',
       icon: '<ellipse cx="12" cy="6" rx="7" ry="3" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/>' },
     viz: { label: 'Visualization & storytelling', pill: 'pill-viz', note: 'Turn numbers into charts and maps people understand',
-      fg: '#C07A3E', bg: '#FBEEDF',
+      fg: '#8B6540', bg: '#F3F1E8',
       icon: '<path d="M4 20V11M10 20V5M16 20v-6M3 20h18" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' },
     stats: { label: 'Statistics & modeling', pill: 'pill-stats', note: 'Find trends, fit models, quantify change',
-      fg: '#6B4F8C', bg: '#F3E8F5',
+      fg: '#4A5A54', bg: '#F3F1E8',
       icon: '<path d="M3 17l5-5 4 3 8-9" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6h6v6" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' },
     geo: { label: 'Geospatial & earth data', pill: 'pill-geo', note: 'Maps, satellites and gridded climate data',
       fg: '#1F4D38', bg: '#E0EBE4',
@@ -686,6 +755,146 @@
 
   searchEl.addEventListener('input', render);
   render();
+
+  /* ===== What should I learn quiz ===== */
+  (function () {
+    const stepsEl = document.getElementById('quizSteps');
+    const resultEl = document.getElementById('quizResult');
+    const progressEl = document.getElementById('quizProgress');
+    const questionEl = document.getElementById('quizQuestion');
+    const optsEl = document.getElementById('quizOpts');
+    const titleEl = document.getElementById('quizResultTitle');
+    const bodyEl = document.getElementById('quizResultBody');
+    const linkEl = document.getElementById('quizResultLink');
+    const restartBtn = document.getElementById('quizRestart');
+    if (!stepsEl || !resultEl) return;
+
+    const questions = [
+      {
+        q: 'Where are you with coding right now?',
+        options: [
+          { id: 'new', label: 'I have never written code (or barely).' },
+          { id: 'some', label: 'I know a little Python or R.' },
+          { id: 'ready', label: 'I am comfortable writing code and want to go deeper.' }
+        ]
+      },
+      {
+        q: 'What do you most want to do first?',
+        options: [
+          { id: 'start', label: 'Get oriented and open notebooks confidently.' },
+          { id: 'tables', label: 'Load, clean, and reshape environmental tables.' },
+          { id: 'charts', label: 'Make clear charts, maps, or stories from data.' },
+          { id: 'models', label: 'Find trends, fit models, or compare change over time.' },
+          { id: 'earth', label: 'Work with maps, satellites, or gridded climate data.' }
+        ]
+      },
+      {
+        q: 'Which language do you want to start in?',
+        options: [
+          { id: 'python', label: 'Python' },
+          { id: 'r', label: 'R' },
+          { id: 'either', label: 'Either is fine' }
+        ]
+      }
+    ];
+
+    const answers = [];
+    let step = 0;
+
+    function recommend(a) {
+      const [exp, goal, lang] = a;
+      const preferR = lang === 'r';
+      const preferPy = lang === 'python' || lang === 'either';
+
+      if (exp === 'new') {
+        if (preferR) {
+          return {
+            title: 'R fundamentals',
+            body: 'Start with the R foundations lesson, then open Notebooks & Colab only if you later switch to Python projects.',
+            href: 'lesson.html?id=r-fundamentals'
+          };
+        }
+        return {
+          title: 'Python fundamentals',
+          body: 'Begin here: variables, loops, and functions with environmental examples. Next, take Notebooks & Google Colab so Terrain projects feel natural.',
+          href: 'lesson.html?id=python-fundamentals'
+        };
+      }
+
+      if (goal === 'start') {
+        return preferR
+          ? { title: 'R fundamentals', body: 'Refresh the core R ideas Terrain projects assume, then jump into a beginner R project.', href: 'lesson.html?id=r-fundamentals' }
+          : { title: 'Notebooks & Google Colab', body: 'You already have some coding instinct. Learn cells, runtimes, and how Terrain Python projects open in Colab.', href: 'lesson.html?id=notebooks-colab' };
+      }
+
+      if (goal === 'tables') {
+        return preferR
+          ? { title: 'tidyverse', body: 'Practice filtering, joining, and summarizing tables the way most R environmental workflows do.', href: 'lesson.html?id=tidyverse' }
+          : { title: 'pandas', body: 'Learn the Python table toolkit behind Terrain air-quality and emissions notebooks.', href: 'lesson.html?id=pandas' };
+      }
+
+      if (goal === 'charts') {
+        return preferR
+          ? { title: 'ggplot2', body: 'Build publication-ready charts in R, then apply them in a CalEnviroScreen-style project.', href: 'lesson.html?id=ggplot2' }
+          : { title: 'matplotlib & seaborn', body: 'Make clear plots in Python, then take the Maps lesson when you are ready for spatial views.', href: 'lesson.html?id=matplotlib-seaborn' };
+      }
+
+      if (goal === 'models') {
+        return {
+          title: 'Regression',
+          body: 'Fit and interpret simple models on environmental data. Pair it with descriptive stats if you want a gentler on-ramp.',
+          href: 'lesson.html?id=regression'
+        };
+      }
+
+      if (goal === 'earth') {
+        return exp === 'ready'
+          ? { title: 'Gridded & remote sensing', body: 'Work with satellite-style grids and Earth observation formats used in advanced Terrain projects.', href: 'lesson.html?id=gridded-remote-sensing' }
+          : { title: 'Geospatial', body: 'Start with points, polygons, and maps before jumping into satellite grids.', href: 'lesson.html?id=geospatial' };
+      }
+
+      return preferPy
+        ? { title: 'Python fundamentals', body: 'A solid default: build fluency, then move into pandas and a starter project.', href: 'lesson.html?id=python-fundamentals' }
+        : { title: 'R fundamentals', body: 'A solid default: build fluency, then move into the tidyverse and a starter project.', href: 'lesson.html?id=r-fundamentals' };
+    }
+
+    function showStep() {
+      const item = questions[step];
+      progressEl.textContent = 'Question ' + (step + 1) + ' of ' + questions.length;
+      questionEl.textContent = item.q;
+      optsEl.innerHTML = item.options.map(function (o) {
+        return '<button type="button" class="quiz-opt" data-id="' + o.id + '">' + o.label + '</button>';
+      }).join('');
+      stepsEl.style.display = '';
+      resultEl.classList.remove('is-open');
+    }
+
+    function showResult() {
+      const rec = recommend(answers);
+      titleEl.textContent = rec.title;
+      bodyEl.textContent = rec.body;
+      linkEl.href = rec.href;
+      stepsEl.style.display = 'none';
+      resultEl.classList.add('is-open');
+    }
+
+    optsEl.addEventListener('click', function (e) {
+      const btn = e.target.closest('.quiz-opt');
+      if (!btn) return;
+      answers[step] = btn.getAttribute('data-id');
+      step += 1;
+      if (step >= questions.length) showResult();
+      else showStep();
+    });
+
+    restartBtn.addEventListener('click', function () {
+      answers.length = 0;
+      step = 0;
+      showStep();
+    });
+
+    showStep();
+  })();
 </script>
 <script src="assets/site-nav.js?v=3"></script>
 
