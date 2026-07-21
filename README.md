@@ -1,5 +1,7 @@
 # Terrain — Environmental Data Science at UCLA
 
+**Live site:** [terrainatucla.netlify.app](https://terrainatucla.netlify.app/)
+
 Terrain is a student-built entry point for environmental data science at UCLA—from students, for students. It exists because getting started meant hunting across `.gov` portals, faculty pages, and random GitHub repos with no clear path from “curious” to “I built something.”
 
 Everything is free and runs on free tools. No paid software, no powerful laptop required, and beginner projects assume no prior coding experience.
