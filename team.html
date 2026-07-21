@@ -243,6 +243,12 @@
     <div class="partners-grid" id="partnersGrid"></div>
   </section>
 
+  <section class="team-section" id="collaborators">
+    <div class="section-label">Collaborators <span class="bar"></span></div>
+    <p style="font-size:16px;color:var(--ink-soft);max-width:64ch;margin-bottom:24px;">Faculty and mentors who advise Terrain and help connect the project to campus.</p>
+    <div class="team-grid" id="collaboratorsGrid"></div>
+  </section>
+
   <section class="collab-section">
     <div class="section-label">Work with us <span class="bar"></span></div>
     <p style="font-size:16px;color:var(--ink-soft);max-width:64ch;margin-bottom:24px;">Terrain is free to use. If you&rsquo;re a student, instructor, campus group, or local organization that wants our projects, explainers, or demos—or to collaborate on outreach—we&rsquo;d love to hear from you.</p>
@@ -370,6 +376,23 @@
     }
   ];
 
+  /* ===== COLLABORATORS =====
+     Faculty / mentors who advise Terrain. Same fields as team members. */
+  const collaboratorsPeople = [
+    {
+      name: 'Prof. Chris Johanson',
+      role: 'Faculty collaborator · UCLA DataX',
+      photo: 'assets/team/chris-johanson.jpg',
+      initials: 'CJ',
+      color: '#5B8BB0',
+      bio: 'Associate Professor of Classics and Digital Humanities, and Faculty Director of Innovative Applications and Creative Activity at UCLA DataX. Advises Terrain as we grow student pathways into data-driven work across campus.',
+      email: 'johanson@humnet.ucla.edu',
+      links: [
+        { label: 'DataX profile', url: 'https://datax.ucla.edu/people/chris-johanson' }
+      ]
+    }
+  ];
+
   /* ===== WORK WITH US =====
      Audience cards for people who use Terrain or want to collaborate.
      Fields: name, type, mark, color, desc, link (optional mailto or URL), linkLabel */
@@ -414,6 +437,7 @@
 
   const grid = document.getElementById('teamGrid');
   const partnersGrid = document.getElementById('partnersGrid');
+  const collaboratorsGrid = document.getElementById('collaboratorsGrid');
   const collabGrid = document.getElementById('collabGrid');
 
   function memberHTML(m) {
@@ -490,6 +514,10 @@
     </div>`;
 
   partnersGrid.innerHTML = partners.map(partnerHTML).join('');
+
+  if (collaboratorsGrid) {
+    collaboratorsGrid.innerHTML = collaboratorsPeople.map(memberHTML).join('');
+  }
 
   collabGrid.innerHTML = collaborators.map(collabHTML).join('') + `
     <div class="collab-card join">

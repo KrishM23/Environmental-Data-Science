@@ -38,7 +38,17 @@ window.LESSONS = {
       "Write reusable functions with parameters and return values",
       "Read a CSV-style file and handle common errors"
     ],
+    video: {
+      label: "Watch walkthrough",
+      url: "https://drive.google.com/file/d/1yS-uovYtSZ2LlGXEIMtAGcfIWtNjU0Z-/view",
+      note: "Mentor walkthrough for this lesson (opens in Google Drive)."
+    },
     resources: [
+      {
+        "name": "Terrain walkthrough: Python fundamentals",
+        "url": "https://drive.google.com/file/d/1yS-uovYtSZ2LlGXEIMtAGcfIWtNjU0Z-/view",
+        "kind": "video"
+      },
       {
         "name": "Kaggle: Intro to Python",
         "url": "https://www.kaggle.com/learn/python",
@@ -310,7 +320,17 @@ window.LESSONS = {
       "Avoid the classic out-of-order execution trap",
       "Save your work to Drive, download .ipynb, or push to GitHub"
     ],
+    video: {
+      label: "Watch walkthrough",
+      url: "https://drive.google.com/file/d/1QoQ5489piIQTTe_u59eXbb0vjXiz_xtd/view",
+      note: "Intro to Google Colab with a Terrain mentor (opens in Google Drive)."
+    },
     resources: [
+      {
+        "name": "Terrain walkthrough: Intro to Google Colab",
+        "url": "https://drive.google.com/file/d/1QoQ5489piIQTTe_u59eXbb0vjXiz_xtd/view",
+        "kind": "video"
+      },
       {
         "name": "Welcome to Colab",
         "url": "https://colab.research.google.com/",

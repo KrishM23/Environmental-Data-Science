@@ -22,7 +22,7 @@ Plain HTML, CSS, and JavaScript. Chart.js for the tracker. Static site—fast, f
 
 ## Status
 
-Live and usable: explainers, datasets, project library, faculty directory, and notebooks. **Mentor walkthrough videos** are the main piece still in progress.
+Live and usable: explainers, datasets, project library, faculty directory, notebooks, and mentor walkthrough videos for several skills lessons and starter projects.
 
 **Partner:** [UCLA DataX](https://datax.ucla.edu/)
 

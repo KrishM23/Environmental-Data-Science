@@ -57,6 +57,15 @@
   .ls-tag.tool { background: var(--paper-2); color: var(--ink-soft); }
   .ls-hero h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: clamp(32px, 4.5vw, 48px); line-height: 1.08; letter-spacing: -.025em; margin-bottom: 14px; max-width: 22ch; }
   .ls-lede { font-size: 18px; color: var(--ink-soft); max-width: 64ch; line-height: 1.6; }
+  .ls-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 22px; }
+  .ls-video-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--moss); color: #fff; text-decoration: none;
+    font-size: 14.5px; font-weight: 600; padding: 11px 18px; border-radius: 10px;
+    transition: background .2s, transform .2s;
+  }
+  .ls-video-btn:hover { background: var(--moss-deep); transform: translateY(-1px); }
+  .ls-video-note { font-size: 13.5px; color: var(--ink-soft); }
 
   /* BODY LAYOUT */
   .ls-body { padding: 44px 0 30px; }
@@ -392,6 +401,13 @@
 
     const prereqHTML = (data.prereqs || []).map(p => `<a href="lesson.html?id=${esc(p.id)}">${arrow} ${esc(p.label)}</a>`).join('');
     const resHTML = (data.resources || []).map(r => `<a href="${esc(r.url)}" target="_blank" rel="noopener">${extLink}<span>${esc(r.name)}</span><span class="kind">${esc(r.kind || '')}</span></a>`).join('');
+    const playIcon = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.8v10.4L13.2 8 4 2.8z"/></svg>';
+    const videoHTML = data.video && data.video.url
+      ? `<div class="ls-hero-actions">
+          <a class="ls-video-btn" href="${esc(data.video.url)}" target="_blank" rel="noopener">${playIcon}${esc(data.video.label || 'Watch walkthrough')}</a>
+          ${data.video.note ? `<span class="ls-video-note">${esc(data.video.note)}</span>` : ''}
+        </div>`
+      : '';
 
     main.innerHTML = `
       <header class="ls-hero">
@@ -408,6 +424,7 @@
           </div>
           <h1>${esc(data.title)}</h1>
           <p class="ls-lede">${data.lede}</p>
+          ${videoHTML}
         </div>
       </header>
       <div class="ls-body">
