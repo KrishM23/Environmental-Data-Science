@@ -1,9 +1,20 @@
 {
   "name": "terrain-site",
   "private": true,
-  "description": "Terrain static site + auth API helpers",
+  "description": "Terrain static site + auth API",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "api": "npm --prefix server start",
-    "api:install": "npm --prefix server install"
+    "api:install": "npm --prefix server install",
+    "build": "npm install --omit=dev"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "serverless-http": "^3.2.0"
   }
 }

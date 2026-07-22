@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 const db = require('./db');
 
 const JWT_SECRET = process.env.TERRAIN_JWT_SECRET || 'terrain-dev-secret-change-me';
@@ -13,6 +13,10 @@ const TOKEN_DAYS = Number(process.env.TERRAIN_TOKEN_DAYS || 30);
 const IS_PROD = process.env.NODE_ENV === 'production' || !!process.env.NETLIFY;
 const PUBLIC_ORIGIN = (process.env.TERRAIN_PUBLIC_ORIGIN || '').replace(/\/$/, '');
 const BCRYPT_ROUNDS = 12;
+
+function newId() {
+  return crypto.randomUUID();
+}
 
 /* Simple in-memory rate limit (per instance) */
 const rateBuckets = new Map();
@@ -118,7 +122,7 @@ function createApp() {
       const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
       const now = new Date().toISOString();
       const user = db.createUser({
-        id: uuidv4(),
+        id: newId(),
         email,
         name,
         passwordHash,

@@ -1,13 +1,14 @@
 # Netlify config for Terrain
-# Drop this in the same folder as index.html when you deploy.
 
 [build]
   publish = "."
-  command = "npm install --prefix server"
+  command = "npm run build"
   functions = "netlify/functions"
 
 [functions]
+  directory = "netlify/functions"
   node_bundler = "esbuild"
+  external_node_modules = ["express"]
 
 # Proxy /api/* to the auth + progress function
 [[redirects]]
