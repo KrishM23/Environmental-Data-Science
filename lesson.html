@@ -7,8 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site-nav.css?v=3">
+<link rel="stylesheet" href="assets/site-nav.css?v=9">
 <link rel="stylesheet" href="assets/terrain-soft.css?v=3">
+<link rel="stylesheet" href="assets/auth.css?v=5">
 
 <style>
   :root {
@@ -281,6 +282,9 @@
 </footer>
 
 <script src="lessons-data.js"></script>
+<script src="assets/site-config.js"></script>
+<script src="assets/auth.js?v=4"></script>
+<script src="assets/progress-ui.js?v=3"></script>
 <script>
   const trackMeta = {
     foundations: { label: 'Foundations', fg: '#2F6B4F', bg: '#E8F0E0' },
@@ -425,6 +429,16 @@
           <h1>${esc(data.title)}</h1>
           <p class="ls-lede">${data.lede}</p>
           ${videoHTML}
+          <div class="lesson-track">
+            <div class="lesson-pct" id="lessonPctWrap" hidden>
+              <div class="lesson-pct-row">
+                <span>Lesson progress</span>
+                <strong id="lessonPctLabel">0%</strong>
+              </div>
+              <div class="lesson-pct-bar" aria-hidden="true"><span id="lessonPctFill"></span></div>
+            </div>
+            <div id="lessonProgress" class="track-rail" data-progress-kind="skills" data-progress-id="${esc(id)}" data-progress-label="${esc(data.title)}" data-login-next="lesson.html?id=${esc(id)}" hidden></div>
+          </div>
         </div>
       </header>
       <div class="ls-body">
@@ -460,22 +474,79 @@
       });
     });
 
-    // Reading progress + TOC scroll-spy
+    // Reading progress + TOC scroll-spy + account % by section
     const bar = document.getElementById('progressBar');
     const tocLinks = Array.from(document.querySelectorAll('#toc a'));
     const headings = toc.map(t => document.getElementById(t.id)).filter(Boolean);
+    const pctWrap = document.getElementById('lessonPctWrap');
+    const pctLabel = document.getElementById('lessonPctLabel');
+    const pctFill = document.getElementById('lessonPctFill');
+    const sectionCount = Math.max(headings.length, 1);
+    let maxPct = 0;
+    let saveTimer = null;
+
+    if (window.TerrainAuth && TerrainAuth.isLoggedIn()) {
+      const cached = TerrainAuth.getProgress() || {};
+      const item = cached.skills && cached.skills[id];
+      if (item && item.meta && typeof item.meta.percent === 'number') {
+        maxPct = Math.max(0, Math.min(100, item.meta.percent));
+      }
+      if (pctWrap) pctWrap.hidden = false;
+      paintLessonPct(maxPct);
+    }
+
+    function paintLessonPct(pct) {
+      if (pctLabel) pctLabel.textContent = Math.round(pct) + '%';
+      if (pctFill) pctFill.style.width = Math.round(pct) + '%';
+    }
+
+    function saveLessonPct(pct, status) {
+      if (!window.TerrainProgressUI || !TerrainAuth.isLoggedIn()) return;
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(function () {
+        TerrainProgressUI.setStatus('skills', id, status, data.title, {
+          silent: true,
+          quietDone: true,
+          meta: { percent: Math.round(pct), sections: sectionCount }
+        }).then(function () {
+          TerrainProgressUI.refreshAll(document.getElementById('main') || document);
+        }).catch(function () {});
+      }, 400);
+    }
+
     function onScroll(){
       const h = document.documentElement;
-      const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+      const scrolled = h.scrollTop / Math.max(1, (h.scrollHeight - h.clientHeight));
       bar.style.width = Math.min(100, Math.max(0, scrolled * 100)) + '%';
       let active = -1;
       headings.forEach((el, i) => { if (el.getBoundingClientRect().top <= 120) active = i; });
       tocLinks.forEach((a, i) => a.classList.toggle('active', i === active));
+
+      if (window.TerrainAuth && TerrainAuth.isLoggedIn() && headings.length) {
+        /* Sections reached (0-based active) → percent through the lesson */
+        const reached = active < 0 ? 0 : active + 1;
+        let pct = Math.round((reached / sectionCount) * 100);
+        if (scrolled > 0.92) pct = 100;
+        if (pct > maxPct) {
+          maxPct = pct;
+          paintLessonPct(maxPct);
+          const status = maxPct >= 100 ? 'done' : 'in_progress';
+          saveLessonPct(maxPct, status);
+        } else if (maxPct === 0 && scrolled > 0.02) {
+          maxPct = Math.max(1, pct);
+          paintLessonPct(maxPct);
+          saveLessonPct(maxPct, 'in_progress');
+        }
+      }
     }
     document.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+
+    if (window.TerrainProgressUI) {
+      TerrainProgressUI.mount(document.getElementById('main') || document);
+    }
   }
 </script>
-<script src="assets/site-nav.js?v=3"></script>
+<script src="assets/site-nav.js?v=9"></script>
 </body>
 </html>

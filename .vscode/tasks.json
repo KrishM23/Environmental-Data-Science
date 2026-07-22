@@ -3,8 +3,14 @@
   "tasks": [
     {
       "label": "serve",
+      "dependsOn": ["serve-site", "serve-api"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "serve-site",
       "type": "shell",
-      "command": "if curl -sf -o /dev/null http://127.0.0.1:8080/ 2>/dev/null; then echo 'Server already running at http://localhost:8080'; else lsof -i :8080 -sTCP:LISTEN -t 2>/dev/null | xargs kill 2>/dev/null; python3 -m http.server 8080; fi",
+      "command": "if curl -sf -o /dev/null http://localhost:8000/login.html 2>/dev/null; then echo 'Server already running at http://localhost:8000'; else python3 -m http.server 8000; fi",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -20,7 +26,31 @@
       },
       "presentation": {
         "reveal": "silent",
-        "panel": "dedicated"
+        "panel": "dedicated",
+        "group": "terrain"
+      }
+    },
+    {
+      "label": "serve-api",
+      "type": "shell",
+      "command": "if curl -sf -o /dev/null http://127.0.0.1:8787/api/health 2>/dev/null; then echo 'API already running at http://localhost:8787'; else npm start; fi",
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "listening|already running"
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated",
+        "group": "terrain"
       }
     }
   ]

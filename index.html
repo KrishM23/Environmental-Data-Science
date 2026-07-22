@@ -7,7 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site-nav.css?v=3">
+<link rel="stylesheet" href="assets/site-nav.css?v=9">
+<link rel="stylesheet" href="assets/auth.css?v=5">
 <script>
 /* Chart.js v4.4.1 (MIT), vendored locally so the page has zero external dependencies */
 /*!
@@ -1723,8 +1724,8 @@ Thank you,
           ${f.email ? `<a class="fac-email" href="mailto:${f.email}">${f.email}</a>` : ''}
           <p>${f.blurb}</p>
           ${f.email ? `<div class="fac-actions">
-            <a class="fac-draft" href="${facultyMailto(f)}">Draft email</a>
-            <button type="button" class="fac-copy" data-email="${f.email}">Copy email</button>
+            <a class="fac-draft" href="${facultyMailto(f)}" data-email="${f.email}" data-name="${f.name.replace(/"/g, '&quot;')}">Draft email</a>
+            <button type="button" class="fac-copy" data-email="${f.email}" data-name="${f.name.replace(/"/g, '&quot;')}">Copy email</button>
           </div>` : ''}
         </div>
       </div>`).join('');
@@ -1773,6 +1774,10 @@ Thank you,
         }, 1800);
       }
       showCopyToast('Email copied');
+      if (window.TerrainAuth && TerrainAuth.isLoggedIn()) {
+        const name = (btn && btn.getAttribute('data-name')) || email;
+        TerrainAuth.setProgressItem('faculty', email, 'copied', name).catch(function () {});
+      }
     } catch (err) {
       showCopyToast('Could not copy — select the email above');
     }
@@ -1780,6 +1785,12 @@ Thank you,
 
   if (facGrid) {
     facGrid.addEventListener('click', function (e) {
+      const draft = e.target.closest('.fac-draft');
+      if (draft && window.TerrainAuth && TerrainAuth.isLoggedIn()) {
+        const email = draft.getAttribute('data-email');
+        const name = draft.getAttribute('data-name') || email;
+        if (email) TerrainAuth.setProgressItem('faculty', email, 'drafted', name).catch(function () {});
+      }
       const btn = e.target.closest('.fac-copy');
       if (!btn) return;
       const email = btn.getAttribute('data-email');
@@ -1860,7 +1871,9 @@ Thank you,
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
 </script>
-<script src="assets/site-nav.js?v=3"></script>
+<script src="assets/site-config.js"></script>
+<script src="assets/auth.js?v=4"></script>
+<script src="assets/site-nav.js?v=9"></script>
 
 </body>
 </html>

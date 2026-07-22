@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My learning | Terrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site-nav.css?v=9">
+<link rel="stylesheet" href="assets/terrain-soft.css?v=4">
+<link rel="stylesheet" href="assets/auth.css?v=5">
+<style>
+  :root {
+    --paper: #FBFAF6; --paper-2: #F3F1E8; --ink: #1B2A26; --ink-soft: #4A5A54;
+    --moss: #2F6B4F; --moss-deep: #1F4D38; --line: #E3DFD2; --glow: #C7E0A8;
+    --radius: 16px; --maxw: 1180px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--glow); color: var(--ink); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  a { color: inherit; }
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,250,246,0.82); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .logo-mark { height: 40px; width: auto; display: block; }
+  .nav-links { display: flex; align-items: center; gap: 2px; }
+  footer { border-top: 1px solid var(--line); padding: 40px 0 32px; }
+  .foot-bottom { font-size: 13px; color: var(--ink-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .foot-bottom a { color: var(--moss); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
+    </a>
+    <div class="nav-links" id="siteNavMenu"></div>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open menu">
+      <span class="nav-toggle-bars" aria-hidden="true">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </span>
+    </button>
+  </div>
+</nav>
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
+
+<header class="dash-head">
+  <div class="wrap">
+    <div class="dash-profile-bar">
+      <div class="dash-avatar" id="dashAvatar" aria-hidden="true">?</div>
+      <div>
+        <h1 id="dashGreeting">My learning</h1>
+        <p class="dash-submeta" id="dashEmail"></p>
+      </div>
+    </div>
+    <p>See your projects, lessons, and faculty contacts in one place.</p>
+    <div class="dash-actions">
+      <a class="dash-btn primary" href="projects.html">Browse projects</a>
+      <a class="dash-btn" href="skills.html">Skills curriculum</a>
+      <a class="dash-btn" href="index.html#faculty">Faculty directory</a>
+      <a class="dash-btn" href="account.html">Account settings</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap" id="dashMain">
+  <div class="dash-continue" id="emptyStart" hidden>
+    <div>
+      <div class="eyebrow">Get started</div>
+      <h2>Start a project</h2>
+      <p>Pick a project, mark it In progress, and come back here anytime to resume.</p>
+    </div>
+    <a class="dash-btn primary" href="projects.html">Browse projects</a>
+  </div>
+
+  <div class="dash-continue" id="continueCard" hidden>
+    <div class="dash-ring-wrap">
+      <div class="dash-ring" id="continueRing" style="--pct:0"><div class="dash-ring-inner" id="continuePct">0%</div></div>
+      <div>
+        <div class="eyebrow">Resume</div>
+        <h2 id="continueTitle">Continue where you left off</h2>
+        <p id="continueMeta"></p>
+      </div>
+    </div>
+    <a class="dash-btn primary" id="continueBtn" href="projects.html">Resume</a>
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-stat">
+      <div class="k">Projects completed</div>
+      <div class="v" id="statProjects">0</div>
+      <div class="s" id="statProjectsSub">of your tracked projects</div>
+    </div>
+    <div class="dash-stat">
+      <div class="k">Lessons underway</div>
+      <div class="v" id="statSkills">0</div>
+      <div class="s" id="statSkillsSub">opened or finished</div>
+    </div>
+    <div class="dash-stat">
+      <div class="k">Faculty contacts</div>
+      <div class="v" id="statFaculty">0</div>
+      <div class="s">emails copied or drafted</div>
+    </div>
+  </div>
+
+  <div class="dash-panels">
+    <section class="dash-panel">
+      <h2>Projects</h2>
+      <p class="panel-lede">Projects you have saved from the library.</p>
+      <div class="dash-list" id="listProjects"></div>
+    </section>
+    <section class="dash-panel">
+      <h2>Skills</h2>
+      <p class="panel-lede">Lessons you have started or finished.</p>
+      <div class="dash-list" id="listSkills"></div>
+    </section>
+    <section class="dash-panel" style="grid-column: 1 / -1;">
+      <h2>Faculty outreach</h2>
+      <p class="panel-lede">Faculty emails you copied or drafted from the directory.</p>
+      <div class="dash-list" id="listFaculty"></div>
+    </section>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-bottom">
+      <span>© 2026 Terrain · Student-built at UCLA</span>
+      <span><a href="mailto:uclaterrain@gmail.com">uclaterrain@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/site-config.js"></script>
+<script src="assets/auth.js?v=4"></script>
+<script src="assets/site-nav.js?v=9"></script>
+<script>
+(function () {
+  if (!window.TerrainAuth || !TerrainAuth.isLoggedIn()) {
+    location.replace('login.html?next=dashboard.html');
+    return;
+  }
+
+  var statusLabel = {
+    done: 'Completed',
+    in_progress: 'In progress',
+    not_started: 'Not started',
+    copied: 'Copied',
+    drafted: 'Drafted',
+    contacted: 'Contacted'
+  };
+
+  function entries(map) {
+    return Object.keys(map || {}).map(function (id) {
+      return Object.assign({ id: id }, map[id]);
+    }).sort(function (a, b) {
+      return String(b.updatedAt || '').localeCompare(String(a.updatedAt || ''));
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function countBy(map, statuses) {
+    return entries(map).filter(function (i) { return statuses.indexOf(i.status) !== -1; }).length;
+  }
+
+  function relativeTime(iso) {
+    if (!iso) return '';
+    var t = new Date(iso).getTime();
+    if (isNaN(t)) return '';
+    var mins = Math.round((Date.now() - t) / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return mins + 'm ago';
+    var hrs = Math.round(mins / 60);
+    if (hrs < 48) return hrs + 'h ago';
+    return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  }
+
+  function completionPct(progress) {
+    var projects = entries(progress.projects);
+    var skills = entries(progress.skills);
+    var total = projects.length + skills.length;
+    if (!total) return 0;
+    var done = countBy(progress.projects, ['done']) + countBy(progress.skills, ['done']);
+    return Math.round((done / total) * 100);
+  }
+
+  function latestInProgress(progress) {
+    var all = []
+      .concat(entries(progress.projects).map(function (i) { return Object.assign({ kind: 'projects' }, i); }))
+      .concat(entries(progress.skills).map(function (i) { return Object.assign({ kind: 'skills' }, i); }))
+      .filter(function (i) { return i.status === 'in_progress'; });
+    all.sort(function (a, b) {
+      return String(b.updatedAt || '').localeCompare(String(a.updatedAt || ''));
+    });
+    return all[0] || null;
+  }
+
+  function hasAnyProgress(progress) {
+    return entries(progress.projects).length + entries(progress.skills).length + entries(progress.faculty).length > 0;
+  }
+
+  function renderList(el, items, kind, emptyHtml) {
+    if (!items.length) {
+      el.innerHTML = '<div class="dash-empty">' + emptyHtml + '</div>';
+      return;
+    }
+    el.innerHTML = items.map(function (item) {
+      var st = item.status || 'in_progress';
+      var href = TerrainAuth.resumeHref(kind, item.id);
+      var when = relativeTime(item.updatedAt);
+      var pct = item.meta && typeof item.meta.percent === 'number' ? Math.round(item.meta.percent) : null;
+      var metaBits = [];
+      if (pct !== null && kind === 'skills') metaBits.push(pct + '% complete');
+      if (when) metaBits.push(when);
+      return '<div class="dash-item" data-kind="' + kind + '" data-id="' + escapeHtml(item.id) + '">' +
+        '<div>' +
+          '<a class="title-link" href="' + href + '">' + escapeHtml(item.label || item.id) + '</a>' +
+          (metaBits.length ? '<div class="meta">' + metaBits.join(' · ') + '</div>' : '') +
+        '</div>' +
+        '<div class="item-actions">' +
+          '<span class="dash-status st-' + st + '">' + (statusLabel[st] || st) + '</span>' +
+          '<a class="resume" href="' + href + '">Resume</a>' +
+          '<button type="button" class="remove" data-remove title="Remove from list">Remove</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function paint(progress) {
+    progress = progress || { projects: {}, skills: {}, faculty: {} };
+    var projects = entries(progress.projects);
+    var skills = entries(progress.skills);
+    var faculty = entries(progress.faculty);
+    var doneP = countBy(progress.projects, ['done']);
+    var doneS = countBy(progress.skills, ['done']);
+    var pct = completionPct(progress);
+
+    document.getElementById('statProjects').textContent = String(doneP);
+    document.getElementById('statProjectsSub').textContent =
+      projects.length
+        ? projects.length + ' tracked · ' + countBy(progress.projects, ['in_progress']) + ' in progress'
+        : 'No projects saved yet';
+    document.getElementById('statSkills').textContent = String(skills.length);
+    document.getElementById('statSkillsSub').textContent =
+      skills.length ? doneS + ' completed · ' + countBy(progress.skills, ['in_progress']) + ' in progress' : 'No lessons started yet';
+    document.getElementById('statFaculty').textContent = String(faculty.length);
+
+    var latest = latestInProgress(progress);
+    var card = document.getElementById('continueCard');
+    if (latest) {
+      card.hidden = false;
+      document.getElementById('continueTitle').textContent = latest.label || latest.id;
+      document.getElementById('continueMeta').textContent =
+        (latest.kind === 'projects' ? 'Project' : 'Lesson') +
+        (latest.updatedAt ? ' · Last updated ' + relativeTime(latest.updatedAt) : '');
+      document.getElementById('continueBtn').href = TerrainAuth.resumeHref(latest.kind, latest.id);
+      document.getElementById('continueBtn').textContent = 'Resume';
+      document.getElementById('continueRing').style.setProperty('--pct', String(pct));
+      document.getElementById('continuePct').textContent = pct + '%';
+    } else {
+      card.hidden = true;
+    }
+
+    var emptyStart = document.getElementById('emptyStart');
+    if (emptyStart) {
+      emptyStart.hidden = hasAnyProgress(progress);
+    }
+
+    renderList(
+      document.getElementById('listProjects'),
+      projects,
+      'projects',
+      'No projects in progress yet. Open the <a href="projects.html">project library</a>, pick one, and mark it In progress.'
+    );
+    renderList(
+      document.getElementById('listSkills'),
+      skills,
+      'skills',
+      'No lessons tracked yet. Open a lesson and mark it In progress when you start.'
+    );
+    renderList(
+      document.getElementById('listFaculty'),
+      faculty,
+      'faculty',
+      'No faculty contacts yet. Use Copy email or Draft email in the <a href="index.html#faculty">faculty directory</a>.'
+    );
+  }
+
+  function greetingFor(user, progress) {
+    var name = TerrainAuth.firstName(user);
+    if (hasAnyProgress(progress || {})) {
+      return 'Welcome back' + (name ? ', ' + name : '');
+    }
+    return name ? 'Hi, ' + name : 'My learning';
+  }
+
+  var user = TerrainAuth.getUser();
+  document.getElementById('dashGreeting').textContent = greetingFor(user, TerrainAuth.getProgress());
+  document.getElementById('dashEmail').innerHTML =
+    escapeHtml(user.email || '') + ' · <a href="account.html">Account settings</a>';
+  document.getElementById('dashAvatar').textContent = TerrainAuth.initials(user);
+
+  document.getElementById('dashMain').addEventListener('click', function (e) {
+    var resume = e.target.closest('a.resume, a.title-link, #continueBtn');
+    if (resume && window.TerrainAuth) TerrainAuth.markReturnToDashboard();
+
+    var btn = e.target.closest('[data-remove]');
+    if (!btn) return;
+    var row = btn.closest('.dash-item');
+    if (!row) return;
+    var kind = row.getAttribute('data-kind');
+    var id = row.getAttribute('data-id');
+    if (!confirm('Remove this item from your learning list?')) return;
+    TerrainAuth.clearProgressItem(kind, id).then(paint).catch(function () {
+      location.href = 'login.html?next=dashboard.html';
+    });
+  });
+
+  paint(TerrainAuth.getProgress());
+  TerrainAuth.me().then(function (data) {
+    if (!data) {
+      location.replace('login.html?next=dashboard.html');
+      return;
+    }
+    if (data.progress) paint(data.progress);
+    if (data.user) {
+      document.getElementById('dashGreeting').textContent = greetingFor(data.user, data.progress);
+      document.getElementById('dashEmail').innerHTML =
+        escapeHtml(data.user.email || '') + ' · <a href="account.html">Account settings</a>';
+      document.getElementById('dashAvatar').textContent = TerrainAuth.initials(data.user);
+    }
+  });
+})();
+</script>
+</body>
+</html>

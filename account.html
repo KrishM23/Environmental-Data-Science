@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account settings | Terrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site-nav.css?v=9">
+<link rel="stylesheet" href="assets/terrain-soft.css?v=4">
+<link rel="stylesheet" href="assets/auth.css?v=5">
+<style>
+  :root {
+    --paper: #FBFAF6; --paper-2: #F3F1E8; --ink: #1B2A26; --ink-soft: #4A5A54;
+    --moss: #2F6B4F; --moss-deep: #1F4D38; --line: #E3DFD2; --glow: #C7E0A8;
+    --radius: 16px; --maxw: 1180px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--glow); color: var(--ink); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  a { color: inherit; }
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,250,246,0.82); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .logo-mark { height: 40px; width: auto; display: block; }
+  .nav-links { display: flex; align-items: center; gap: 2px; }
+  footer { border-top: 1px solid var(--line); padding: 40px 0 32px; }
+  .foot-bottom { font-size: 13px; color: var(--ink-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .foot-bottom a { color: var(--moss); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo" aria-label="Terrain">
+      <img src="assets/terrain-logo.png" alt="" class="logo-mark" height="40">
+    </a>
+    <div class="nav-links" id="siteNavMenu"></div>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open menu">
+      <span class="nav-toggle-bars" aria-hidden="true">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </span>
+    </button>
+  </div>
+</nav>
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
+
+<header class="dash-head">
+  <div class="wrap">
+    <h1>Account settings</h1>
+    <p>Update your profile, password, and account preferences.</p>
+  </div>
+</header>
+
+<div class="wrap acct-layout">
+  <nav class="acct-nav" aria-label="Account sections">
+    <a href="#profile" class="is-active">Profile</a>
+    <a href="#password">Password</a>
+    <a href="#danger">Close account</a>
+    <a href="dashboard.html">Back to My learning</a>
+  </nav>
+
+  <div>
+    <section class="acct-card" id="profile">
+      <h2>Profile</h2>
+      <p class="panel-lede">Your display name on Terrain.</p>
+      <div class="auth-error" id="profileError" role="alert"></div>
+      <div class="auth-success" id="profileSuccess" role="status"></div>
+      <form id="profileForm" novalidate>
+        <div class="auth-field">
+          <label for="name">Full name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required maxlength="80">
+        </div>
+        <div class="auth-field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" disabled>
+          <p class="auth-hint">Email cannot be changed here. Contact uclaterrain@gmail.com if you need help.</p>
+        </div>
+        <button type="submit" class="auth-submit" id="profileBtn" style="width:auto;min-width:160px;">Save changes</button>
+      </form>
+    </section>
+
+    <section class="acct-card" id="password">
+      <h2>Password</h2>
+      <p class="panel-lede">Use a unique password with at least 8 characters, including a letter and a number.</p>
+      <div class="auth-error" id="pwError" role="alert"></div>
+      <div class="auth-success" id="pwSuccess" role="status"></div>
+      <form id="passwordForm" novalidate>
+        <div class="auth-field">
+          <label for="currentPassword">Current password</label>
+          <input id="currentPassword" type="password" autocomplete="current-password" required>
+        </div>
+        <div class="auth-field">
+          <label for="newPassword">New password</label>
+          <input id="newPassword" type="password" autocomplete="new-password" required minlength="8">
+          <div class="auth-strength" id="strength" data-score="0"><span></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="auth-field">
+          <label for="confirmPassword">Confirm new password</label>
+          <input id="confirmPassword" type="password" autocomplete="new-password" required>
+        </div>
+        <button type="submit" class="auth-submit" id="pwBtn" style="width:auto;min-width:180px;">Update password</button>
+      </form>
+    </section>
+
+    <section class="acct-card acct-danger" id="danger">
+      <h2>Close your account</h2>
+      <p class="panel-lede">Permanently deletes your account and all saved progress. This cannot be undone.</p>
+      <div class="auth-error" id="delError" role="alert"></div>
+      <form id="deleteForm" novalidate>
+        <div class="auth-field">
+          <label for="deletePassword">Confirm with your password</label>
+          <input id="deletePassword" type="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="dash-btn ghost-danger" id="delBtn" style="border-color:#E8C8C1;color:#8B3A2F;">Delete my account</button>
+      </form>
+    </section>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-bottom">
+      <span>© 2026 Terrain · Student-built at UCLA</span>
+      <span><a href="mailto:uclaterrain@gmail.com">uclaterrain@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/site-config.js"></script>
+<script src="assets/auth.js?v=4"></script>
+<script src="assets/site-nav.js?v=9"></script>
+<script>
+(function () {
+  if (!window.TerrainAuth || !TerrainAuth.isLoggedIn()) {
+    location.replace('login.html?next=account.html');
+    return;
+  }
+
+  var user = TerrainAuth.getUser();
+  document.getElementById('name').value = user.name || '';
+  document.getElementById('email').value = user.email || '';
+
+  document.getElementById('newPassword').addEventListener('input', function () {
+    document.getElementById('strength').setAttribute('data-score', String(TerrainAuth.passwordStrength(this.value)));
+  });
+
+  document.querySelectorAll('.acct-nav a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      document.querySelectorAll('.acct-nav a').forEach(function (x) { x.classList.remove('is-active'); });
+      a.classList.add('is-active');
+    });
+  });
+
+  document.getElementById('profileForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var err = document.getElementById('profileError');
+    var ok = document.getElementById('profileSuccess');
+    var btn = document.getElementById('profileBtn');
+    err.classList.remove('is-visible');
+    ok.classList.remove('is-visible');
+    btn.disabled = true;
+    try {
+      await TerrainAuth.updateProfile(document.getElementById('name').value.trim());
+      ok.textContent = 'Profile saved.';
+      ok.classList.add('is-visible');
+    } catch (ex) {
+      err.textContent = ex.message || 'Could not save profile.';
+      err.classList.add('is-visible');
+    }
+    btn.disabled = false;
+  });
+
+  document.getElementById('passwordForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var err = document.getElementById('pwError');
+    var ok = document.getElementById('pwSuccess');
+    var btn = document.getElementById('pwBtn');
+    err.classList.remove('is-visible');
+    ok.classList.remove('is-visible');
+    var next = document.getElementById('newPassword').value;
+    var confirm = document.getElementById('confirmPassword').value;
+    var policy = TerrainAuth.passwordPolicyError(next);
+    if (policy) {
+      err.textContent = policy;
+      err.classList.add('is-visible');
+      return;
+    }
+    if (next !== confirm) {
+      err.textContent = 'New passwords do not match.';
+      err.classList.add('is-visible');
+      return;
+    }
+    btn.disabled = true;
+    try {
+      await TerrainAuth.changePassword(document.getElementById('currentPassword').value, next);
+      ok.textContent = 'Password updated.';
+      ok.classList.add('is-visible');
+      document.getElementById('passwordForm').reset();
+      document.getElementById('strength').setAttribute('data-score', '0');
+    } catch (ex) {
+      err.textContent = ex.message || 'Could not update password.';
+      err.classList.add('is-visible');
+    }
+    btn.disabled = false;
+  });
+
+  document.getElementById('deleteForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var err = document.getElementById('delError');
+    err.classList.remove('is-visible');
+    if (!confirm('Delete your Terrain account and all saved progress? This cannot be undone.')) return;
+    var btn = document.getElementById('delBtn');
+    btn.disabled = true;
+    try {
+      await TerrainAuth.deleteAccount(document.getElementById('deletePassword').value);
+      location.href = 'index.html';
+    } catch (ex) {
+      err.textContent = ex.message || 'Could not delete account.';
+      err.classList.add('is-visible');
+      btn.disabled = false;
+    }
+  });
+
+  TerrainAuth.me().then(function (data) {
+    if (data && data.user) {
+      document.getElementById('name').value = data.user.name || '';
+      document.getElementById('email').value = data.user.email || '';
+    }
+  });
+})();
+</script>
+</body>
+</html>

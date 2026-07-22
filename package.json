@@ -1,0 +1,9 @@
+{
+  "name": "terrain-site",
+  "private": true,
+  "description": "Terrain static site + auth API helpers",
+  "scripts": {
+    "api": "npm --prefix server start",
+    "api:install": "npm --prefix server install"
+  }
+}

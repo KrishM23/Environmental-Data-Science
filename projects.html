@@ -7,8 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site-nav.css?v=3">
+<link rel="stylesheet" href="assets/site-nav.css?v=9">
 <link rel="stylesheet" href="assets/terrain-soft.css?v=3">
+<link rel="stylesheet" href="assets/auth.css?v=5">
 
 <style>
   :root {
@@ -161,6 +162,7 @@
   /* PROJECT CARD */
   .proj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
   .pcard {
+    position: relative;
     background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
     padding: 0; display: flex; flex-direction: column; gap: 0; overflow: hidden;
     transition: transform .22s, box-shadow .22s, border-color .22s;
@@ -210,7 +212,7 @@
   .meta-data:hover { background: var(--glow); }
   .skills { display: flex; flex-wrap: wrap; gap: 6px; }
   .skill { font-size: 12px; color: var(--ink-soft); border: 1px solid var(--line); padding: 3px 9px; border-radius: 100px; }
-  .pcard-foot { display: flex; gap: 10px; margin-top: 2px; }
+  .pcard-foot { display: flex; gap: 10px; margin-top: 2px; flex-wrap: wrap; }
   .pbtn {
     text-decoration: none; font-size: 14px; font-weight: 500; padding: 10px 16px;
     border-radius: 10px; border: 1px solid var(--line); color: var(--ink);
@@ -220,6 +222,7 @@
   .pbtn-primary { background: var(--moss); color: #fff; border-color: var(--moss); }
   .pbtn-primary:hover { background: var(--moss-deep); border-color: var(--moss-deep); }
   .pbtn-soon { opacity: .55; cursor: default; pointer-events: none; }
+  .chip.track-mine.active { background: #E8F0E0; border-color: #C7E0A8; color: var(--moss-deep); }
 
   .empty { text-align: center; padding: 60px 20px; color: var(--ink-soft); font-size: 16px; }
 
@@ -294,18 +297,6 @@
 </header>
 
 <div class="wrap">
-  <aside class="flow-banner flow-banner--skills" aria-label="Skills curriculum">
-    <div>
-      <p class="flow-k">New to coding?</p>
-      <h2>Start with the free skills curriculum</h2>
-      <p>17 full lessons on Python, pandas, maps, and more — everything these projects assume you know. Work through them first, then come back here.</p>
-    </div>
-    <a href="skills.html" class="flow-banner-btn">
-      Start learning
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-  </aside>
-
   <section class="starter-path" aria-labelledby="starter-path-heading">
     <h2 id="starter-path-heading">Start here</h2>
     <p>One recommended starter at each level. Finish these in order if you want a clear path through the library.</p>
@@ -366,11 +357,26 @@
       <button class="chip" data-filter="advanced">Advanced</button>
       <button class="chip" data-filter="python">Python</button>
       <button class="chip" data-filter="r">R</button>
+      <button class="chip track-mine" data-filter="mine" id="filterMine" hidden>My learning</button>
+      <button class="chip track-mine" data-filter="done" id="filterDone" hidden>Completed</button>
     </div>
+    <p class="track-filter-hint" id="trackHint"></p>
   </div>
   <div class="result-count" id="count"></div>
 
   <div id="groups"></div>
+
+  <aside class="flow-banner flow-banner--skills" aria-label="Skills curriculum">
+    <div>
+      <p class="flow-k">New to coding?</p>
+      <h2>Start with the free skills curriculum</h2>
+      <p>17 full lessons on Python, pandas, maps, and more. These projects assume you know the basics. Work through the lessons first, then come back here.</p>
+    </div>
+    <a href="skills.html" class="flow-banner-btn">
+      Start learning
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </aside>
 
   <div class="cta-band">
     <h2>Finished one? You're ready for the real thing.</h2>
@@ -429,6 +435,8 @@
 </footer>
 
 <script src="assets/site-config.js"></script>
+<script src="assets/auth.js?v=4"></script>
+<script src="assets/progress-ui.js?v=3"></script>
 <script>
   /* ===== PROJECT LIBRARY =====
      Add a project by appending an object below. Fields:
@@ -465,6 +473,7 @@
     },
     {
       title: 'Who carries the pollution burden?',
+      id: 'calenviroscreen-burden',
       level: 'beginner', time: '~1 hr', lang: 'R',
       desc: 'Use CalEnviroScreen to explore which California communities face the highest combined pollution and vulnerability. The foundational move in any environmental-justice analysis, done gently.',
       build: 'A ranked chart of the most-burdened census tracts, with a short written takeaway.',
@@ -477,6 +486,7 @@
     },
     {
       title: 'Is your hometown getting hotter?',
+      id: 'hometown-temperature',
       level: 'beginner', time: '~1 hr', lang: 'Python',
       desc: 'Grab decades of temperature records from NOAA for a U.S. city and plot the long-run trend. A clean, motivating intro to time-series data with a personal hook.',
       build: 'A temperature-trend line chart for a city you choose, with the warming rate.',
@@ -489,6 +499,7 @@
     },
     {
       title: 'Rebuild the UCLA carbon tracker',
+      id: 'ucla-carbon-tracker',
       level: 'intermediate', time: '~1.5 hr', lang: 'R',
       desc: 'Fit a trend line to UCLA\u2019s verified emissions data and compare progress against UC\u2019s 90%-by-2045 commitment. This is the same analysis used in the carbon tracker on Terrain\u2019s homepage.',
       build: 'A reproducible chart of reported vs. committed emissions, plus a projected year to reach the 2045 target.',
@@ -515,6 +526,7 @@
     },
     {
       title: 'Connect pollution burden to air quality',
+      id: 'pollution-burden-air',
       level: 'intermediate', time: '~2 hr', lang: 'R',
       desc: 'Combine CalEnviroScreen and EPA AirNow to test whether the communities flagged as most burdened actually breathe worse air. Your first real two-dataset question with a regression behind it.',
       build: 'A scatter plot and simple model linking EJ scores to measured air quality.',
@@ -539,6 +551,7 @@
     },
     {
       title: 'Measure ice-sheet change with ICESat-2',
+      id: 'icesat2-elevation',
       level: 'advanced', time: '~3 hr', lang: 'Python',
       desc: 'Open NASA ICESat-2 laser altimetry (ATL06) and compute elevation change along a repeating orbit track. The same workflow researchers use for ice-sheet mass balance and sea-level research.',
       build: 'An elevation-change profile along an ice sheet with uncertainty bands and a short methods note.',
@@ -550,6 +563,7 @@
     },
     {
       title: 'Compare heat-wave trends across Western cities',
+      id: 'western-heat-waves',
       level: 'advanced', time: '~2.5 hr', lang: 'Python',
       desc: 'Pull daily temperature from NOAA for several cities, define heat-wave thresholds, and compare how often extreme heat arrived in the 1980s vs. the 2010s. A step up from single-city trend lines into event-based climate analysis.',
       build: 'A multi-city dashboard of heat-wave frequency and duration with decade-over-decade comparison.',
@@ -561,6 +575,7 @@
     },
     {
       title: 'Do burdened communities sit near major emitters?',
+      id: 'burden-near-emitters',
       level: 'advanced', time: '~3 hr', lang: 'R',
       desc: 'Join CalEnviroScreen tract scores with Climate TRACE facility locations to test whether the highest-burden neighborhoods cluster near large point sources. Environmental justice meets emissions inventory science.',
       build: 'A map linking census-tract burden scores to nearby facilities, plus a buffer analysis and written interpretation.',
@@ -638,13 +653,17 @@
       <div class="pcard-thumb">
         <img src="${p.image}" alt="${p.imageAlt || ''}" loading="lazy">
         <span class="pcard-time-overlay">${p.time}</span>
-      </div>` : '';
+        ${p.id ? `<span class="pcard-track-badge" hidden data-status="not_started"></span>` : ''}
+      </div>` : (p.id ? `<span class="pcard-track-badge" hidden data-status="not_started" style="position:absolute;top:12px;right:12px;"></span>` : '');
     const badge = p.starter
       ? `<div class="pcard-badge">Recommended starter</div>`
       : '';
     const anchor = p.id ? ` id="${p.id}"` : '';
+    const trackAttrs = p.id
+      ? ` data-project-id="${p.id}" data-track-status="not_started"`
+      : '';
     return `
-      <div class="pcard${p.starter ? ' is-starter' : ''}"${anchor}>
+      <div class="pcard${p.starter ? ' is-starter' : ''}"${anchor}${trackAttrs}>
         ${thumb}
         <div class="pcard-inner">
           ${badge}
@@ -667,6 +686,7 @@
             ${notebookBtn(p.notebook)}
             ${p.demo ? `<a class="pbtn" href="${p.demo}">See live demo</a>` : ''}
           </div>
+          ${p.id ? `<div class="track-rail" data-progress-kind="projects" data-progress-id="${p.id}" data-progress-label="${String(p.title).replace(/"/g, '&quot;')}" data-login-next="projects.html" hidden></div>` : ''}
         </div>
       </div>`;
   }
@@ -678,7 +698,12 @@
       const byLang = ['python','r'].includes(activeFilter) ? p.lang.toLowerCase() === activeFilter : true;
       const haystack = (p.title + ' ' + p.desc + ' ' + p.build + ' ' + p.dataset + ' ' + p.lang + ' ' + p.skills.join(' ')).toLowerCase();
       const bySearch = !q || haystack.includes(q);
-      return byLevel && byLang && bySearch;
+      let byTrack = true;
+      if (activeFilter === 'mine' || activeFilter === 'done') {
+        const st = (window.TerrainProgressUI && TerrainProgressUI.statusOf('projects', p.id)) || 'not_started';
+        byTrack = activeFilter === 'done' ? st === 'done' : (st === 'in_progress' || st === 'done');
+      }
+      return byLevel && byLang && bySearch && byTrack;
     });
 
     countEl.textContent = filtered.length + (filtered.length === 1 ? ' project' : ' projects');
@@ -704,6 +729,7 @@
         </div>`;
     });
     groupsEl.innerHTML = html;
+    if (window.TerrainProgressUI) TerrainProgressUI.mount(groupsEl);
   }
 
   document.getElementById('filters').addEventListener('click', e => {
@@ -724,10 +750,88 @@
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
-  window.addEventListener('hashchange', scrollToStarterHash);
+  window.addEventListener('hashchange', function () {
+    scrollToStarterHash();
+    autoStartOpenedProject();
+  });
   setTimeout(scrollToStarterHash, 60);
+
+  /* Auto in-progress for the project you opened (hash) or when you start Colab/video */
+  function setupTrackingChrome() {
+    var loggedIn = window.TerrainAuth && TerrainAuth.isLoggedIn();
+    var mine = document.getElementById('filterMine');
+    var done = document.getElementById('filterDone');
+    var hint = document.getElementById('trackHint');
+    if (mine) mine.hidden = !loggedIn;
+    if (done) done.hidden = !loggedIn;
+    if (hint) {
+      hint.innerHTML = loggedIn
+        ? 'Opening a project marks it <strong>In progress</strong> on your account. Set <strong>Done</strong> when you finish.'
+        : '<a href="login.html?next=projects.html">Log in</a> to save which projects you are working on.';
+    }
+    if (window.TerrainProgressUI) TerrainProgressUI.mount(groupsEl);
+    autoStartOpenedProject();
+  }
+
+  function autoStartOpenedProject() {
+    if (!window.TerrainProgressUI || !window.TerrainAuth || !TerrainAuth.isLoggedIn()) return;
+    var hashId = (location.hash || '').replace(/^#/, '');
+    if (!hashId) return;
+    var card = document.getElementById(hashId);
+    if (!card || !card.getAttribute('data-project-id')) return;
+    var id = card.getAttribute('data-project-id');
+    var labelEl = card.querySelector('h3');
+    var start = function () {
+      TerrainProgressUI.ensureStarted('projects', id, labelEl ? labelEl.textContent : id).then(function () {
+        TerrainProgressUI.refreshAll(groupsEl);
+      }).catch(function () {});
+    };
+    /* Mark once the project is on screen while you scroll it */
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
+            start();
+            io.disconnect();
+          }
+        });
+      }, { threshold: [0.4, 0.6] });
+      io.observe(card);
+    } else {
+      start();
+    }
+  }
+
+  groupsEl.addEventListener('click', function (e) {
+    var link = e.target.closest('a.pbtn');
+    if (!link || !window.TerrainProgressUI || !TerrainAuth.isLoggedIn()) return;
+    var card = link.closest('.pcard[data-project-id]');
+    if (!card) return;
+    var id = card.getAttribute('data-project-id');
+    var labelEl = card.querySelector('h3');
+    TerrainProgressUI.ensureStarted('projects', id, labelEl ? labelEl.textContent : id).then(function () {
+      TerrainProgressUI.refreshAll(groupsEl);
+    }).catch(function () {});
+  });
+
+  setupTrackingChrome();
+  if (window.TerrainAuth && TerrainAuth.isLoggedIn()) {
+    TerrainAuth.me().then(function () {
+      render();
+      setupTrackingChrome();
+      setTimeout(scrollToStarterHash, 40);
+    });
+  }
+  window.addEventListener('hashchange', function () {
+    scrollToStarterHash();
+    autoStartOpenedProject();
+  });
+  document.addEventListener('terrain:progress', function () {
+    if (activeFilter === 'mine' || activeFilter === 'done') render();
+    else if (window.TerrainProgressUI) TerrainProgressUI.refreshAll(groupsEl);
+  });
 </script>
-<script src="assets/site-nav.js?v=3"></script>
+<script src="assets/site-nav.js?v=9"></script>
 
 </body>
 </html>

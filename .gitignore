@@ -4,3 +4,7 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .vscode/
+server/node_modules/
+server/data/store.json
+server/data/store.json.tmp
+node_modules/

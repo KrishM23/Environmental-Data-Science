@@ -3,6 +3,18 @@
 
 [build]
   publish = "."
+  command = "npm install --prefix server"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Proxy /api/* to the auth + progress function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
 
 [[headers]]
   for = "/notebooks/*.ipynb"
